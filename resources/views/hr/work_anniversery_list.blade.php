@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
-    <title>Turain || Birthday list</title>
+    <title>Turain || Work Anniversery list</title>
 
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico">
 
@@ -75,11 +75,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Upcomming Birthday</h5>
+                        <h5 class="m-b-10">Upcomming </h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}"">Home</a></li>
-                        <li class="breadcrumb-item">Birthday List</li>
+                        <li class="breadcrumb-item">Work Anniversary List</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -128,7 +128,7 @@
 
                                                 <th>Name</th>
                                                 <th>Designation</th>
-                                                <th>DOB</th>
+                                                <th>Joinning Date</th>
                                                 <th>Role</th>
 
                                                 <th class="text-end">Actions</th>
@@ -138,50 +138,51 @@
                                             @foreach ($data as $data)
                                                 <tr>
                                                     <td>{{ $data->name }}</td>
+
                                                     @php
                                                         $designation = DB::table('designations')
                                                             ->where('id', $data->designation)
                                                             ->first();
                                                     @endphp
+                                                    <td>{{ $designation->designation_name ?? '-' }}</td>
 
-                                                    <td>{{ $designation->designation_name }}</td>
                                                     @php
-                                                        $dob = \Carbon\Carbon::parse($data->dob);
+                                                        $entry = \Carbon\Carbon::parse($data->entry_date);
                                                         $today = \Carbon\Carbon::today();
 
-                                                        // Birthday for current year
-                                                        $birthdayThisYear = \Carbon\Carbon::create(
+                                                        // Anniversary for this year
+                                                        $anniversaryThisYear = \Carbon\Carbon::create(
                                                             $today->year,
-                                                            $dob->month,
-                                                            $dob->day,
+                                                            $entry->month,
+                                                            $entry->day,
                                                         );
 
-                                                        // If already passed, move to next year
-                                                        if ($birthdayThisYear->lt($today)) {
-                                                            $birthdayThisYear->addYear();
+                                                        if ($anniversaryThisYear->lt($today)) {
+                                                            $anniversaryThisYear->addYear();
                                                         }
 
-                                                        $daysLeft = $today->diffInDays($birthdayThisYear);
+                                                        $daysLeft = $today->diffInDays($anniversaryThisYear);
+                                                        $yearsCompleted = $entry->diffInYears($anniversaryThisYear);
                                                     @endphp
-
-                                                    <td
-                                                        @if ($daysLeft == 0) class="text-danger fw-bold"
-    @elseif ($daysLeft == 2)
-        class="text-warning fw-bold" @endif>
-                                                        {{ $dob->format('d M') }}
+                                                    <td data-order="{{ $anniversaryThisYear->format('Y-m-d') }}"
+                                                        @if ($daysLeft == 0) class="text-success fw-bold"
+    @elseif ($daysLeft == 2) class="text-warning fw-bold" @endif>
+                                                        {{ $anniversaryThisYear->format('d M') }}
 
                                                         @if ($daysLeft == 0)
-                                                            🎂
+                                                            🎁
                                                         @endif
+
+                                                        <span class="text-muted ms-2">
+                                                            {{ $yearsCompleted }}
+                                                            {{ $yearsCompleted == 1 ? 'Year' : 'Years' }} Anniversary
+                                                        </span>
                                                     </td>
+
                                                     <td>{{ $data->role }}</td>
-                                                    <td class="text-end">
-                                                        <a href="#"
-                                                            class="btn btn-sm btn-outline-primary">View</a>
-                                                    </td>
+                                                    <td> view</td>
                                                 </tr>
                                             @endforeach
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -918,25 +919,24 @@
             });
         });
     </script>
-
-
     <script>
         $(document).ready(function() {
 
-            if (!$.fn.DataTable.isDataTable('#customerList')) {
-                var table = $('#customerList').DataTable({
-                    ordering: true,
-                    pageLength: 10
-                });
+            if ($.fn.DataTable.isDataTable('#customerList')) {
+                $('#customerList').DataTable().destroy();
             }
 
-            $('#roleFilter').on('change', function() {
-                var table = $('#customerList').DataTable();
-                table.column(3).search(this.value).draw();
+            $('#customerList').DataTable({
+                ordering: true,
+                order: [
+                    [2, 'asc']
+                ], // Anniversary column index
+                pageLength: 10
             });
 
         });
     </script>
+
 
 </body>
 

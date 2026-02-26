@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use PhpParser\Node\Expr\FuncCall;
+use Yajra\DataTables\Facades\DataTables;
+
 
 class HrController extends Controller
 {
@@ -551,9 +553,12 @@ public function upcomming_birthday_show(){
 $data = DB::select('CALL get_all_birthdays_desc_all()');
   return view("hr.birthday_list" , compact('data'));
 }
+public function upcomming_work_anniversery_show()
+{
+    // Call Stored Procedure
+    $data = DB::select('CALL get_upcoming_2_month_entries()');
 
-public function upcomming_work_anniversery_show(){
-    dd("work");
+    return view('hr.work_anniversery_list', compact('data'));
 }
 
 
