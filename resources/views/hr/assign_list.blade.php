@@ -14,14 +14,14 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
 
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/dataTables.bs5.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/select2-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/dataTables.bs5.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
 
-    <link rel="stylesheet" type="text/css" href="assets/css/theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css">
 
 </head>
 
@@ -57,79 +57,12 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne">
-                                <i class="feather-bar-chart"></i>
-                            </a>
+
                             <div class="dropdown">
-                                <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10"
-                                    data-bs-auto-close="outside">
-                                    <i class="feather-filter"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-eye me-3"></i>
-                                        <span>All</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-users me-3"></i>
-                                        <span>Group</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-flag me-3"></i>
-                                        <span>Country</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-dollar-sign me-3"></i>
-                                        <span>Invoice</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-briefcase me-3"></i>
-                                        <span>Project</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-user-check me-3"></i>
-                                        <span>Active</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-user-minus me-3"></i>
-                                        <span>Inactive</span>
-                                    </a>
-                                </div>
+
+
                             </div>
-                            <div class="dropdown">
-                                <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10"
-                                    data-bs-auto-close="outside">
-                                    <i class="feather-paperclip"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-pdf me-3"></i>
-                                        <span>PDF</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-csv me-3"></i>
-                                        <span>CSV</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-xml me-3"></i>
-                                        <span>XML</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-txt me-3"></i>
-                                        <span>Text</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-exe me-3"></i>
-                                        <span>Excel</span>
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-printer me-3"></i>
-                                        <span>Print</span>
-                                    </a>
-                                </div>
-                            </div>
+
                             <a href="{{ route('hr.assign.create') }}" class="btn btn-primary">
                                 <i class="feather feather-user-plus me-2"></i>
                                 <span>Assign Intern</span>
@@ -167,75 +100,47 @@
                                                     </div>
                                                 </th>
                                                 <th>Mentor</th>
-                                                <th>Intern</th>
+                                                <th>Candidate</th>
                                                 <th>Status</th>
-                                                <th class="text-end">Actions</th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($assign as $assign)
-                                                <?php
-                                                $mentor = DB::table('mentor_data')->where('id', $assign->mentor_id)->first();
-                                                $intern = DB::table('intern_data')->where('id', $assign->candidate_id)->first();
-                                                ?>
-                                                <tr class="single-item">
-                                                    <td>
-                                                        <div class="item-checkbox ms-1">
-                                                            <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox"
-                                                                    class="custom-control-input checkbox"
-                                                                    id="checkBox_1">
-                                                                <label class="custom-control-label"
-                                                                    for="checkBox_1"></label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                            @foreach ($assignments as $mentorId => $rows)
+                                                @foreach ($rows as $index => $assign)
+                                                    <tr>
+                                                        {{-- Checkbox --}}
+                                                        <td>
+                                                            <input type="checkbox" class="form-check-input">
+                                                        </td>
 
-                                                    <td>{{ $mentor->name }}</a></td>
-                                                    <td>{{ $intern->name }}</a></td>
+                                                        {{-- Mentor (only once) --}}
+                                                        @if ($index == 0)
+                                                            <td rowspan="{{ count($rows) }}"
+                                                                class="fw-semibold align-middle">
+                                                                {{ $assign->mentor_name }}
+                                                            </td>
+                                                        @endif
 
-                                                    <td>
-                                                        <select class="form-select status-select"
-                                                            data-id="{{ $assign->id }}">
-                                                            <option value="1"
-                                                                {{ $assign->status == 1 ? 'selected' : '' }}>Active
-                                                            </option>
-                                                            <option value="0"
-                                                                {{ $assign->status == 0 ? 'selected' : '' }}>Inactive
-                                                            </option>
-                                                        </select>
+                                                        {{-- Intern --}}
+                                                        <td>{{ $assign->intern_name }}</td>
 
+                                                        {{-- Status --}}
+                                                        <td>
+                                                            <select class="form-select status-select"
+                                                                data-id="{{ $assign->id }}">
+                                                                <option value="1"
+                                                                    {{ $assign->status == 1 ? 'selected' : '' }}>Active
+                                                                </option>
+                                                                <option value="0"
+                                                                    {{ $assign->status == 0 ? 'selected' : '' }}>
+                                                                    Inactive</option>
+                                                            </select>
+                                                        </td>
 
-
-                                                        {{-- <option value="danger" data-bg="bg-danger">Declined</option> --}}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <div class="hstack gap-2 justify-content-end">
-
-                                                            {{-- View --}}
-                                                            <a href="{{ route('assign.view', $assign->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-eye"></i>
-                                                            </a>
-
-
-
-                                                            {{-- Edit --}}
-                                                            {{-- <a href="{{ route('intern.edit', $assign->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-edit-3"></i>
-                                                            </a> --}}
-
-
-                                                        </div>
-                                                    </td>
-
-                                                </tr>
+                                                    </tr>
+                                                @endforeach
                                             @endforeach
-
-
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -928,45 +833,36 @@
     <script src="assets/js/customers-init.min.js"></script>
 
     <script src="assets/js/theme-customizer-init.min.js"></script>
-
-
-
-    <script>
-        document.getElementById('statusSelect').addEventListener('change', function() {
-            const status = this.value;
-
-            // Redirect to same page with query parameter
-            const url = new URL(window.location.href);
-            url.searchParams.set('status', status);
-
-            window.location.href = url.toString();
-        });
-    </script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
     <script>
-        $(document).on('change', '.status-select', function() {
+        $(document).ready(function() {
 
-            let status = $(this).val();
-            let id = $(this).data('id');
+            $(document).on('change', '.status-select', function() {
+                // alert("ok");
+                let status = $(this).val();
+                let id = $(this).data('id');
 
-            $.ajax({
-                url: "{{ route('assign.status.update') }}",
-                type: "POST",
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    id: id,
-                    status: status
-                },
-                success: function(response) {
-                    showToast(response.message, 'success');
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    showToast('Failed to update status!', 'danger');
-                }
+                $.ajax({
+                    url: "{{ route('assign.status.update') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: id,
+                        status: status
+                    },
+                    success: function(response) {
+                        showToast(response.message, 'success');
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
+                        showToast('Failed to update status!', 'danger');
+                    }
+                });
+
             });
+
         });
     </script>
 

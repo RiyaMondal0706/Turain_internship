@@ -196,6 +196,30 @@
                                             </div>
                                             <div class="row mb-4 align-items-center">
                                                 <div class="col-lg-4">
+                                                    <label for="designationInput" class="fw-semibold">Department:<span
+                                                            class="text-danger">*</span></label>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <div class="input-group">
+                                                        <div class="input-group-text"><i
+                                                                class="feather-briefcase"></i></div>
+                                                        <select class="form-control" id="departmentInput"
+                                                            name="department_id" required>
+                                                            <option value="">Select Department</option>
+                                                            @foreach ($departments as $department)
+                                                                <option value="{{ $department->id }}"
+                                                                    {{ $mentor->department == $department->id ? 'selected' : '' }}>
+                                                                    {{ $department->department_name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-4 align-items-center">
+                                                <div class="col-lg-4">
                                                     <label for="designationInput"
                                                         class="fw-semibold">Designation:<span
                                                             class="text-danger">*</span></label>
@@ -205,34 +229,17 @@
                                                         <div class="input-group-text"><i
                                                                 class="feather-briefcase"></i></div>
                                                         <select class="form-control" id="designationInput"
-                                                            name="designation">
+                                                            name="designation_id" required>
                                                             <option value="">Select Designation</option>
-
-                                                            <option value="intern"
-                                                                {{ $mentor->designation == 'intern' ? 'selected' : '' }}>
-                                                                Intern
-                                                            </option>
-
-                                                            <option value="junior_developer"
-                                                                {{ $mentor->designation == 'junior_developer' ? 'selected' : '' }}>
-                                                                Junior Developer
-                                                            </option>
-
-                                                            <option value="senior_developer"
-                                                                {{ $mentor->designation == 'senior_developer' ? 'selected' : '' }}>
-                                                                Senior Developer
-                                                            </option>
-
-                                                            <option value="designer"
-                                                                {{ $mentor->designation == 'designer' ? 'selected' : '' }}>
-                                                                Designer
-                                                            </option>
-
-                                                            <option value="tester"
-                                                                {{ $mentor->designation == 'tester' ? 'selected' : '' }}>
-                                                                Tester
-                                                            </option>
                                                         </select>
+
+
+                                                        <input type="hidden" id="selectedDesignation"
+                                                            value="{{ $mentor->designation }}">
+
+
+
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -660,6 +667,53 @@
         function validateEmail(email) {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
+    </script>
+
+
+
+
+    <script>
+        $(document).ready(function() {
+
+            function loadDesignations(departmentId, selectedId = null) {
+
+                if (!departmentId) return;
+
+                $.ajax({
+                    url: "{{ route('get.designations') }}",
+                    type: "GET",
+                    data: {
+                        department_id: departmentId
+                    },
+                    success: function(data) {
+
+                        let options = '<option value="">Select Designation</option>';
+
+                        $.each(data, function(key, item) {
+                            let selected = (item.id == selectedId) ? 'selected' : '';
+                            options += `<option value="${item.id}" ${selected}>
+                                    ${item.designation_name}
+                                </option>`;
+                        });
+
+                        $('#designationInput').html(options);
+                    }
+                });
+            }
+
+            // ✅ On page load (EDIT PAGE)
+            let departmentId = $('#departmentInput').val();
+            let selectedDesignation = $('#selectedDesignation').val();
+
+            if (departmentId && selectedDesignation) {
+                loadDesignations(departmentId, selectedDesignation);
+            }
+
+            // On department change
+            $('#departmentInput').on('change', function() {
+                loadDesignations($(this).val());
+            });
+        });
     </script>
 
 </body>

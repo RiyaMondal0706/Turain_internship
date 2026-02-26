@@ -121,10 +121,10 @@
                                         <!-- Project Name -->
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">
-                                                Project Name
+                                                Project Title
                                             </label>
                                             <input type="text" name="project_name" class="form-control"
-                                                placeholder="Enter project name" required>
+                                                placeholder="Enter project title" required>
                                         </div>
 
                                         <!-- Documentation -->
@@ -139,6 +139,14 @@
                                             </small>
                                         </div>
 
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">
+                                                Documentation Description
+                                            </label>
+                                            <textarea name="documentation_note" class="form-control" rows="4"
+                                                placeholder="Enter documentation details here..."></textarea>
+
+                                        </div>
                                         <!-- Submission Date -->
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">

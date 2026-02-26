@@ -93,7 +93,8 @@
                                 <!-- Toast -->
                                 <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3"></div>
 
-                                <form action="{{ route('assignment.update', $project->id) }}" method="POST">
+                                <form action="{{ route('assignment.update', $project->id) }}"
+                                    method="POST"enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
 
@@ -102,8 +103,6 @@
 
                                         <!-- Intern Select -->
                                         <div class="col-md-6">
-
-
                                             <!-- Project Name -->
                                             <div class="col-md-6">
                                                 <label class="form-label fw-semibold">
@@ -124,6 +123,15 @@
                                                 <small class="text-muted">
                                                     Only PDF files are allowed
                                                 </small>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold">
+                                                    Documentation Description
+                                                </label>
+                                                <textarea name="documentation_note" class="form-control" rows="4"
+                                                    placeholder="Enter documentation details here...">{{ $project->project_description }}</textarea>
+
                                             </div>
 
                                             <!-- Submission Date -->

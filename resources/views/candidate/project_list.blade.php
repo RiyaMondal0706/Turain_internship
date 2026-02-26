@@ -20,14 +20,48 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/daterangepicker.min.css') }}" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/theme.min.css') }}" />
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
+    <style>
+        /* Remove blur from body & content */
+        body.modal-open,
+        body.modal-open .container,
+        body.modal-open .container-fluid,
+        body.modal-open .content,
+        body.modal-open .page-content {
+            filter: none !important;
+            opacity: 1 !important;
+        }
+
+        /* Kill backdrop completely */
+        .modal-backdrop {
+            display: none !important;
+        }
+
+        /* Chat popup position */
+        .modal-dialog-bottom {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            margin: 0;
+        }
+
+        /* Keep popup on top */
+        .modal {
+            z-index: 2000 !important;
+        }
+
+        .modal-title {
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
+    @include('layouts.candidate.sidebar')
 
-    @include('layouts.mentor.sidebar')
-
-    @include('layouts.mentor.header')
+    @include('layouts.candidate.header')
 
 
     <!--! ================================================================ !-->
@@ -39,11 +73,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Assignment</h5>
+                        <h5 class="m-b-10">Mentor</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}"">Home</a></li>
-                        <li class=" breadcrumb-item">Assignment List</li>
+                        <li class=" breadcrumb-item">Mentor List</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -155,6 +189,8 @@
                                     <div class="card shadow-sm">
                                         <div class="card-body p-0">
                                             <div class="table-responsive">
+
+
                                                 <table class="table table-hover align-middle mb-0" id="customerList">
                                                     <thead class="bg-light text-uppercase text-muted small">
                                                         <tr>
@@ -164,74 +200,73 @@
                                                                         id="checkAllCustomer">
                                                                     <label class="form-check-label"
                                                                         for="checkAllCustomer"></label>
-                                                                </div>
 
-
-
-                                                            </th>
                                                             <th>Project</th>
-                                                            <th>Project Description</th>
+                                                            <th>Project Documentation</th>
                                                             <th>Start Date</th>
+                                                            <th>End Date</th>
                                                             <th>Due Date</th>
                                                             <th>Project Submission</th>
                                                             <th class="text-end">Actions</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <div id="projectDetails" class="border rounded p-3 mt-3"
-                                                            style="display:none; background:#f9f9f9; position:relative;">
 
-                                                            <!-- Close Button -->
 
-                                                        </div>
-                                                        @foreach ($project as $proj)
+
+                                                        @forelse ($project as $assign)
                                                             <tr class="shadow-sm rounded mb-2">
+
 
                                                                 <!-- Checkbox -->
                                                                 <td class="text-center">
                                                                     <div class="form-check">
                                                                         <input class="form-check-input checkbox"
                                                                             type="checkbox"
-                                                                            id="checkBox_{{ $proj->id }}">
+                                                                            id="checkBox_{{ $assign->id }}">
                                                                         <label class="form-check-label"
-                                                                            for="checkBox_{{ $proj->id }}"></label>
+                                                                            for="checkBox_{{ $assign->id }}"></label>
                                                                     </div>
                                                                 </td>
 
                                                                 <!-- Project Name -->
                                                                 <td>
-                                                                    <div class="fw-bold text-dark">{{ $proj->project }}
-                                                                    </div>
+                                                                    <span
+                                                                        class="badge rounded-pill bg-primary mb-1 px-3 py-2">{{ $assign->project }}</span>
                                                                 </td>
 
                                                                 <td>
                                                                     <span class="short-desc">
-                                                                        {{ Str::limit($proj->project_description, 10) }}
+                                                                        {{ Str::limit($assign->project_description, 10) }}
                                                                     </span>
 
                                                                     <button type="button"
                                                                         class="btn btn-sm btn-link toggle-desc"
-                                                                        data-desc="{{ $proj->project_description }}"
-                                                                        data-doc="{{ asset('assets/documentation/' . $proj->documentation) }}">
+                                                                        data-desc="{{ $assign->project_description }}"
+                                                                        data-doc="{{ asset('assets/documentation/' . $assign->documentation) }}">
                                                                         View
                                                                     </button>
                                                                 </td>
 
-                                                                </td>
+
+
                                                                 <!-- Start Date -->
                                                                 <td>
-                                                                    <span class="text-secondary">
-                                                                        {{ \Carbon\Carbon::parse($proj->start_date)->timezone('Asia/Kolkata')->format('d M Y') }}
-                                                                    </span>
+                                                                    <span
+                                                                        class="text-secondary">{{ \Carbon\Carbon::parse($assign->start_date)->timezone('Asia/Kolkata')->format('d M Y') }}</span>
                                                                 </td>
 
-
+                                                                <!-- End Date -->
+                                                                <td>
+                                                                    <span
+                                                                        class="text-secondary">{{ \Carbon\Carbon::parse($assign->end_date)->timezone('Asia/Kolkata')->format('d M Y') }}</span>
+                                                                </td>
 
                                                                 <!-- Due Date -->
                                                                 <td>
                                                                     @php
                                                                         $end = \Carbon\Carbon::parse(
-                                                                            $proj->end_date,
+                                                                            $assign->end_date,
                                                                         )->startOfDay();
                                                                         $today = \Carbon\Carbon::today(
                                                                             'Asia/Kolkata',
@@ -241,106 +276,86 @@
                                                                             false,
                                                                         );
 
-                                                                        if ($proj->status == 0) {
-                                                                            // Status 0 = submitted, show blurred
-                                                                            $color =
-                                                                                'bg-secondary text-white opacity-75';
-                                                                            $statusText = 'Submitted';
+                                                                        if ($daysLeft < 0) {
+                                                                            $color = 'bg-danger text-white';
+                                                                            $status = 'Overdue';
+                                                                        } elseif ($daysLeft <= 3) {
+                                                                            $color = 'bg-danger text-white';
+                                                                            $status =
+                                                                                $daysLeft .
+                                                                                ' day' .
+                                                                                ($daysLeft == 1 ? '' : 's') .
+                                                                                ' left';
+                                                                        } elseif ($daysLeft <= 7) {
+                                                                            $color = 'bg-warning text-dark';
+                                                                            $status =
+                                                                                $daysLeft .
+                                                                                ' day' .
+                                                                                ($daysLeft == 1 ? '' : 's') .
+                                                                                ' left';
                                                                         } else {
-                                                                            // Status not 0, normal due date colors
-                                                                            if ($daysLeft < 0) {
-                                                                                $color = 'bg-danger text-white';
-                                                                                $statusText = 'Overdue';
-                                                                            } elseif ($daysLeft <= 3) {
-                                                                                $color = 'bg-danger text-white';
-                                                                                $statusText =
-                                                                                    $daysLeft .
-                                                                                    ' day' .
-                                                                                    ($daysLeft == 1 ? '' : 's') .
-                                                                                    ' left';
-                                                                            } elseif ($daysLeft <= 7) {
-                                                                                $color = 'bg-warning text-dark';
-                                                                                $statusText =
-                                                                                    $daysLeft .
-                                                                                    ' day' .
-                                                                                    ($daysLeft == 1 ? '' : 's') .
-                                                                                    ' left';
-                                                                            } else {
-                                                                                $color = 'bg-success text-white';
-                                                                                $statusText =
-                                                                                    $daysLeft .
-                                                                                    ' day' .
-                                                                                    ($daysLeft == 1 ? '' : 's') .
-                                                                                    ' left';
-                                                                            }
+                                                                            $color = 'bg-success text-white';
+                                                                            $status =
+                                                                                $daysLeft .
+                                                                                ' day' .
+                                                                                ($daysLeft == 1 ? '' : 's') .
+                                                                                ' left';
                                                                         }
                                                                     @endphp
-
                                                                     <span
                                                                         class="badge rounded-pill {{ $color }} mb-1 px-3 py-2 d-inline-block text-center">
-                                                                        {{ $proj->status == 0 ? 'Submitted' : $end->format('d M Y') }}<br>
-                                                                        <small>{{ $proj->status == 0 ? '' : '(' . $statusText . ')' }}</small>
+                                                                        {{ $end->format('d M Y') }}<br>
+                                                                        <small>({{ $status }})</small>
                                                                     </span>
                                                                 </td>
+
 
                                                                 <td>
                                                                     <!-- Icon Buttons -->
                                                                     <div class="icon-actions d-flex gap-2">
-                                                                        @php
-                                                                            $github = DB::table('assignment_github')
-                                                                                ->where('assign_id', $proj->id)
-                                                                                ->first();
-                                                                        @endphp
-
-                                                                        <button
-                                                                            class="btn btn-success btn-sm copy-github-btn"
-                                                                            data-link="{{ $github->github_link ?? '' }}"
-                                                                            title="Copy Project Link">
-                                                                            <i class="bi bi-link"></i>
+                                                                        <!-- 2️⃣ Copy GitHub link -->
+                                                                        <button class="btn btn-info btn-sm"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#githubNoteModal"
+                                                                            data-id="{{ $assign->id }}">
+                                                                            <i class="bi bi-github"></i>
                                                                         </button>
-
-                                                                        <!-- 3️⃣ Open chatbox -->
                                                                         <button class="btn btn-info btn-sm"
                                                                             data-bs-toggle="modal"
                                                                             data-bs-target="#noteModal"
-                                                                            data-id="{{ $proj->id }}">
+                                                                            data-id="{{ $assign->id }}">
                                                                             <i class="bi bi-journal-text"></i>
                                                                         </button>
                                                                     </div>
                                                                 </td>
 
+
+
                                                                 <!-- Actions -->
                                                                 <td class="text-end">
-                                                                    @if ($proj->status == 0)
-                                                                        <!-- Status 0: show view icon -->
-                                                                        <a href="{{ route('submition_assignment.show', $proj->id) }}"
-                                                                            class="btn btn-sm btn-outline-secondary"
-                                                                            title="View">
-                                                                            <i class="bi bi-eye"></i>
-                                                                        </a>
-                                                                    @else
-                                                                        <!-- Status not 0: show edit button -->
-                                                                        <a href="{{ route('assignment.edit', $proj->id) }}"
-                                                                            class="btn btn-sm btn-outline-primary"
-                                                                            title="Edit">
-                                                                            <i class="feather feather-edit"></i>
-                                                                        </a>
-                                                                    @endif
+                                                                    <button type="button"
+                                                                        class="btn btn-sm btn-outline-success upload-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#uploadModal"
+                                                                        data-id="{{ $assign->id }}">
+                                                                        <i data-feather="upload"></i> Upload
+                                                                    </button>
                                                                 </td>
 
                                                             </tr>
-                                                        @endforeach
+                                                        @empty
+                                                            <tr>
+                                                                <td colspan="6" class="text-center text-muted">No
+                                                                    projects assigned</td>
+                                                            </tr>
+                                                        @endforelse
                                                     </tbody>
-
 
                                                 </table>
 
 
                                                 <!-- END main content -->
                                             </div>
-
-                                            <!-- MODAL HERE -->
-                                            <!-- Assignment Modal -->
 
 
                                         </div>
@@ -642,33 +657,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="projectDetailsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <!-- Header -->
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Project Details</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-
-                <!-- Body -->
-                <div class="modal-body">
-                    <h6>Project Description</h6>
-                    <p id="projectDescText"></p>
-
-                    <hr>
-
-                    <a id="downloadDocBtn" href="#" class="btn btn-success" download target="_blank"
-                        style= "height: 30px; width:150px;">
-                        📄 Download Documentation
-                    </a>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="noteModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
@@ -701,11 +689,111 @@
                                 Today ({{ now()->format('d M Y') }})
                             </h6>
 
-                            <textarea id="noteText" class="form-control" rows="5"></textarea>
+                            <textarea id="noteText" class="form-control" rows="5" placeholder="Write today's work..."></textarea>
 
+                            <div class="mt-2 text-end">
+                                <button class="btn btn-primary btn-sm" id="saveNote">
+                                    Save
+                                </button>
+                            </div>
                         </div>
 
                     </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="githubNoteModal" tabindex="-1"> <!-- renamed -->
+        <div class="modal-dialog modal-sm modal-dialog-bottom">
+            <div class="modal-content">
+
+                <div class="modal-header bg-primary text-white">
+                    <h6 class="modal-title"> Project Link</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="githubAssignId"> <!-- renamed -->
+                    <textarea id="githubNoteText" class="form-control" rows="4" placeholder="Write something..."></textarea> <!-- renamed -->
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary btn-sm" id="githubSaveNote">Save</button> <!-- renamed -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Assignment Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header" style="background: blue;">
+                    <h5 class="modal-title text-white" id="uploadModalLabel">Submit Assignment</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body">
+                    <input type="hidden" id="uploadAssignId">
+
+                    <!-- Project Link -->
+                    <div class="mb-3">
+                        <label class="form-label">Project Link</label>
+                        <input type="url" class="form-control" id="projectLink"
+                            placeholder="https://github.com/username/project" required>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" id="projectNote" rows="4"
+                            placeholder="Write short explanation or instructions"></textarea>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" id="uploadSaveBtn" class="btn btn-success">
+                        Submit
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="projectDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <!-- Header -->
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Project Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body">
+                    <h6>Project Description</h6>
+                    <p id="projectDescText"></p>
+
+                    <hr>
+
+                    <a id="downloadDocBtn" href="#" class="btn btn-success" download target="_blank"
+                        style="height: 30px; width:150px;">
+                        📄 Download Documentation
+                    </a>
                 </div>
 
             </div>
@@ -723,80 +811,40 @@
     <script src="{{ asset('assets/js/dashboard-init.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
+
+    <script>
+        $(document).ready(function() {
+
+            $('.toggle-desc').on('click', function() {
+
+                let desc = $(this).data('desc');
+
+                $('#projectDescText').text(desc);
+                $('#projectDetails').slideDown();
+
+                // Optional: scroll to the div
+                $('html, body').animate({
+                    scrollTop: $('#projectDetails').offset().top - 100
+                }, 300);
+
+            });
+
+        });
     </script>
     <script>
         $(document).ready(function() {
 
-            // Close button click
             $('#closeProjectDetails').on('click', function() {
                 $('#projectDetails').slideUp();
             });
 
         });
     </script>
-
-    // for github link
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            document.querySelectorAll('.copy-github-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-
-                    const link = this.dataset.link;
-
-                    if (!link) {
-                        Swal.fire('Error', 'Project link not found', 'error');
-                        return;
-                    }
-
-                    navigator.clipboard.writeText(link).then(() => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Copied!',
-                            text: 'Project link copied to clipboard',
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    }).catch(() => {
-                        Swal.fire('Error', 'Failed to copy link', 'error');
-                    });
-
-                });
-            });
-
-        });
-    </script>
-
-
-
-    // for project details
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            document.querySelectorAll('.toggle-desc').forEach(btn => {
-                btn.addEventListener('click', function() {
-
-                    const desc = this.dataset.desc;
-                    const docUrl = this.dataset.doc;
-
-                    document.getElementById('projectDescText').innerText = desc;
-
-                    const downloadBtn = document.getElementById('downloadDocBtn');
-                    downloadBtn.href = docUrl;
-
-                    // Show modal
-                    new bootstrap.Modal(
-                        document.getElementById('projectDetailsModal')
-                    ).show();
-                });
-            });
-
-        });
-    </script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -813,7 +861,7 @@
 
             // Load date list
             function loadNoteDates(assignId) {
-                fetch(`/assignment-mentor/${assignId}/notes`) // backend route
+                fetch(`/assignment/${assignId}/notes`) // backend route
                     .then(res => res.json())
                     .then(data => {
                         let html = '';
@@ -880,6 +928,159 @@
         });
     </script>
 
+
+
+
+
+
+    <script>
+        var githubModal = document.getElementById('githubNoteModal');
+        githubModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var assignId = button.getAttribute('data-id');
+            document.getElementById('githubAssignId').value = assignId;
+        });
+    </script>
+
+    <script>
+        document.getElementById('githubSaveNote').addEventListener('click', function() {
+            let assignId = document.getElementById('githubAssignId').value;
+            let note = document.getElementById('githubNoteText').value;
+
+            if (!note.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Required',
+                    text: 'Please write note'
+                });
+                return;
+            }
+
+            fetch("{{ route('assignment.github.store') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        assign_id: assignId,
+                        note: note
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Saved',
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        document.getElementById('githubNoteText').value = '';
+
+                        // Close modal
+                        bootstrap.Modal.getInstance(
+                            document.getElementById('githubNoteModal')
+                        ).hide();
+                    }
+                })
+                .catch(err => console.error(err));
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Set assign id when upload button clicked
+            document.querySelectorAll('.upload-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.getElementById('uploadAssignId').value = this.dataset.id;
+                    document.getElementById('projectLink').value = '';
+                    document.getElementById('projectNote').value = '';
+                });
+            });
+
+            // Submit assignment
+            document.getElementById('uploadSaveBtn').addEventListener('click', function() {
+
+                let assignId = document.getElementById('uploadAssignId').value;
+                let projectLink = document.getElementById('projectLink').value.trim();
+                let projectNote = document.getElementById('projectNote').value.trim();
+
+                if (!projectLink) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Required',
+                        text: 'Please enter project link'
+                    });
+                    return;
+                }
+
+                fetch("{{ route('assignment.submit.post', ':id') }}".replace(':id', assignId), {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            assign_id: assignId,
+                            project_link: projectLink,
+                            note: projectNote
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Submitted',
+                                text: data.message || 'Assignment submitted successfully!',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+
+                            bootstrap.Modal.getInstance(
+                                document.getElementById('uploadModal')
+                            ).hide();
+                        }
+                    })
+                    .catch(() => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong!'
+                        });
+                    });
+            });
+
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            document.querySelectorAll('.toggle-desc').forEach(btn => {
+                btn.addEventListener('click', function() {
+
+                    const desc = this.dataset.desc;
+                    const docUrl = this.dataset.doc;
+
+                    document.getElementById('projectDescText').innerText = desc;
+
+                    const downloadBtn = document.getElementById('downloadDocBtn');
+                    downloadBtn.href = docUrl;
+
+                    // Show modal
+                    new bootstrap.Modal(
+                        document.getElementById('projectDetailsModal')
+                    ).show();
+                });
+            });
+
+        });
+    </script>
 
 </body>
 

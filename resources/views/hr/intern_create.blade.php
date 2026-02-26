@@ -52,7 +52,7 @@
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item">Edit</li>
+                        <li class="breadcrumb-item">Create</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -116,8 +116,7 @@
                                                         class="fs-12 fw-normal text-muted text-truncate-1-line">Following
                                                         information is publicly displayed, be careful! </span>
                                                 </h5>
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">Add
-                                                    New</a>
+
                                             </div>
                                             <div class="row mb-4 align-items-center">
                                                 <div class="col-lg-4">
@@ -213,26 +212,46 @@
                                             </div>
                                             <div class="row mb-4 align-items-center">
                                                 <div class="col-lg-4">
-                                                    <label for="designationInput"
-                                                        class="fw-semibold">Designation:<span
-                                                            class="text-danger">*</span></label>
+                                                    <label class="fw-semibold">
+                                                        Department:<span class="text-danger">*</span>
+                                                    </label>
                                                 </div>
                                                 <div class="col-lg-8">
                                                     <div class="input-group">
-                                                        <div class="input-group-text"><i
-                                                                class="feather-briefcase"></i></div>
-                                                        <select class="form-control" id="designationInput"
-                                                            name = "designation">
-                                                            <option value="">Select Designation</option>
-                                                            <option value="intern">Intern</option>
-                                                            <option value="junior_developer">Junior Developer</option>
-                                                            <option value="senior_developer">Senior Developer</option>
-                                                            <option value="designer">Designer</option>
-                                                            <option value="tester">Tester</option>
+                                                        <div class="input-group-text">
+                                                            <i class="feather-layers"></i>
+                                                        </div>
+                                                        <select class="form-control" id="departmentInput"
+                                                            name="department_id" required>
+                                                            <option value="">Select Department</option>
+                                                            @foreach ($departments as $department)
+                                                                <option value="{{ $department->id }}">
+                                                                    {{ $department->department_name }}
+                                                                </option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row mb-4 align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label class="fw-semibold">
+                                                        Designation:<span class="text-danger">*</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <div class="input-group">
+                                                        <div class="input-group-text">
+                                                            <i class="feather-briefcase"></i>
+                                                        </div>
+                                                        <select class="form-control" id="designationInput"
+                                                            name="designation_id" required>
+                                                            <option value="">Select Designation</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
 
 
                                         </div>
@@ -1167,6 +1186,36 @@
         });
     </script>
 
+
+    <script>
+        $(document).ready(function() {
+            $('#departmentInput').on('change', function() {
+                let departmentId = $(this).val();
+                $('#designationInput').html('<option value="">Loading...</option>');
+
+                if (departmentId) {
+                    $.ajax({
+                        url: "{{ route('get.designations') }}",
+                        type: "GET",
+                        data: {
+                            department_id: departmentId
+                        },
+                        success: function(response) {
+                            let options = '<option value="">Select Designation</option>';
+                            $.each(response, function(key, value) {
+                                options += `<option value="${value.id}">
+                                        ${value.designation_name}
+                                    </option>`;
+                            });
+                            $('#designationInput').html(options);
+                        }
+                    });
+                } else {
+                    $('#designationInput').html('<option value="">Select Designation</option>');
+                }
+            });
+        });
+    </script>
 
 
 

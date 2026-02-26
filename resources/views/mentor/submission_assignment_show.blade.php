@@ -10,9 +10,9 @@
     <meta name="author" content="theme_ocean">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Turain || Mentor List</title>
+    <title>Turain || Candidate list</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
 
@@ -20,51 +20,39 @@
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/dataTables.bs5.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css">
     <style>
-        .toggle-switch {
-            width: 50px;
-            height: 25px;
-            background-color: #e0e0e0;
-            border-radius: 50px;
-            position: relative;
-            transition: 0.3s;
+        /* REMOVE blur from background */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.4) !important;
+            /* optional */
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
 
-        .toggle-switch.active {
-            background-color: #28a745;
-            /* green for active */
+        /* REMOVE blur from page content */
+        body.modal-open * {
+            filter: none !important;
         }
 
-        .toggle-switch::after {
-            content: '';
-            width: 21px;
-            height: 21px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: 0.3s;
-        }
-
-        .toggle-switch.active::after {
-            left: 27px;
-            /* moves to right when active */
+        /* ENSURE MODAL IS SHARP */
+        .modal-content {
+            filter: none !important;
+            backdrop-filter: none !important;
+            background: #fff !important;
         }
     </style>
-
 
 </head>
 
 <body>
 
 
-    @include('layouts.hr.sidebar')
+    @include('layouts.mentor.sidebar')
 
-    @include('layouts.hr.header')
-
+    @include('layouts.mentor.header')
 
     <!--! ================================================================ !-->
     <!--! [Start] Main Content !-->
@@ -75,11 +63,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Mentor</h5>
+                        <h5 class="m-b-10">Project</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}"">Home</a></li>
-                        <li class=" breadcrumb-item">Mentor List</li>
+                        <li class=" breadcrumb-item">Final Project</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -91,16 +79,84 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-
-                            <div class="dropdown">
-
-
-                            </div>
-
-                            <a href="{{ route('hr.mentor.create') }}" class="btn btn-primary">
-                                <i class="feather feather-user-plus me-2"></i>
-                                <span>Create Mentor</span>
+                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne">
+                                <i class="feather-bar-chart"></i>
                             </a>
+                            <div class="dropdown">
+                                <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10"
+                                    data-bs-auto-close="outside">
+                                    <i class="feather-filter"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-eye me-3"></i>
+                                        <span>All</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-users me-3"></i>
+                                        <span>Group</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-flag me-3"></i>
+                                        <span>Country</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-dollar-sign me-3"></i>
+                                        <span>Invoice</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-briefcase me-3"></i>
+                                        <span>Project</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-user-check me-3"></i>
+                                        <span>Active</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-user-minus me-3"></i>
+                                        <span>Inactive</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10"
+                                    data-bs-auto-close="outside">
+                                    <i class="feather-paperclip"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="bi bi-filetype-pdf me-3"></i>
+                                        <span>PDF</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="bi bi-filetype-csv me-3"></i>
+                                        <span>CSV</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="bi bi-filetype-xml me-3"></i>
+                                        <span>XML</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="bi bi-filetype-txt me-3"></i>
+                                        <span>Text</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="bi bi-filetype-exe me-3"></i>
+                                        <span>Excel</span>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="bi bi-printer me-3"></i>
+                                        <span>Print</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <a href="{{ route('mentor.assign.create') }}" class="btn btn-primary">
+                                <i class="feather feather-clipboard me-2"></i>
+                                <span>Project Assignment</span>
+                            </a>
+
 
                         </div>
                     </div>
@@ -120,111 +176,84 @@
                         <div class="card stretch stretch-full">
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="customerList">
-                                        <thead>
-                                            <tr>
-                                                <th class="wd-30">
-                                                    <div class="btn-group mb-1">
-                                                        <div class="custom-control custom-checkbox ms-1">
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                id="checkAllCustomer">
-                                                            <label class="custom-control-label"
-                                                                for="checkAllCustomer"></label>
-                                                        </div>
-                                                    </div>
-                                                </th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>Department</th>
-                                                <th>Designation</th>
-                                                <th>Status</th>
-                                                <th class="text-end">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($mentor as $mentor)
-                                                <tr class="single-item">
-                                                    <td>
-                                                        <div class="item-checkbox ms-1">
-                                                            <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox"
-                                                                    class="custom-control-input checkbox"
-                                                                    id="checkBox_1">
-                                                                <label class="custom-control-label"
-                                                                    for="checkBox_1"></label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <a href="customers-view.html" class="hstack gap-3">
-                                                            <div class="avatar-image avatar-md">
-                                                                <img src="{{ asset('assets/images/mentor/' . $mentor->image) }}"
-                                                                    alt="Intern Image" class="img-fluid">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
 
-                                                            </div>
-                                                            <div>
-                                                                <span class="text-truncate-1-line">{{ $mentor->name }}
-                                                                </span>
-                                                            </div>
+
+                                                <div class="d-flex justify-content-end">
+                                                    <button class="btn btn-warning btn-sm openReviewModal"
+                                                        data-id="{{ $assignment->id }}"
+                                                        @if ($final->submitted_by_mentor) disabled @endif
+                                                        style="width: 100px; height: 35px; font-size: 15px;">
+
+                                                        {{ $final->submitted_by_mentor ? 'Submitted Review' : 'Review' }}
+                                                    </button>
+                                                </div>
+
+                                                <h3 style="color : rgb(87, 57, 135)">Assignment:
+                                                    {{ $assignment->project }} </h3>
+
+                                                <h5 style = "color: blue"> Final Project Submission(Candidate) </h5>
+                                                <p><strong>Project Link:</strong> <a href="{{ $final->project_link }}"
+                                                        target="_blank">{{ $final->project_link }}</a></p>
+                                                <p><strong>Note :</strong>{{ $final->notes }} </p>
+                                                <p><strong>Submission Date:</strong>
+                                                    {{ \Carbon\Carbon::parse($final->submission)->format('d M Y') }}
+                                                </p>
+
+
+                                                <h5 style = "color: blue"> Project Details (candidate) </h5>
+
+                                                @if ($github)
+                                                    <p><strong>Project Link:</strong> <a
+                                                            href="{{ $github->github_link }}"
+                                                            target="_blank">{{ $github->github_link }}</a></p>
+                                                @endif
+
+                                                <h5>Notes</h5>
+                                                @if ($notes->count())
+                                                    <ul>
+                                                        @foreach ($notes as $note)
+                                                            <li>{{ $note->note }} ({{ $note->created_at }})</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @else
+                                                    <p class="text-muted">No notes submitted yet.</p>
+                                                @endif
+                                                <h5 style = "color: blue"> Project Details (Mentor) </h5>
+                                                <p><strong>Description:</strong> {{ $assignment->project_description }}
+                                                </p>
+                                                <p><strong>Start Date:</strong>
+                                                    {{ \Carbon\Carbon::parse($assignment->start_date)->format('d M Y') }}
+                                                </p>
+                                                <p><strong>End Date:</strong>
+                                                    {{ \Carbon\Carbon::parse($assignment->end_date)->format('d M Y') }}
+                                                </p>
+
+
+                                                @if ($assignment->documentation)
+                                                    <p><strong>Documentation:</strong>
+                                                        <a href="{{ asset('assets/documentation/' . $assignment->documentation) }}"
+                                                            target="_blank">
+                                                            Download
                                                         </a>
-                                                    </td>
-                                                    <td><a href="apps-email.html">{{ $mentor->email }}</a></td>
+                                                    </p>
+                                                @endif
+                                            </div>
 
-                                                    <td>{{ $mentor->phone }}</a></td>
+                                            <!-- Review Button -->
 
-                                                    <?php
-                                                    $department = DB::table('departments')->where('id', $mentor->department)->first();
-                                                    $designation = DB::table('designations')->where('id', $mentor->designation)->first();
-                                                    ?>
-                                                    <td>{{ $department->department_name ?? '-' }}</td>
+                                            <!-- END main content -->
+                                        </div>
 
-                                                    <td>{{ $designation->designation_name ?? '-' }}</td>
-
+                                        <!-- MODAL HERE -->
+                                        <!-- Assignment Modal -->
 
 
-                                                    <td>
-                                                        <span class="status-icon" data-id="{{ $mentor->id }}"
-                                                            data-status="{{ $mentor->status }}"
-                                                            style="cursor:pointer; font-size:24px;">
-                                                            <div
-                                                                class="toggle-switch @if ($mentor->status == 1) active @endif">
-                                                            </div>
-                                                        </span>
+                                    </div>
 
 
-
-                                                        {{-- <option value="danger" data-bg="bg-danger">Declined</option> --}}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <div class="hstack gap-2 justify-content-end">
-
-                                                            {{-- View --}}
-                                                            <a href="{{ route('mentor.view', $mentor->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-eye"></i>
-                                                            </a>
-
-
-
-                                                            {{-- Edit --}}
-                                                            <a href="{{ route('mentor.edit', $mentor->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-edit-3"></i>
-                                                            </a>
-
-
-                                                        </div>
-                                                    </td>
-
-                                                </tr>
-                                            @endforeach
-
-
-
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -903,6 +932,34 @@
     </div>
 
 
+    <!-- Review Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">Project Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="reviewProjectId">
+
+                    <!-- Reviews List -->
+                    <div id="reviewsList" class="mb-3" style="max-height:300px; overflow-y:auto;">
+                        <!-- Reviews loaded here -->
+                    </div>
+
+                    <!-- New Review -->
+                    <textarea id="reviewText" class="form-control" rows="4" placeholder="Write your review..."></textarea>
+                    <div class="mt-2 text-end">
+                        <button class="btn btn-warning" id="submitReview">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!--! BEGIN: Vendors JS !-->
     <script src="assets/vendors/js/vendors.min.js"></script>
 
@@ -916,59 +973,97 @@
 
     <script src="assets/js/theme-customizer-init.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        document.getElementById('statusSelect').addEventListener('change', function() {
-            const status = this.value;
+        $(document).ready(function() {
 
-            // Redirect to same page with query parameter
-            const url = new URL(window.location.href);
-            url.searchParams.set('status', status);
+            // Open modal and set project id
+            $('.openReviewModal').on('click', function() {
+                var projectId = $(this).data('id');
+                $('#reviewProjectId').val(projectId);
 
-            window.location.href = url.toString();
+                // Optional: load existing reviews via AJAX
+                loadReviews(projectId);
+
+                $('#reviewModal').modal('show');
+            });
+
+            // Submit review
+            $('#submitReview').on('click', function() {
+                var projectId = $('#reviewProjectId').val();
+                var reviewText = $('#reviewText').val().trim();
+
+                if (reviewText === '') {
+                    alert('Please write a review before submitting.');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/submit-review', // Your route
+                    method: 'POST',
+                    data: {
+                        project_id: projectId,
+                        review: reviewText,
+                        _token: $('meta[name="csrf-token"]').attr('content') // Laravel CSRF token
+                    },
+                    success: function(response) {
+                        // Clear textarea
+                        $('#reviewText').val('');
+
+                        // Reload reviews
+                        loadReviews(projectId);
+                    },
+                    error: function(xhr) {
+                        alert('Error submitting review. Please try again.');
+                    }
+                });
+            });
+
+            // Function to load reviews dynamically
+            function loadReviews(projectId) {
+                $.ajax({
+                    url: '/get-reviews/' + projectId, // Your route
+                    method: 'GET',
+                    success: function(response) {
+                        $('#reviewsList').html(''); // Clear previous
+                        if (response.reviews.length > 0) {
+                            response.reviews.forEach(function(review) {
+                                $('#reviewsList').append(
+                                    `<div class="card mb-2">
+                                <div class="card-body">
+                                    <strong>${review.user_name}</strong>
+                                    <p>${review.review}</p>
+                                    <small class="text-muted">${review.created_at}</small>
+                                </div>
+                            </div>`
+                                );
+                            });
+                        } else {
+                            $('#reviewsList').html('<p class="text-muted">No reviews yet.</p>');
+                        }
+                    },
+
+                });
+            }
+
         });
     </script>
 
-
-
     <script>
-        $(document).on('click', '.status-icon', function() {
+        $('.openReviewModal').each(function() {
+            var button = $(this);
+            var assignmentId = button.data('id');
 
-            let $icon = $(this).find('.toggle-switch');
-            let id = $(this).data('id');
-            let currentStatus = $(this).data('status');
-            let newStatus = currentStatus == 1 ? 0 : 1;
-
-            $icon.toggleClass('active');
-            $(this).data('status', newStatus);
-
-            $.ajax({
-                url: "{{ route('mentor.status.update') }}",
-                type: "POST",
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    id: id,
-                    status: newStatus
-                },
-                success: function(response) {
-                    showToast(response.message, 'success');
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    showToast('Failed to update status!', 'danger');
-                    // revert toggle if failed
-                    $icon.toggleClass('active');
-                    $(this).data('status', currentStatus);
+            // Example: check submission status (replace with real logic)
+            $.get('/assignment-status/' + assignmentId, function(response) {
+                if (response.is_submitted) {
+                    button.text('Submitted');
+                    button.prop('disabled', true);
                 }
             });
         });
     </script>
-
-
-
-
-
 </body>
 
 </html>

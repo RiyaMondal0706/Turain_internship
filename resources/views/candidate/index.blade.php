@@ -24,10 +24,9 @@
 </head>
 
 <body>
+    @include('layouts.candidate.sidebar')
 
-    @include('layouts.mentor.sidebar')
-
-    @include('layouts.mentor.header')
+    @include('layouts.candidate.header')
 
 
     <!--! ================================================================ !-->
@@ -46,7 +45,18 @@
                         <li class="breadcrumb-item">Dashboard</li>
                     </ul>
                 </div>
+                <div class="page-header-right ms-auto">
+                    <div class="page-header-right-items">
+                        <div class="d-flex d-md-none">
+                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                                <i class="feather-arrow-left me-2"></i>
+                                <span>Back</span>
+                            </a>
+                        </div>
 
+                    </div>
+
+                </div>
             </div>
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
@@ -66,7 +76,7 @@
                                                 <span class="counter">{{ $internCount }}</span>
                                             </div>
                                             <h3 class="fs-13 fw-semibold text-truncate-1-line">
-                                                Total Interns
+                                                Total Mentor
                                             </h3>
                                         </div>
                                     </div>
@@ -79,8 +89,8 @@
                                             Active Interns
                                         </span>
                                         <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark"><span
-                                                    class="counter">{{ $activeIntern }}</span>/<span
+                                            <span class="fs-12 text-dark">{{ $activeIntern }}<span
+                                                    class="counter"></span>/<span
                                                     class="counter">{{ $internCount }}</span></span>
                                         </div>
                                     </div>
@@ -117,11 +127,11 @@
                                 <div class="pt-4">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <span class="fs-12 fw-medium text-muted">
-                                            Ongoing Project
+                                            Completed Project
                                         </span>
                                         <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark"><span
-                                                    class="counter">{{ $submitedCount }}</span>/<span
+                                            <span class="fs-12 text-dark">{{ $submitedCount }}<span
+                                                    class="counter"></span>/<span
                                                     class="counter">{{ $projectCount }}</span></span>
                                         </div>
                                     </div>

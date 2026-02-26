@@ -10,18 +10,18 @@
     <meta name="author" content="theme_ocean">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Turain || Intern list</title>
+    <title>Turain || Candidate list</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
 
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/dataTables.bs5.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/select2-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/dataTables.bs5.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
 
-    <link rel="stylesheet" type="text/css" href="assets/css/theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css">
     <style>
         /* REMOVE blur from background */
         .modal-backdrop {
@@ -62,11 +62,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Mentor</h5>
+                        <h5 class="m-b-10">Candidate</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}"">Home</a></li>
-                        <li class=" breadcrumb-item">Mentor List</li>
+                        <li class=" breadcrumb-item">Candidate List</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -189,8 +189,9 @@
                                                                         for="checkAllCustomer"></label>
                                                                 </div>
                                                             </th>
-                                                            <th>Intern</th>
+                                                            <th>Candidate</th>
                                                             <th>Project</th>
+
                                                             <th>Start Date</th>
                                                             <th>End Date</th>
                                                             <th>Due Date</th>
@@ -223,8 +224,15 @@
 
                                                                 <!-- Intern -->
                                                                 <td>
-                                                                    <div class="fw-bold text-dark">{{ $intern->name }}
-                                                                    </div>
+                                                                    <a href="{{ route('intern.profile', $intern->id) }}"
+                                                                        class="text-decoration-none">
+                                                                        <div class="p-2 rounded border hover-shadow">
+                                                                            <div class="fw-semibold text-dark">
+                                                                                {{ $intern->name }}</div>
+                                                                            <small class="text-primary">Open
+                                                                                profile</small>
+                                                                        </div>
+                                                                    </a>
                                                                 </td>
 
                                                                 <!-- Project -->
@@ -272,42 +280,50 @@
                                                                                 false,
                                                                             );
 
-                                                                            if ($daysLeft < 0) {
-                                                                                $color = 'bg-danger text-white';
-                                                                                $status = 'Overdue';
-                                                                            } elseif ($daysLeft <= 3) {
-                                                                                $color = 'bg-danger text-white';
-                                                                                $status =
-                                                                                    $daysLeft .
-                                                                                    ' day' .
-                                                                                    ($daysLeft == 1 ? '' : 's') .
-                                                                                    ' left';
-                                                                            } elseif ($daysLeft <= 7) {
-                                                                                $color = 'bg-warning text-dark';
-                                                                                $status =
-                                                                                    $daysLeft .
-                                                                                    ' day' .
-                                                                                    ($daysLeft == 1 ? '' : 's') .
-                                                                                    ' left';
+                                                                            if ($item->status == 0) {
+                                                                                // Status 0 = submitted
+                                                                                $color =
+                                                                                    'bg-secondary text-white opacity-75';
+                                                                                $statusText = 'Submitted';
                                                                             } else {
-                                                                                $color = 'bg-success text-white';
-                                                                                $status =
-                                                                                    $daysLeft .
-                                                                                    ' day' .
-                                                                                    ($daysLeft == 1 ? '' : 's') .
-                                                                                    ' left';
+                                                                                // Status not 0 = normal due date calculation
+                                                                                if ($daysLeft < 0) {
+                                                                                    $color = 'bg-danger text-white';
+                                                                                    $statusText = 'Overdue';
+                                                                                } elseif ($daysLeft <= 3) {
+                                                                                    $color = 'bg-danger text-white';
+                                                                                    $statusText =
+                                                                                        $daysLeft .
+                                                                                        ' day' .
+                                                                                        ($daysLeft == 1 ? '' : 's') .
+                                                                                        ' left';
+                                                                                } elseif ($daysLeft <= 7) {
+                                                                                    $color = 'bg-warning text-dark';
+                                                                                    $statusText =
+                                                                                        $daysLeft .
+                                                                                        ' day' .
+                                                                                        ($daysLeft == 1 ? '' : 's') .
+                                                                                        ' left';
+                                                                                } else {
+                                                                                    $color = 'bg-success text-white';
+                                                                                    $statusText =
+                                                                                        $daysLeft .
+                                                                                        ' day' .
+                                                                                        ($daysLeft == 1 ? '' : 's') .
+                                                                                        ' left';
+                                                                                }
                                                                             }
                                                                         @endphp
+
                                                                         <span
                                                                             class="badge rounded-pill {{ $color }} mb-1 px-3 py-2 d-inline-block text-center">
-                                                                            {{ $end->format('d M Y') }}<br>
-                                                                            <small>({{ $status }})</small>
+                                                                            {{ $item->status == 0 ? 'Submitted' : $end->format('d M Y') }}<br>
+                                                                            <small>{{ $item->status == 0 ? '' : '(' . $statusText . ')' }}</small>
                                                                         </span><br>
                                                                     @empty
                                                                         <span class="text-muted">N/A</span>
                                                                     @endforelse
                                                                 </td>
-
                                                                 <!-- Actions -->
                                                                 <td class="text-end">
                                                                     <a href="{{ route('assignment.view', $assign->id) }}"

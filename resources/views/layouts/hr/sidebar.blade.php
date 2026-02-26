@@ -21,13 +21,14 @@
                       </a>
                   </li>
                   <li class="nxl-item">
-                      <a class="nxl-link" href="{{ route('hr.intern.list') }}">
+                      <a class="nxl-link" href="{{ route('hr.internship.list') }}">
                           <span class="nxl-micon">
                               <i class="feather feather-users"></i>
                           </span>
-                          <span class="nxl-text">Intern List</span>
+                          <span class="nxl-text">Candidate List</span>
                       </a>
                   </li>
+
 
                   <li class="nxl-item">
                       <a class="nxl-link" href="{{ route('hr.mentor.list') }}">
@@ -48,7 +49,22 @@
                       </a>
                   </li>
 
-
+                  <li class="nxl-item">
+                      <a class="nxl-link" href="{{ route('hr.department.list') }}">
+                          <span class="nxl-micon">
+                              <i class="feather feather-layers"></i>
+                          </span>
+                          <span class="nxl-text">Department</span>
+                      </a>
+                  </li>
+                  <li class="nxl-item">
+                      <a class="nxl-link" href="{{ route('hr.completed_project.list') }}">
+                          <span class="nxl-micon">
+                              <i class="bi bi-clipboard"></i>
+                          </span>
+                          <span class="nxl-text">Completed Projeect</span>
+                      </a>
+                  </li>
 
                   {{-- <li class="nxl-item nxl-hasmenu">
                       <a href="javascript:void(0);" class="nxl-link">

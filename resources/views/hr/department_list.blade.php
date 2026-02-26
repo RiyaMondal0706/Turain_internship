@@ -10,9 +10,9 @@
     <meta name="author" content="theme_ocean">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Turain || Mentor List</title>
+    <title>Turain || Department List</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
 
@@ -22,39 +22,99 @@
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
 
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css">
+
     <style>
-        .toggle-switch {
-            width: 50px;
-            height: 25px;
-            background-color: #e0e0e0;
-            border-radius: 50px;
-            position: relative;
-            transition: 0.3s;
+        /* Container styling */
+        .dept-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e9ebfa !important;
         }
 
-        .toggle-switch.active {
-            background-color: #28a745;
-            /* green for active */
+        .dept-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+            border-color: #6259ca !important;
+            /* Change to your primary color */
         }
 
-        .toggle-switch::after {
-            content: '';
-            width: 21px;
-            height: 21px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: 0.3s;
+        /* Icon box styling */
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: #f0f1ff;
         }
 
-        .toggle-switch.active::after {
-            left: 27px;
-            /* moves to right when active */
+        /* Designation Chips */
+        .designation-chip {
+            background-color: #0d6efd;
+            /* Bootstrap Primary Blue */
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: default;
+            white-space: nowrap;
+        }
+
+
+        .designation-chip:hover {
+            background-color: #6259ca;
+            color: #fff;
+            border-color: #6259ca;
+        }
+
+        /* Rounded Action Buttons */
+        .btn-action {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            color: #0dcaf0;
+            background: rgba(13, 202, 240, 0.1);
+            border: none;
+        }
+
+        .btn-edit:hover {
+            background: #0dcaf0;
+            color: #fff;
+        }
+
+        .btn-delete {
+            color: #dc3545;
+            background: rgba(220, 53, 69, 0.1);
+            border: none;
+        }
+
+        .btn-delete:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .dept-card {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 15px;
+            }
+
+            .dept-info {
+                min-width: 100% !important;
+            }
         }
     </style>
-
 
 </head>
 
@@ -75,11 +135,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Mentor</h5>
+                        <h5 class="m-b-10">Department</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}"">Home</a></li>
-                        <li class=" breadcrumb-item">Mentor List</li>
+                        <li class=" breadcrumb-item">Department List</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -97,10 +157,15 @@
 
                             </div>
 
-                            <a href="{{ route('hr.mentor.create') }}" class="btn btn-primary">
-                                <i class="feather feather-user-plus me-2"></i>
-                                <span>Create Mentor</span>
+                            <a href="{{ route('hr.department.create') }}" class="btn btn-primary">
+                                <i class="feather feather-plus me-2"></i>
+                                <span>Create Department</span>
                             </a>
+                            <a href="{{ route('hr.designation.create') }}" class="btn btn-primary">
+                                <i class="feather feather-plus me-2"></i>
+                                <span>Create Designation</span>
+                            </a>
+
 
                         </div>
                     </div>
@@ -120,111 +185,63 @@
                         <div class="card stretch stretch-full">
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover" id="customerList">
-                                        <thead>
-                                            <tr>
-                                                <th class="wd-30">
-                                                    <div class="btn-group mb-1">
-                                                        <div class="custom-control custom-checkbox ms-1">
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                id="checkAllCustomer">
-                                                            <label class="custom-control-label"
-                                                                for="checkAllCustomer"></label>
-                                                        </div>
-                                                    </div>
-                                                </th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>Department</th>
-                                                <th>Designation</th>
-                                                <th>Status</th>
-                                                <th class="text-end">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($mentor as $mentor)
-                                                <tr class="single-item">
-                                                    <td>
-                                                        <div class="item-checkbox ms-1">
-                                                            <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox"
-                                                                    class="custom-control-input checkbox"
-                                                                    id="checkBox_1">
-                                                                <label class="custom-control-label"
-                                                                    for="checkBox_1"></label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <a href="customers-view.html" class="hstack gap-3">
-                                                            <div class="avatar-image avatar-md">
-                                                                <img src="{{ asset('assets/images/mentor/' . $mentor->image) }}"
-                                                                    alt="Intern Image" class="img-fluid">
+                                    <div class="card-body p-4">
 
-                                                            </div>
-                                                            <div>
-                                                                <span class="text-truncate-1-line">{{ $mentor->name }}
-                                                                </span>
-                                                            </div>
-                                                        </a>
-                                                    </td>
-                                                    <td><a href="apps-email.html">{{ $mentor->email }}</a></td>
-
-                                                    <td>{{ $mentor->phone }}</a></td>
-
-                                                    <?php
-                                                    $department = DB::table('departments')->where('id', $mentor->department)->first();
-                                                    $designation = DB::table('designations')->where('id', $mentor->designation)->first();
-                                                    ?>
-                                                    <td>{{ $department->department_name ?? '-' }}</td>
-
-                                                    <td>{{ $designation->designation_name ?? '-' }}</td>
-
-
-
-                                                    <td>
-                                                        <span class="status-icon" data-id="{{ $mentor->id }}"
-                                                            data-status="{{ $mentor->status }}"
-                                                            style="cursor:pointer; font-size:24px;">
-                                                            <div
-                                                                class="toggle-switch @if ($mentor->status == 1) active @endif">
-                                                            </div>
-                                                        </span>
-
-
-
-                                                        {{-- <option value="danger" data-bg="bg-danger">Declined</option> --}}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <div class="hstack gap-2 justify-content-end">
-
-                                                            {{-- View --}}
-                                                            <a href="{{ route('mentor.view', $mentor->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-eye"></i>
-                                                            </a>
-
-
-
-                                                            {{-- Edit --}}
-                                                            <a href="{{ route('mentor.edit', $mentor->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-edit-3"></i>
-                                                            </a>
-
-
-                                                        </div>
-                                                    </td>
-
+                                        <table class="table table-bordered align-middle">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th style="width: 25%">Department</th>
+                                                    <th style="width: 50%">Designations</th>
+                                                    <th style="width: 25%" class="text-center">Actions</th>
                                                 </tr>
-                                            @endforeach
+                                            </thead>
+
+                                            <tbody>
+                                                @foreach ($departments as $department)
+                                                    <tr>
+
+                                                        <!-- Department -->
+                                                        <td class="fw-semibold">
+                                                            <i class="feather feather-layers text-primary me-2"></i>
+                                                            {{ $department->department_name }}
+                                                        </td>
+
+                                                        <!-- Designations -->
+                                                        <td>
+                                                            <div class="d-flex flex-wrap gap-2">
+                                                                @php
+                                                                    $designations = DB::table('designations')
+                                                                        ->where('department_id', $department->id)
+                                                                        ->get();
+                                                                @endphp
+
+                                                                @foreach ($designations as $designation)
+                                                                    <span class="designation-chip">
+                                                                        {{ $designation->designation_name }}
+                                                                    </span>
+                                                                @endforeach
+                                                            </div>
+                                                        </td>
+
+                                                        <!-- Actions -->
+                                                        <td class="text-center">
+                                                            <div class="d-flex justify-content-center gap-2">
+                                                                <a href="{{ route('hr.department.edit', $department->id) }}"
+                                                                    class="btn btn-sm btn-outline-info"
+                                                                    title="Edit Department">
+                                                                    <i class="feather feather-edit"></i>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+
+                                    </div>
 
 
-
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -915,58 +932,6 @@
     <script src="assets/js/customers-init.min.js"></script>
 
     <script src="assets/js/theme-customizer-init.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-
-    <script>
-        document.getElementById('statusSelect').addEventListener('change', function() {
-            const status = this.value;
-
-            // Redirect to same page with query parameter
-            const url = new URL(window.location.href);
-            url.searchParams.set('status', status);
-
-            window.location.href = url.toString();
-        });
-    </script>
-
-
-
-    <script>
-        $(document).on('click', '.status-icon', function() {
-
-            let $icon = $(this).find('.toggle-switch');
-            let id = $(this).data('id');
-            let currentStatus = $(this).data('status');
-            let newStatus = currentStatus == 1 ? 0 : 1;
-
-            $icon.toggleClass('active');
-            $(this).data('status', newStatus);
-
-            $.ajax({
-                url: "{{ route('mentor.status.update') }}",
-                type: "POST",
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    id: id,
-                    status: newStatus
-                },
-                success: function(response) {
-                    showToast(response.message, 'success');
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    showToast('Failed to update status!', 'danger');
-                    // revert toggle if failed
-                    $icon.toggleClass('active');
-                    $(this).data('status', currentStatus);
-                }
-            });
-        });
-    </script>
-
-
-
 
 
 </body>

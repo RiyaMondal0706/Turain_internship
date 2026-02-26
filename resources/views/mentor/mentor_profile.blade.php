@@ -9,25 +9,25 @@
     <meta name="keyword" content="" />
     <meta name="author" content="flexilecode" />
 
-    <title>Turain || Dashboard</title>
+    <title>Turain || mentor View </title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/assets/images/favicon.ico') }}">
 
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/bootstrap.min.css') }}" />
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/vendors.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/daterangepicker.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/css/vendors.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/css/daterangepicker.min.css') }}" />
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/theme.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/theme.min.css') }}" />
 
 </head>
 
 <body>
 
-    @include('layouts.mentor.sidebar')
+    @include('layouts.hr.sidebar')
 
-    @include('layouts.mentor.header')
+    @include('layouts.hr.header')
 
 
     <!--! ================================================================ !-->
@@ -39,105 +39,144 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Dashboard</h5>
+                        <h5 class="m-b-10">mentor</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">Dashboard</li>
+                        <li class="breadcrumb-item">mentor View</li>
                     </ul>
                 </div>
-
+                <div class="page-header-right ms-auto">
+                    <div class="page-header-right-items">
+                        <div class="d-flex d-md-none">
+                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                                <i class="feather-arrow-left me-2"></i>
+                                <span>Back</span>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand successAlertMessage">
+                                <i class="feather-star"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand">
+                                <i class="feather-eye me-2"></i>
+                                <span>Follow</span>
+                            </a>
+                            <a href="customers-create.html" class="btn btn-primary">
+                                <i class="feather-plus me-2"></i>
+                                <span>Create Customer</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="d-md-none d-flex align-items-center">
+                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                            <i class="feather-align-right fs-20"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
             <div class="main-content">
                 <div class="row">
-                    <!-- [Invoices Awaiting Payment] start -->
-                    <div class="col-xxl-3 col-md-6">
+                    <div class="col-xxl-2 col-xl-4">
                         <div class="card stretch stretch-full">
                             <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between mb-4">
-                                    <div class="d-flex gap-4 align-items-center">
-                                        <div class="avatar-text avatar-lg bg-gray-200">
-                                            <i class="feather-users"></i>
+                                <div class="mb-4 text-center">
+                                    <div class="wd-150 ht-150 mx-auto mb-3 position-relative">
+                                        <div class="avatar-image wd-150 ht-150 border border-5 border-gray-3">
+                                            <img src="{{ asset('assets/images/mentor/' . $mentor->image) }}"
+                                                alt="" class="img-fluid">
                                         </div>
-                                        <div>
-                                            <div class="fs-4 fw-bold text-dark">
-                                                <span class="counter">{{ $internCount }}</span>
-                                            </div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">
-                                                Total Interns
-                                            </h3>
+                                        <div class="wd-10 ht-10 text-success rounded-circle position-absolute translate-middle"
+                                            style="top: 76%; right: 10px">
+                                            <i class="bi bi-patch-check-fill"></i>
                                         </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <a href="javascript:void(0);"
+                                            class="fs-14 fw-bold d-block">{{ $mentor->name }}</a>
+                                        <a href="javascript:void(0);" class="fs-12 fw-normal text-muted d-block">
+                                            {{ $mentor->email }}</a>
                                     </div>
 
                                 </div>
+                                <ul class="list-unstyled mb-4">
+                                    <li class="hstack justify-content-between mb-4">
+                                        <span class="text-muted fw-medium hstack gap-3"><i
+                                                class="feather-map-pin"></i>Location</span>
+                                        <a href="javascript:void(0);" class="float-end">{{ $mentor->address }}</a>
+                                    </li>
+                                    <li class="hstack justify-content-between mb-4">
+                                        <span class="text-muted fw-medium hstack gap-3"><i
+                                                class="feather-phone"></i>Phone</span>
+                                        <a href="javascript:void(0);" class="float-end">{{ $mentor->phone }}</a>
+                                    </li>
+                                    <li class="hstack justify-content-between mb-0">
+                                        <span class="text-muted fw-medium hstack gap-3"><i
+                                                class="feather-mail"></i>Email</span>
+                                        <a href="javascript:void(0);" class="float-end">{{ $mentor->email }}</a>
+                                    </li>
 
-                                <div class="pt-4">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <span class="fs-12 fw-medium text-muted">
-                                            Active Interns
-                                        </span>
-                                        <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark"><span
-                                                    class="counter">{{ $activeIntern }}</span>/<span
-                                                    class="counter">{{ $internCount }}</span></span>
+                                </ul>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-xxl-8 col-xl-8">
+                        <div class="card border-top-0">
+                            <div class="card-header p-0">
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs flex-wrap w-100 text-center customers-nav-tabs" id="myTab"
+                                    role="tablist">
+                                    <li class="nav-item flex-fill border-top" role="presentation">
+                                        <a href="javascript:void(0);" class="nav-link active" data-bs-toggle="tab"
+                                            data-bs-target="#overviewTab" role="tab">Profile</a>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active p-4" id="overviewTab" role="tabpanel">
+
+                                    <div class="profile-details mb-5">
+                                        <div class="mb-4 d-flex align-items-center justify-content-between">
+                                            <h5 class="fw-bold mb-0">Profile Details:</h5>
+
                                         </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Full Name:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $mentor->name }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Mobile Number:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $mentor->phone }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Email Address:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $mentor->email }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Location:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $mentor->address }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Address Details:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $mentor->address }}</div>
+                                        </div>
+
                                     </div>
 
-                                    <div class="progress mt-2 ht-3">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%">
-                                        </div>
-                                    </div>
+
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-xxl-3 col-md-6">
-                        <div class="card stretch stretch-full">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between mb-4">
-                                    <div class="d-flex gap-4 align-items-center">
-                                        <div class="avatar-text avatar-lg bg-gray-200">
-                                            <i class="feather-users"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fs-4 fw-bold text-dark">
-                                                <span class="counter">{{ $projectCount }}</span>
-                                            </div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">
-                                                Total Project
-                                            </h3>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="pt-4">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <span class="fs-12 fw-medium text-muted">
-                                            Ongoing Project
-                                        </span>
-                                        <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark"><span
-                                                    class="counter">{{ $submitedCount }}</span>/<span
-                                                    class="counter">{{ $projectCount }}</span></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="progress mt-2 ht-3">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <!--! END: [Team Progress] !-->
                 </div>
             </div>
             <!-- [ Main Content ] end -->

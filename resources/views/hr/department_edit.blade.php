@@ -10,9 +10,9 @@
     <meta name="author" content="theme_ocean">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Turain || Mentor List</title>
+    <title>Turain || Department List</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico">
 
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
 
@@ -20,42 +20,38 @@
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/dataTables.bs5.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
-
+    <link rel="stylesheet" href="https://cdn.mobiscroll.com/5.8.3/css/mobiscroll.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"> --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
     <style>
-        .toggle-switch {
-            width: 50px;
-            height: 25px;
-            background-color: #e0e0e0;
-            border-radius: 50px;
-            position: relative;
-            transition: 0.3s;
+        .selected-box {
+            min-height: 46px;
+            border: 1px dashed #cfd4da;
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #f8f9fa;
         }
 
-        .toggle-switch.active {
-            background-color: #28a745;
-            /* green for active */
+        .selected-tag {
+            background: #0d6efd;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .toggle-switch::after {
-            content: '';
-            width: 21px;
-            height: 21px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: 0.3s;
-        }
-
-        .toggle-switch.active::after {
-            left: 27px;
-            /* moves to right when active */
+        .selected-tag span {
+            cursor: pointer;
+            font-weight: bold;
         }
     </style>
-
-
 </head>
 
 <body>
@@ -66,20 +62,20 @@
     @include('layouts.hr.header')
 
 
-    <!--! ================================================================ !-->
-    <!--! [Start] Main Content !-->
-    <!--! ================================================================ !-->
+
+
+
     <main class="nxl-container">
         <div class="nxl-content">
             <!-- [ page-header ] start -->
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Mentor</h5>
+                        <h5 class="m-b-10">Intern</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}"">Home</a></li>
-                        <li class=" breadcrumb-item">Mentor List</li>
+                        <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item">Mentor Create</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -90,19 +86,7 @@
                                 <span>Back</span>
                             </a>
                         </div>
-                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
 
-                            <div class="dropdown">
-
-
-                            </div>
-
-                            <a href="{{ route('hr.mentor.create') }}" class="btn btn-primary">
-                                <i class="feather feather-user-plus me-2"></i>
-                                <span>Create Mentor</span>
-                            </a>
-
-                        </div>
                     </div>
                     <div class="d-md-none d-flex align-items-center">
                         <a href="javascript:void(0)" class="page-header-right-open-toggle">
@@ -111,146 +95,91 @@
                     </div>
                 </div>
             </div>
-
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
             <div class="main-content">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card stretch stretch-full">
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-hover" id="customerList">
-                                        <thead>
-                                            <tr>
-                                                <th class="wd-30">
-                                                    <div class="btn-group mb-1">
-                                                        <div class="custom-control custom-checkbox ms-1">
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                id="checkAllCustomer">
-                                                            <label class="custom-control-label"
-                                                                for="checkAllCustomer"></label>
-                                                        </div>
-                                                    </div>
-                                                </th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>Department</th>
-                                                <th>Designation</th>
-                                                <th>Status</th>
-                                                <th class="text-end">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($mentor as $mentor)
-                                                <tr class="single-item">
-                                                    <td>
-                                                        <div class="item-checkbox ms-1">
-                                                            <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox"
-                                                                    class="custom-control-input checkbox"
-                                                                    id="checkBox_1">
-                                                                <label class="custom-control-label"
-                                                                    for="checkBox_1"></label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <a href="customers-view.html" class="hstack gap-3">
-                                                            <div class="avatar-image avatar-md">
-                                                                <img src="{{ asset('assets/images/mentor/' . $mentor->image) }}"
-                                                                    alt="Intern Image" class="img-fluid">
+                        <div class="card border-top-0">
 
-                                                            </div>
-                                                            <div>
-                                                                <span class="text-truncate-1-line">{{ $mentor->name }}
-                                                                </span>
-                                                            </div>
-                                                        </a>
-                                                    </td>
-                                                    <td><a href="apps-email.html">{{ $mentor->email }}</a></td>
-
-                                                    <td>{{ $mentor->phone }}</a></td>
-
-                                                    <?php
-                                                    $department = DB::table('departments')->where('id', $mentor->department)->first();
-                                                    $designation = DB::table('designations')->where('id', $mentor->designation)->first();
-                                                    ?>
-                                                    <td>{{ $department->department_name ?? '-' }}</td>
-
-                                                    <td>{{ $designation->designation_name ?? '-' }}</td>
-
-
-
-                                                    <td>
-                                                        <span class="status-icon" data-id="{{ $mentor->id }}"
-                                                            data-status="{{ $mentor->status }}"
-                                                            style="cursor:pointer; font-size:24px;">
-                                                            <div
-                                                                class="toggle-switch @if ($mentor->status == 1) active @endif">
-                                                            </div>
-                                                        </span>
-
-
-
-                                                        {{-- <option value="danger" data-bg="bg-danger">Declined</option> --}}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <div class="hstack gap-2 justify-content-end">
-
-                                                            {{-- View --}}
-                                                            <a href="{{ route('mentor.view', $mentor->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-eye"></i>
-                                                            </a>
-
-
-
-                                                            {{-- Edit --}}
-                                                            <a href="{{ route('mentor.edit', $mentor->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-edit-3"></i>
-                                                            </a>
-
-
-                                                        </div>
-                                                    </td>
-
-                                                </tr>
-                                            @endforeach
-
-
-
-                                        </tbody>
-                                    </table>
+                            <div class="card shadow-sm border-0">
+                                <div class="card-header bg-white py-3">
+                                    <h5 class="card-title mb-0 fw-bold text-dark">
+                                        <i class="feather feather-plus-circle text-primary me-2"></i> Edit Department
+                                    </h5>
                                 </div>
+                                <form method="POST" action="{{ route('department.update', $department->id) }}">
+                                    @csrf
+                                    @method('PUT')
+
+                                    <div class="card-body p-4">
+                                        <div class="container">
+
+                                            <h4 class="mb-4 fw-semibold text-dark">Edit Department</h4>
+
+                                            <!-- Department -->
+                                            <div class="mb-4">
+                                                <label class="form-label fw-medium">Department</label>
+                                                <select class="form-select" name="department_id" required>
+                                                    @foreach ($departments as $dept)
+                                                        <option value="{{ $dept->id }}"
+                                                            {{ $dept->id == $department->id ? 'selected' : '' }}>
+                                                            {{ $dept->department_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <!-- Selected Designations -->
+                                            <div class="mb-3">
+                                                <label class="form-label fw-medium">Selected Designations</label>
+                                                <div id="selected-designations" class="selected-box">
+                                                    @foreach ($designations as $designation)
+                                                        @if ($designation->status == 1)
+                                                            <div class="selected-tag" data-id="{{ $designation->id }}">
+                                                                {{ $designation->designation_name }}
+                                                                <span class="remove">&times;</span>
+                                                            </div>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
+                                            <!-- Available Designations -->
+                                            <div class="mb-4">
+                                                <label class="form-label fw-medium">Designations</label>
+                                                <select id="designation_select" class="form-select">
+                                                    <option value="">Select designation</option>
+                                                    @foreach ($designations as $designation)
+                                                        @if ($designation->status == 0)
+                                                            <option value="{{ $designation->department_id }}">
+                                                                {{ $designation->designation_name }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <!-- Hidden inputs -->
+                                            <div id="hidden-inputs"></div>
+
+                                            <div class="text-end mt-4">
+                                                <button type="submit" class="btn btn-primary px-4">
+                                                    Update All
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- [ Main Content ] end -->
         </div>
-        <!-- [ Footer ] start -->
-        <footer class="footer">
-            <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
-                <span>Copyright ©</span>
-                <script>
-                    document.write(new Date().getFullYear());
-                </script>
-            </p>
-            <p><span>By: <a target="_blank" href="https://wrapbootstrap.com/user/theme_ocean"
-                        target="_blank">theme_ocean</a></span> • <span>Distributed by: <a target="_blank"
-                        href="https://themewagon.com" target="_blank">ThemeWagon</a></span></p>
-            <div class="d-flex align-items-center gap-4">
-                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
-                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
-                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
-            </div>
-        </footer>
-        <!-- [ Footer ] end -->
     </main>
 
     <!--! ================================================================ !-->
@@ -915,59 +844,82 @@
     <script src="assets/js/customers-init.min.js"></script>
 
     <script src="assets/js/theme-customizer-init.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    {{-- <script>
+        $(document).on('click', '.delete-designation', function(e) {
+            e.preventDefault(); // Prevent any default form submit
 
-    <script>
-        document.getElementById('statusSelect').addEventListener('change', function() {
-            const status = this.value;
+            let designationId = $(this).data('id');
 
-            // Redirect to same page with query parameter
-            const url = new URL(window.location.href);
-            url.searchParams.set('status', status);
-
-            window.location.href = url.toString();
-        });
-    </script>
-
-
-
-    <script>
-        $(document).on('click', '.status-icon', function() {
-
-            let $icon = $(this).find('.toggle-switch');
-            let id = $(this).data('id');
-            let currentStatus = $(this).data('status');
-            let newStatus = currentStatus == 1 ? 0 : 1;
-
-            $icon.toggleClass('active');
-            $(this).data('status', newStatus);
+            if (!confirm('Are you sure you want to delete this designation?')) return;
 
             $.ajax({
-                url: "{{ route('mentor.status.update') }}",
-                type: "POST",
+                url: '/designation/' + designationId,
+                type: 'DELETE',
                 data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    id: id,
-                    status: newStatus
+                    _token: '{{ csrf_token() }}'
                 },
-                success: function(response) {
-                    showToast(response.message, 'success');
+                success: function(res) {
+                    // Remove the row from the UI
+                    $('#row-' + designationId).remove();
+                    alert('Designation deleted successfully');
                 },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    showToast('Failed to update status!', 'danger');
-                    // revert toggle if failed
-                    $icon.toggleClass('active');
-                    $(this).data('status', currentStatus);
+                error: function() {
+                    alert('Failed to delete designation');
                 }
             });
         });
+    </script> --}}
+    <script>
+        $(document).ready(function() {
+
+            // Add designation
+            $('#designation_select').on('change', function() {
+                const id = $(this).val();
+                const text = $(this).find(':selected').text();
+
+                if (!id) return;
+
+                $('#selected-designations').append(`
+            <div class="selected-tag" data-id="${id}">
+                ${text}
+                <span class="remove">&times;</span>
+            </div>
+        `);
+
+                $(this).find(':selected').remove();
+                $(this).val('');
+            });
+
+            // Remove designation
+            $(document).on('click', '.remove', function() {
+                const tag = $(this).closest('.selected-tag');
+                const id = tag.data('id');
+                const text = tag.text().replace('×', '').trim();
+
+                $('#designation_select').append(
+                    `<option value="${id}">${text}</option>`
+                );
+
+                tag.remove();
+            });
+
+            // Before submit → build hidden inputs
+            $('form').on('submit', function() {
+                $('#hidden-inputs').empty();
+
+                $('#selected-designations .selected-tag').each(function() {
+                    const id = $(this).data('id');
+                    $('#hidden-inputs').append(
+                        `<input type="hidden" name="selected_designations[]" value="${id}">`
+                    );
+                });
+            });
+
+        });
     </script>
-
-
-
-
 
 </body>
 

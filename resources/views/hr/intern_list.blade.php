@@ -10,19 +10,53 @@
     <meta name="author" content="theme_ocean">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
     <title>Turain || Intern list</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico">
 
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
 
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/dataTables.bs5.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendors/css/select2-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/dataTables.bs5.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
 
-    <link rel="stylesheet" type="text/css" href="assets/css/theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
+    <style>
+        .toggle-switch {
+            width: 50px;
+            height: 25px;
+            background-color: #e0e0e0;
+            border-radius: 50px;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active {
+            background-color: #28a745;
+            /* green for active */
+        }
+
+        .toggle-switch::after {
+            content: '';
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 27px;
+            /* moves to right when active */
+        }
+    </style>
 </head>
 
 <body>
@@ -40,11 +74,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Intern</h5>
+                        <h5 class="m-b-10">Candidate</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}"">Home</a></li>
-                        <li class="breadcrumb-item">Intern List</li>
+                        <li class="breadcrumb-item">Candidate List</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -56,82 +90,15 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne">
-                                <i class="feather-bar-chart"></i>
-                            </a>
+
                             <div class="dropdown">
-                                <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10"
-                                    data-bs-auto-close="outside">
-                                    <i class="feather-filter"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-eye me-3"></i>
-                                        <span>All</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-users me-3"></i>
-                                        <span>Group</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-flag me-3"></i>
-                                        <span>Country</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-dollar-sign me-3"></i>
-                                        <span>Invoice</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-briefcase me-3"></i>
-                                        <span>Project</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-user-check me-3"></i>
-                                        <span>Active</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-user-minus me-3"></i>
-                                        <span>Inactive</span>
-                                    </a>
-                                </div>
+
+
                             </div>
-                            <div class="dropdown">
-                                <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10"
-                                    data-bs-auto-close="outside">
-                                    <i class="feather-paperclip"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-pdf me-3"></i>
-                                        <span>PDF</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-csv me-3"></i>
-                                        <span>CSV</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-xml me-3"></i>
-                                        <span>XML</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-txt me-3"></i>
-                                        <span>Text</span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-filetype-exe me-3"></i>
-                                        <span>Excel</span>
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="bi bi-printer me-3"></i>
-                                        <span>Print</span>
-                                    </a>
-                                </div>
-                            </div>
+
                             <a href="{{ route('hr.intern.create') }}" class="btn btn-primary">
                                 <i class="feather feather-plus me-2"></i>
-                                <span>Create Intern</span>
+                                <span>Create Candidate</span>
                             </a>
 
                         </div>
@@ -165,11 +132,11 @@
                                                         </div>
                                                     </div>
                                                 </th>
-                                                <th>Intern</th>
+                                                <th>Candidate</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
-                                                <th>Start Date</th>
-                                                <th>End Date</th>
+                                                <th>Department</th>
+                                                <th>Designation</th>
                                                 <th>Status</th>
                                                 <th class="text-end">Actions</th>
                                             </tr>
@@ -189,7 +156,8 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <a href="customers-view.html" class="hstack gap-3">
+                                                        <a href="{{ route('intern.view', $intern->id) }}"
+                                                            class="hstack gap-3">
                                                             <div class="avatar-image avatar-md">
                                                                 <img src="{{ asset('assets/images/intern/' . $intern->image) }}"
                                                                     alt="Intern Image" class="img-fluid">
@@ -201,22 +169,29 @@
                                                             </div>
                                                         </a>
                                                     </td>
-                                                    <td><a href="apps-email.html">{{ $intern->email }}</a></td>
+                                                    <td><a
+                                                            href="https://mail.google.com/mail/u/0/?ogbl#inbox?compose=new">{{ $intern->email }}</a>
+                                                    </td>
 
                                                     <td>{{ $intern->phone }}</a></td>
-                                                    <td>{{ $intern->entry_date }}</td>
-                                                    <td>{{ $intern->end_date }}</td>
-                                                    <td>
-                                                        <select class="form-select status-select"
-                                                            data-id="{{ $intern->id }}">
-                                                            <option value="1"
-                                                                {{ $intern->status == 1 ? 'selected' : '' }}>Active
-                                                            </option>
-                                                            <option value="0"
-                                                                {{ $intern->status == 0 ? 'selected' : '' }}>Inactive
-                                                            </option>
-                                                        </select>
+                                                    <?php
+                                                    $department = DB::table('departments')->where('id', $intern->department)->first();
+                                                    $designation = DB::table('designations')->where('id', $intern->designation)->first();
+                                                    ?>
+                                                    <td>{{ $department->department_name ?? '-' }}</td>
 
+                                                    <td>{{ $designation->designation_name ?? '-' }}</td>
+
+
+
+                                                    <td>
+                                                        <span class="status-icon" data-id="{{ $intern->id }}"
+                                                            data-status="{{ $intern->status }}"
+                                                            style="cursor:pointer; font-size:24px;">
+                                                            <div
+                                                                class="toggle-switch @if ($intern->status == 1) active @endif">
+                                                            </div>
+                                                        </span>
 
 
                                                         {{-- <option value="danger" data-bg="bg-danger">Declined</option> --}}
@@ -929,17 +904,18 @@
 
 
     <!--! BEGIN: Vendors JS !-->
-    <script src="assets/vendors/js/vendors.min.js"></script>
+    <script src="/assets/vendors/js/vendors.min.js"></script>
 
-    <script src="assets/vendors/js/dataTables.min.js"></script>
-    <script src="assets/vendors/js/dataTables.bs5.min.js"></script>
-    <script src="assets/vendors/js/select2.min.js"></script>
-    <script src="assets/vendors/js/select2-active.min.js"></script>
+    <script src="/assets/vendors/js/dataTables.min.js"></script>
+    <script src="/assets/vendors/js/dataTables.bs5.min.js"></script>
+    <script src="/assets/vendors/js/select2.min.js"></script>
+    <script src="/assets/vendors/js/select2-active.min.js"></script>
 
-    <script src="assets/js/common-init.min.js"></script>
-    <script src="assets/js/customers-init.min.js"></script>
+    <script src="/assets/js/common-init.min.js"></script>
+    <script src="/assets/js/customers-init.min.js"></script>
 
-    <script src="assets/js/theme-customizer-init.min.js"></script>
+    <script src="/assets/js/theme-customizer-init.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 
 
@@ -947,7 +923,6 @@
         document.getElementById('statusSelect').addEventListener('change', function() {
             const status = this.value;
 
-            // Redirect to same page with query parameter
             const url = new URL(window.location.href);
             url.searchParams.set('status', status);
 
@@ -956,27 +931,30 @@
     </script>
 
 
-
     <script>
-        $(document).on('change', '.status-select', function() {
-
-            let status = $(this).val(); // 1 or 0
-            let id = $(this).data('id');
+        $(document).on('click', '.status-icon', function() {
+            let el = $(this);
+            let currentStatus = el.data('status');
+            let newStatus = currentStatus == 1 ? 0 : 1; // toggle
+            let id = el.data('id');
 
             $.ajax({
                 url: "{{ route('intern.status.update') }}",
-                type: "POST",
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    id: id,
-                    status: status
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
-                success: function(response) {
-                    showToast(response.message, 'success');
+                data: {
+                    id: id,
+                    status: newStatus
+                },
+                success: function(res) {
+                    // toggle the switch visually
+                    el.find('.toggle-switch').toggleClass('active');
+                    el.data('status', newStatus);
                 },
                 error: function(xhr) {
-                    console.log(xhr.responseText);
-                    showToast('Failed to update status!', 'danger');
+                    console.error(xhr.responseText);
                 }
             });
         });

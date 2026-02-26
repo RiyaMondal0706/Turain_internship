@@ -11,24 +11,23 @@
 
     <title>Turain || Dashboard</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/assets/images/favicon.ico') }}">
 
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/bootstrap.min.css') }}" />
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/vendors.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/daterangepicker.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/css/vendors.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/css/daterangepicker.min.css') }}" />
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/theme.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/theme.min.css') }}" />
 
 </head>
 
 <body>
 
-    @include('layouts.mentor.sidebar')
+    @include('layouts.hr.sidebar')
 
-    @include('layouts.mentor.header')
-
+    @include('layouts.hr.header')
 
     <!--! ================================================================ !-->
     <!--! [Start] Main Content !-->
@@ -39,107 +38,101 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Dashboard</h5>
+                        <h5 class="m-b-10">Complete</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">Dashboard</li>
+                        <li class="breadcrumb-item">Complete Project</li>
                     </ul>
                 </div>
+                <div class="page-header-right ms-auto">
+                    <div class="page-header-right-items">
+                        <div class="d-flex d-md-none">
+                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                                <i class="feather-arrow-left me-2"></i>
+                                <span>Back</span>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
 
+                            <div class="dropdown filter-dropdown">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-md-none d-flex align-items-center">
+                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                            <i class="feather-align-right fs-20"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
-            <div class="main-content">
-                <div class="row">
-                    <!-- [Invoices Awaiting Payment] start -->
-                    <div class="col-xxl-3 col-md-6">
-                        <div class="card stretch stretch-full">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between mb-4">
-                                    <div class="d-flex gap-4 align-items-center">
-                                        <div class="avatar-text avatar-lg bg-gray-200">
-                                            <i class="feather-users"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fs-4 fw-bold text-dark">
-                                                <span class="counter">{{ $internCount }}</span>
-                                            </div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">
-                                                Total Interns
-                                            </h3>
-                                        </div>
-                                    </div>
 
-                                </div>
 
-                                <div class="pt-4">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <span class="fs-12 fw-medium text-muted">
-                                            Active Interns
-                                        </span>
-                                        <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark"><span
-                                                    class="counter">{{ $activeIntern }}</span>/<span
-                                                    class="counter">{{ $internCount }}</span></span>
-                                        </div>
-                                    </div>
 
-                                    <div class="progress mt-2 ht-3">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%">
-                                        </div>
-                                    </div>
-                                </div>
+            <table class="table table-hover align-middle mb-0" id="customerList">
+                <thead class="bg-light text-uppercase text-muted small">
+                    <tr>
+                        <th class="text-center" style="width: 40px;">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="checkAllCustomer">
+                                <label class="form-check-label" for="checkAllCustomer"></label>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xxl-3 col-md-6">
-                        <div class="card stretch stretch-full">
-                            <div class="card-body">
-                                <div class="d-flex align-items-start justify-content-between mb-4">
-                                    <div class="d-flex gap-4 align-items-center">
-                                        <div class="avatar-text avatar-lg bg-gray-200">
-                                            <i class="feather-users"></i>
-                                        </div>
-                                        <div>
-                                            <div class="fs-4 fw-bold text-dark">
-                                                <span class="counter">{{ $projectCount }}</span>
-                                            </div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">
-                                                Total Project
-                                            </h3>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="pt-4">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <span class="fs-12 fw-medium text-muted">
-                                            Ongoing Project
-                                        </span>
-                                        <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark"><span
-                                                    class="counter">{{ $submitedCount }}</span>/<span
-                                                    class="counter">{{ $projectCount }}</span></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="progress mt-2 ht-3">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
 
 
-                    <!--! END: [Team Progress] !-->
-                </div>
-            </div>
+                        </th>
+                        <th>Candidate</th>
+                        <th>Project </th>
+                        <th>Project Link </th>
+                        <th> Submission Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                @php
+                    $data = DB::select('CALL get_assignment_submission_full_data()');
+                @endphp
+                @foreach ($data as $data)
+                    <tr>
+                        <td></td>
+                        <td>{{ $data->candidate_name }} </td>
+                        <td>{{ $data->project }} </td>
+                        <td>{{ $data->project_link }} </td>
+                        <td>
+                            {{ \Carbon\Carbon::parse($data->submission)->format('d-m-Y') }}
+                        </td>
+                        <td>
+                            @if (!empty($data->submitted_by_hr))
+                                <span class="badge bg-success text-white">
+                                    Certificate Generated
+                                </span>
+                                <br>
+                            @elseif (!empty($data->submitted_by_mentor))
+                                <span class="badge bg-warning text-dark">
+                                    Submitted by Mentor
+                                </span>
+                                <br>
+                                <a href="{{ route('certificate.generate', $data->id) }}" title="Generate Certificate"
+                                    class="text-success generate-cert-link">
+                                    <i class="bi bi-award-fill"></i>
+                                </a>
+                            @elseif (!empty($data->project_link))
+                                <span class="badge bg-warning text-dark">
+                                    Submitted by Candidate
+                                </span>
+                            @else
+                                -
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+
+            </table>
+
+
+
             <!-- [ Main Content ] end -->
         </div>
         <!-- [ Footer ] start -->
@@ -430,6 +423,21 @@
         </div>
     </div>
 
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="certificateToast" class="toast align-items-center text-white bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Certificate generated successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+
     <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
 
     <script src="{{ asset('assets/vendors/js/daterangepicker.min.js') }}"></script>
@@ -440,6 +448,47 @@
     <script src="{{ asset('assets/js/dashboard-init.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-4.0.0-rc.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('.generate-cert-link');
+
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); // prevent default navigation
+                    const url = this.href;
+
+                    // SweetAlert confirmation
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to generate this certificate!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, generate it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Navigate to generate certificate
+                            window.location.href = url;
+
+                            // Optional: show a success toast after clicking
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Certificate generated successfully!',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                toast: true
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
 </body>
 

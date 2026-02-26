@@ -20,14 +20,48 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/daterangepicker.min.css') }}" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/theme.min.css') }}" />
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
+    <style>
+        /* Remove blur from body & content */
+        body.modal-open,
+        body.modal-open .container,
+        body.modal-open .container-fluid,
+        body.modal-open .content,
+        body.modal-open .page-content {
+            filter: none !important;
+            opacity: 1 !important;
+        }
+
+        /* Kill backdrop completely */
+        .modal-backdrop {
+            display: none !important;
+        }
+
+        /* Chat popup position */
+        .modal-dialog-bottom {
+            position: fixed;
+            bottom: 90px;
+            right: 30px;
+            margin: 0;
+        }
+
+        /* Keep popup on top */
+        .modal {
+            z-index: 2000 !important;
+        }
+
+        .modal-title {
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
+    @include('layouts.candidate.sidebar')
 
-    @include('layouts.mentor.sidebar')
-
-    @include('layouts.mentor.header')
+    @include('layouts.candidate.header')
 
 
     <!--! ================================================================ !-->
@@ -39,11 +73,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Assignment</h5>
+                        <h5 class="m-b-10">Mentor</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}"">Home</a></li>
-                        <li class=" breadcrumb-item">Assignment List</li>
+                        <li class=" breadcrumb-item">Mentor List</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -155,26 +189,20 @@
                                     <div class="card shadow-sm">
                                         <div class="card-body p-0">
                                             <div class="table-responsive">
+
+
                                                 <table class="table table-hover align-middle mb-0" id="customerList">
                                                     <thead class="bg-light text-uppercase text-muted small">
                                                         <tr>
-                                                            <th class="text-center" style="width: 40px;">
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" class="form-check-input"
-                                                                        id="checkAllCustomer">
-                                                                    <label class="form-check-label"
-                                                                        for="checkAllCustomer"></label>
-                                                                </div>
 
 
-
-                                                            </th>
                                                             <th>Project</th>
-                                                            <th>Project Description</th>
                                                             <th>Start Date</th>
-                                                            <th>Due Date</th>
-                                                            <th>Project Submission</th>
-                                                            <th class="text-end">Actions</th>
+                                                            <th>End Date</th>
+                                                            <th>Submited Date</th>
+                                                            <th>Project Link</th>
+                                                            <th>Project Note</th>
+                                                            <th>Status</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -182,165 +210,109 @@
                                                             style="display:none; background:#f9f9f9; position:relative;">
 
                                                             <!-- Close Button -->
+                                                            <button type="button" id="closeProjectDetails"
+                                                                class="btn btn-sm btn-outline-danger"
+                                                                style="position:absolute; top:8px; right:8px;">
+                                                                ✕
+                                                            </button>
 
+                                                            <h6 class="mb-2">Project Description</h6>
+                                                            <div id="projectDescText"></div>
                                                         </div>
-                                                        @foreach ($project as $proj)
+
+
+                                                        @forelse ($data as $assign)
                                                             <tr class="shadow-sm rounded mb-2">
 
-                                                                <!-- Checkbox -->
-                                                                <td class="text-center">
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input checkbox"
-                                                                            type="checkbox"
-                                                                            id="checkBox_{{ $proj->id }}">
-                                                                        <label class="form-check-label"
-                                                                            for="checkBox_{{ $proj->id }}"></label>
-                                                                    </div>
-                                                                </td>
+
+
 
                                                                 <!-- Project Name -->
                                                                 <td>
-                                                                    <div class="fw-bold text-dark">{{ $proj->project }}
-                                                                    </div>
+                                                                    <span
+                                                                        class="badge rounded-pill bg-primary mb-1 px-3 py-2">{{ $assign->project }}</span>
                                                                 </td>
 
-                                                                <td>
-                                                                    <span class="short-desc">
-                                                                        {{ Str::limit($proj->project_description, 10) }}
-                                                                    </span>
 
-                                                                    <button type="button"
-                                                                        class="btn btn-sm btn-link toggle-desc"
-                                                                        data-desc="{{ $proj->project_description }}"
-                                                                        data-doc="{{ asset('assets/documentation/' . $proj->documentation) }}">
-                                                                        View
-                                                                    </button>
-                                                                </td>
 
-                                                                </td>
                                                                 <!-- Start Date -->
                                                                 <td>
-                                                                    <span class="text-secondary">
-                                                                        {{ \Carbon\Carbon::parse($proj->start_date)->timezone('Asia/Kolkata')->format('d M Y') }}
-                                                                    </span>
-                                                                </td>
-
-
-
-                                                                <!-- Due Date -->
-                                                                <td>
-                                                                    @php
-                                                                        $end = \Carbon\Carbon::parse(
-                                                                            $proj->end_date,
-                                                                        )->startOfDay();
-                                                                        $today = \Carbon\Carbon::today(
-                                                                            'Asia/Kolkata',
-                                                                        )->startOfDay();
-                                                                        $daysLeft = (int) $today->diffInDays(
-                                                                            $end,
-                                                                            false,
-                                                                        );
-
-                                                                        if ($proj->status == 0) {
-                                                                            // Status 0 = submitted, show blurred
-                                                                            $color =
-                                                                                'bg-secondary text-white opacity-75';
-                                                                            $statusText = 'Submitted';
-                                                                        } else {
-                                                                            // Status not 0, normal due date colors
-                                                                            if ($daysLeft < 0) {
-                                                                                $color = 'bg-danger text-white';
-                                                                                $statusText = 'Overdue';
-                                                                            } elseif ($daysLeft <= 3) {
-                                                                                $color = 'bg-danger text-white';
-                                                                                $statusText =
-                                                                                    $daysLeft .
-                                                                                    ' day' .
-                                                                                    ($daysLeft == 1 ? '' : 's') .
-                                                                                    ' left';
-                                                                            } elseif ($daysLeft <= 7) {
-                                                                                $color = 'bg-warning text-dark';
-                                                                                $statusText =
-                                                                                    $daysLeft .
-                                                                                    ' day' .
-                                                                                    ($daysLeft == 1 ? '' : 's') .
-                                                                                    ' left';
-                                                                            } else {
-                                                                                $color = 'bg-success text-white';
-                                                                                $statusText =
-                                                                                    $daysLeft .
-                                                                                    ' day' .
-                                                                                    ($daysLeft == 1 ? '' : 's') .
-                                                                                    ' left';
-                                                                            }
-                                                                        }
-                                                                    @endphp
-
                                                                     <span
-                                                                        class="badge rounded-pill {{ $color }} mb-1 px-3 py-2 d-inline-block text-center">
-                                                                        {{ $proj->status == 0 ? 'Submitted' : $end->format('d M Y') }}<br>
-                                                                        <small>{{ $proj->status == 0 ? '' : '(' . $statusText . ')' }}</small>
-                                                                    </span>
+                                                                        class="text-secondary">{{ \Carbon\Carbon::parse($assign->start_date)->timezone('Asia/Kolkata')->format('d M Y') }}</span>
+                                                                </td>
+
+                                                                <!-- End Date -->
+                                                                <td>
+                                                                    <span
+                                                                        class="text-secondary">{{ \Carbon\Carbon::parse($assign->end_date)->timezone('Asia/Kolkata')->format('d M Y') }}</span>
                                                                 </td>
 
                                                                 <td>
-                                                                    <!-- Icon Buttons -->
-                                                                    <div class="icon-actions d-flex gap-2">
-                                                                        @php
-                                                                            $github = DB::table('assignment_github')
-                                                                                ->where('assign_id', $proj->id)
-                                                                                ->first();
-                                                                        @endphp
+                                                                    <span
+                                                                        class="text-secondary">{{ \Carbon\Carbon::parse($assign->submission)->timezone('Asia/Kolkata')->format('d M Y') }}</span>
+                                                                </td>
 
-                                                                        <button
-                                                                            class="btn btn-success btn-sm copy-github-btn"
-                                                                            data-link="{{ $github->github_link ?? '' }}"
-                                                                            title="Copy Project Link">
-                                                                            <i class="bi bi-link"></i>
-                                                                        </button>
 
-                                                                        <!-- 3️⃣ Open chatbox -->
-                                                                        <button class="btn btn-info btn-sm"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#noteModal"
-                                                                            data-id="{{ $proj->id }}">
-                                                                            <i class="bi bi-journal-text"></i>
-                                                                        </button>
+                                                                <td>
+                                                                    <a href="{{ $assign->project_link }}"
+                                                                        target="_blank">
+                                                                        {{ \Illuminate\Support\Str::limit($assign->project_link, 20) }}
+                                                                    </a>
+                                                                </td>
+                                                                <td>
+                                                                    {{ \Illuminate\Support\Str::limit($assign->notes, 10) }}
+                                                                </td>
+                                                                @php
+
+                                                                    $submitted_by_candidate = $assign->project_link;
+                                                                    $submitted_by_mentor = $assign->submitted_by_mentor;
+                                                                    $submitted_by_hr = $assign->submitted_by_hr;
+                                                                @endphp
+                                                                <td>
+                                                                    <div class="submission-status">
+                                                                        @if ($submitted_by_hr)
+                                                                            <!-- HR submitted: show certificate download -->
+                                                                            <span class="badge bg-success">Submitted by
+                                                                                HR</span>
+                                                                            <a href=""
+                                                                                class="btn btn-primary btn-sm">
+                                                                                <i class="bi bi-download"></i> Download
+                                                                                Certificate
+                                                                            </a>
+                                                                        @elseif($submitted_by_mentor)
+                                                                            <!-- Mentor submitted -->
+                                                                            <span class="badge bg-info">Submitted by
+                                                                                Mentor</span>
+                                                                        @elseif($submitted_by_candidate)
+                                                                            <!-- Candidate submitted -->
+                                                                            <span
+                                                                                class="badge bg-warning text-dark">Submitted
+                                                                                by You</span>
+                                                                        @else
+                                                                            <!-- Nothing submitted yet -->
+                                                                            <span class="badge bg-secondary">Waiting
+                                                                                for
+                                                                                Higher Authorization</span>
+                                                                        @endif
                                                                     </div>
                                                                 </td>
 
-                                                                <!-- Actions -->
-                                                                <td class="text-end">
-                                                                    @if ($proj->status == 0)
-                                                                        <!-- Status 0: show view icon -->
-                                                                        <a href="{{ route('submition_assignment.show', $proj->id) }}"
-                                                                            class="btn btn-sm btn-outline-secondary"
-                                                                            title="View">
-                                                                            <i class="bi bi-eye"></i>
-                                                                        </a>
-                                                                    @else
-                                                                        <!-- Status not 0: show edit button -->
-                                                                        <a href="{{ route('assignment.edit', $proj->id) }}"
-                                                                            class="btn btn-sm btn-outline-primary"
-                                                                            title="Edit">
-                                                                            <i class="feather feather-edit"></i>
-                                                                        </a>
-                                                                    @endif
-                                                                </td>
 
                                                             </tr>
-                                                        @endforeach
-                                                    </tbody>
+                                                        @empty
+                                                            <tr>
+                                                                <td colspan="6" class="text-center text-muted">No
+                                                                    projects assigned</td>
+                                                            </tr>
+                                                        @endforelse
 
+                                                    </tbody>
 
                                                 </table>
 
 
                                                 <!-- END main content -->
                                             </div>
-
-                                            <!-- MODAL HERE -->
-                                            <!-- Assignment Modal -->
 
 
                                         </div>
@@ -642,70 +614,92 @@
         </div>
     </div>
 
-    <div class="modal fade" id="projectDetailsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+
+    <div class="modal fade" id="noteModal" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-bottom">
             <div class="modal-content">
 
-                <!-- Header -->
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Project Details</h5>
+                    <h6 class="modal-title">📝 Today Work</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
-                <!-- Body -->
                 <div class="modal-body">
-                    <h6>Project Description</h6>
-                    <p id="projectDescText"></p>
+                    <input type="hidden" id="assignId">
+                    <textarea id="noteText" class="form-control" rows="4" placeholder="Write something..."></textarea>
+                </div>
 
-                    <hr>
-
-                    <a id="downloadDocBtn" href="#" class="btn btn-success" download target="_blank"
-                        style= "height: 30px; width:150px;">
-                        📄 Download Documentation
-                    </a>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary btn-sm" id="saveNote">Save</button>
                 </div>
 
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="noteModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal fade" id="githubNoteModal" tabindex="-1"> <!-- renamed -->
+        <div class="modal-dialog modal-sm modal-dialog-bottom">
+            <div class="modal-content">
+
+                <div class="modal-header bg-primary text-white">
+                    <h6 class="modal-title"> Project Link</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="githubAssignId"> <!-- renamed -->
+                    <textarea id="githubNoteText" class="form-control" rows="4" placeholder="Write something..."></textarea> <!-- renamed -->
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary btn-sm" id="githubSaveNote">Save</button> <!-- renamed -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Assignment Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
 
                 <!-- Header -->
-                <div class="modal-header bg-primary text-white">
-                    <h6 class="modal-title">📝 Daily Work Notes</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <div class="modal-header" style="background: blue;">
+                    <h5 class="modal-title text-white" id="uploadModalLabel">Submit Assignment</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
 
                 <!-- Body -->
                 <div class="modal-body">
-                    <input type="hidden" id="assignId">
+                    <input type="hidden" id="uploadAssignId">
 
-                    <div class="row">
-
-                        <!-- LEFT: Date list -->
-                        <div class="col-4 border-end">
-                            <h6 class="text-muted">Previous Dates</h6>
-                            <table class="table table-sm table-hover">
-                                <tbody id="noteDateList">
-                                    <!-- Dates injected by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- RIGHT: Note view / write -->
-                        <div class="col-8">
-                            <h6 id="noteDateTitle" class="text-primary">
-                                Today ({{ now()->format('d M Y') }})
-                            </h6>
-
-                            <textarea id="noteText" class="form-control" rows="5"></textarea>
-
-                        </div>
-
+                    <!-- Project Link -->
+                    <div class="mb-3">
+                        <label class="form-label">Project Link</label>
+                        <input type="url" class="form-control" id="projectLink"
+                            placeholder="https://github.com/username/project" required>
                     </div>
+
+                    <!-- Notes -->
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" id="projectNote" rows="4"
+                            placeholder="Write short explanation or instructions"></textarea>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="button" id="uploadSaveBtn" class="btn btn-success">
+                        Submit
+                    </button>
                 </div>
 
             </div>
@@ -723,163 +717,223 @@
     <script src="{{ asset('assets/js/dashboard-init.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
+
+    <script>
+        $(document).ready(function() {
+
+            $('.toggle-desc').on('click', function() {
+
+                let desc = $(this).data('desc');
+
+                $('#projectDescText').text(desc);
+                $('#projectDetails').slideDown();
+
+                // Optional: scroll to the div
+                $('html, body').animate({
+                    scrollTop: $('#projectDetails').offset().top - 100
+                }, 300);
+
+            });
+
+        });
     </script>
     <script>
         $(document).ready(function() {
 
-            // Close button click
             $('#closeProjectDetails').on('click', function() {
                 $('#projectDetails').slideUp();
             });
 
         });
     </script>
-
-    // for github link
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('noteModal')
+            .addEventListener('show.bs.modal', function(event) {
 
-            document.querySelectorAll('.copy-github-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                let button = event.relatedTarget;
+                let assignId = button.getAttribute('data-id');
 
-                    const link = this.dataset.link;
+                document.getElementById('assignId').value = assignId;
+            });
+    </script>
+    <script>
+        document.getElementById('saveNote').addEventListener('click', function() {
 
-                    if (!link) {
-                        Swal.fire('Error', 'Project link not found', 'error');
-                        return;
-                    }
+            let assignId = document.getElementById('assignId').value;
+            let note = document.getElementById('noteText').value;
 
-                    navigator.clipboard.writeText(link).then(() => {
+            if (!note.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Required',
+                    text: 'Please write note'
+                });
+                return;
+            }
+
+            fetch("{{ route('assignment.note.store') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        assign_id: assignId,
+                        note: note
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Copied!',
-                            text: 'Project link copied to clipboard',
-                            timer: 1500,
+                            title: 'Saved',
+                            text: data.message,
+                            timer: 2000,
                             showConfirmButton: false
                         });
-                    }).catch(() => {
-                        Swal.fire('Error', 'Failed to copy link', 'error');
-                    });
 
-                });
-            });
+                        // Clear textarea
+                        document.getElementById('noteText').value = '';
 
+                        // Close modal
+                        bootstrap.Modal.getInstance(
+                            document.getElementById('noteModal')
+                        ).hide();
+                    }
+                })
+                .catch(err => console.error(err));
         });
     </script>
-
-
-
-    // for project details
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            document.querySelectorAll('.toggle-desc').forEach(btn => {
-                btn.addEventListener('click', function() {
-
-                    const desc = this.dataset.desc;
-                    const docUrl = this.dataset.doc;
-
-                    document.getElementById('projectDescText').innerText = desc;
-
-                    const downloadBtn = document.getElementById('downloadDocBtn');
-                    downloadBtn.href = docUrl;
-
-                    // Show modal
-                    new bootstrap.Modal(
-                        document.getElementById('projectDetailsModal')
-                    ).show();
-                });
-            });
-
+        var githubModal = document.getElementById('githubNoteModal');
+        githubModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var assignId = button.getAttribute('data-id');
+            document.getElementById('githubAssignId').value = assignId;
         });
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('githubSaveNote').addEventListener('click', function() {
+            let assignId = document.getElementById('githubAssignId').value;
+            let note = document.getElementById('githubNoteText').value;
 
-            // When note button clicked
-            document.querySelectorAll('[data-bs-target="#noteModal"]').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const assignId = this.dataset.id;
-                    document.getElementById('assignId').value = assignId;
-                    document.getElementById('noteText').value = '';
-
-                    loadNoteDates(assignId);
+            if (!note.trim()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Required',
+                    text: 'Please write note'
                 });
-            });
+                return;
+            }
 
-            // Load date list
-            function loadNoteDates(assignId) {
-                fetch(`/assignment-mentor/${assignId}/notes`) // backend route
-                    .then(res => res.json())
-                    .then(data => {
-                        let html = '';
-                        data.forEach(row => {
-                            html += `
-                        <tr>
-                            <td>
-                                <a href="#" class="note-date"
-                                   data-note="${row.note}"
-                                   data-date="${row.created_at}">
-                                   ${row.created_at}
-                                </a>
-                            </td>
-                        </tr>
-                    `;
+            fetch("{{ route('assignment.github.store') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        assign_id: assignId,
+                        note: note
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Saved',
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: false
                         });
-                        document.getElementById('noteDateList').innerHTML = html;
-                        bindDateClicks();
-                    });
-            }
 
-            // When date clicked
-            function bindDateClicks() {
-                document.querySelectorAll('.note-date').forEach(link => {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        document.getElementById('noteText').value = this.dataset.note;
-                        document.getElementById('noteDateTitle').innerText =
-                            'Note: ' + this.dataset.date;
-                        activeDate = this.dataset.date;
-                    });
+                        document.getElementById('githubNoteText').value = '';
+
+                        // Close modal
+                        bootstrap.Modal.getInstance(
+                            document.getElementById('githubNoteModal')
+                        ).hide();
+                    }
+                })
+                .catch(err => console.error(err));
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Set assign id when upload button clicked
+            document.querySelectorAll('.upload-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.getElementById('uploadAssignId').value = this.dataset.id;
+                    document.getElementById('projectLink').value = '';
+                    document.getElementById('projectNote').value = '';
                 });
-            }
+            });
 
-            // Save today's note
-            document.getElementById('saveNote').addEventListener('click', function() {
-                const assignId = document.getElementById('assignId').value;
-                const note = document.getElementById('noteText').value.trim();
+            // Submit assignment
+            document.getElementById('uploadSaveBtn').addEventListener('click', function() {
 
-                if (!note) {
-                    Swal.fire('Required', 'Please write today’s note', 'warning');
+                let assignId = document.getElementById('uploadAssignId').value;
+                let projectLink = document.getElementById('projectLink').value.trim();
+                let projectNote = document.getElementById('projectNote').value.trim();
+
+                if (!projectLink) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Required',
+                        text: 'Please enter project link'
+                    });
                     return;
                 }
 
-                fetch("{{ route('assignment.note.store') }}", {
-                        method: 'POST',
+                fetch("{{ route('assignment.submit.post', ':id') }}".replace(':id', assignId), {
+                        method: "POST",
                         headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
                         },
                         body: JSON.stringify({
                             assign_id: assignId,
-                            note: note,
-                            date: activeDate
+                            project_link: projectLink,
+                            note: projectNote
                         })
                     })
                     .then(res => res.json())
                     .then(data => {
-                        Swal.fire('Saved', 'Today’s note saved', 'success');
-                        loadNoteDates(assignId); // reload left table
+                        if (data.status) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Submitted',
+                                text: data.message || 'Assignment submitted successfully!',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+
+                            bootstrap.Modal.getInstance(
+                                document.getElementById('uploadModal')
+                            ).hide();
+                        }
+                    })
+                    .catch(() => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong!'
+                        });
                     });
             });
 
         });
     </script>
-
 
 </body>
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Mail\InternshipCredentialsMail;
+use App\Mail\mentorCredentialsMail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
@@ -18,9 +19,10 @@ class HrController extends Controller
     public function internCreate_show()
     {
         $state = DB::table('states')
-
             ->get();
-        return view('hr.intern_create', compact('state'));
+        $departments = DB::table('departments')
+            ->get();
+        return view('hr.intern_create', compact('state', 'departments'));
     }
 
     public function internList_show()
@@ -47,7 +49,8 @@ class HrController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'designation' => $request->designation,
+            'department' => $request->department_id,
+            'designation' =>  $request->designation_id,
             'dob' => Carbon::parse($request->dob)->format('Y-m-d'),
             'github_link' => $request->gitbub,
             'mp_boad' => $request->mp_boad,
@@ -113,6 +116,7 @@ class HrController extends Controller
     }
     public function updateStatus(Request $request)
     {
+        // dd("ok");
         DB::table('intern_data')
             ->where('id', $request->id)
             ->update([
@@ -133,22 +137,14 @@ class HrController extends Controller
     }
     public function inter_view($id)
     {
-        $intern = DB::table('intern_data')
-            ->where('id', $id)
-            ->first();
-        $state = DB::table('states')
-            ->where('id', $intern->state)
-            ->first();
-        $districts = DB::table('districts')
-            ->where('id', $intern->district)
-            ->first();
-        $cities = DB::table('cities')
-            ->where('id', $intern->city)
-            ->first();
+        $result = DB::select('CALL get_intern_profile(?)', [$id]);
 
+        if (empty($result)) {
+            abort(404, 'Intern not found');
+        }
+        $intern = $result[0];
 
-        // dd($id);
-        return view('hr.intern_view', compact('intern', 'state', 'districts', 'cities'));
+        return view('hr.intern_view', compact('intern'));
     }
 
     public function intern_edit_show($id)
@@ -159,7 +155,9 @@ class HrController extends Controller
         $intern = DB::table('intern_data')
             ->where('id', $id)
             ->first();
-        return view('hr.intern_edit', compact('state', 'intern'));
+        $departments = DB::table('departments')
+            ->get();
+        return view('hr.intern_edit', compact('state', 'intern', 'departments'));
     }
 
     public function intern_update(Request $request, $id)
@@ -197,7 +195,8 @@ class HrController extends Controller
                     'name' => $request->name,
                     'email' => $request->email,
                     'phone' => $request->phone,
-                    'designation' => $request->designation,
+                    'department' => $request->department_id,
+                    'designation' => $request->designation_id,
                     'dob' => $request->dob,
                     'github_link' => $request->gitbub,
                     'mp_boad' => $request->mp_boad,
@@ -238,7 +237,9 @@ class HrController extends Controller
     }
     public function mentorCreate_show()
     {
-        return view('hr.mentor_create');
+        $departments = DB::table('departments')
+            ->get();
+        return view('hr.mentor_create', compact('departments'));
     }
     public function mentor_store(Request $request)
     {
@@ -254,7 +255,8 @@ class HrController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'designation' => $request->designation,
+            'designation' => $request->designation_id,
+            'department' => $request->department_id,
             'address' => $request->address,
             'image' => $avatarName,
             'created_at' => now(),
@@ -274,7 +276,7 @@ class HrController extends Controller
         ]);
 
         Mail::to($request->email)->send(
-            new InternshipCredentialsMail(
+            new mentorCredentialsMail(
                 $request->name,
                 $request->email,
                 $plainPassword,
@@ -328,7 +330,9 @@ class HrController extends Controller
         $mentor = DB::table('mentor_data')
             ->where('id', $id)
             ->first();
-        return view('hr.mentor_edit', compact('mentor'));
+        $departments = DB::table('departments')
+            ->get();
+        return view('hr.mentor_edit', compact('mentor', 'departments'));
     }
     public function mentor_update(Request $request, $id)
     {
@@ -349,7 +353,8 @@ class HrController extends Controller
                     'name' => $request->name,
                     'email' => $request->email,
                     'phone' => $request->phone,
-                    'designation' => $request->designation,
+                    'designation' => $request->designation_id,
+                    'department' => $request->department_id,
                     'image' => $avatarName,
                     'address' => $request->address,
                 ]
@@ -365,8 +370,6 @@ class HrController extends Controller
         $mentors =  DB::table('mentor_data')
             ->get();
 
-
-
         return view('hr.assign', compact('interns', 'mentors'));
     }
 
@@ -378,35 +381,168 @@ class HrController extends Controller
                 'candidate_id' => $request->intern_id
             ]
         );
+        return redirect()
+            ->route('hr.assign.list');
     }
 
     public function assignList_show()
     {
-        $assign = DB::table('assign')
-            ->get();
+        $assignments = DB::table('assign')
+            ->join('mentor_data', 'assign.mentor_id', '=', 'mentor_data.id')
+            ->join('intern_data', 'assign.candidate_id', '=', 'intern_data.id')
+            ->select(
+                'assign.*',
+                'mentor_data.name as mentor_name',
+                'intern_data.name as intern_name'
+            )
+            ->get()
+            ->groupBy('mentor_id');
 
-        return view('hr.assign_list', compact('assign'));
+        return view('hr.assign_list', compact('assignments'));
     }
 
     public function updateStatus_assign(Request $request)
     {
+        // dd($request->status);
         DB::table('assign')
             ->where('id', $request->id)
             ->update([
-                'status' => $request->status
+                'status' => $request->status,
+            ]);
+    }
+
+    public function getDesignations(Request $request)
+    {
+        $designations = DB::table('designations')
+            ->where('department_id', $request->department_id)
+            ->where('status', 1)
+            ->select('id', 'designation_name')
+            ->get();
+
+        return response()->json($designations);
+    }
+    public function department_show()
+    {
+        $departments = DB::table('departments')
+            ->get();
+        return view('hr.department_list', compact('departments'));
+    }
+    public function department_create()
+    {
+        return view('hr.department_create');
+    }
+    public function department_store(Request $request)
+    {
+        $departmentName = $request->department_name;
+
+        $departmentCode = strtoupper(substr($departmentName, 0, 3));
+
+        DB::table('departments')->insert([
+            'department_name' => $request->department_name,
+            'department_code' => $departmentCode,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('hr.department.list');
+    }
+    public function designation_create()
+
+    {
+        $departments = DB::table('departments')
+            ->get();
+        return view('hr/designation_create', compact('departments'));
+    }
+
+    public function designation_store(Request $request)
+    {
+        $request->validate([
+            'level' => 'required|in:junior,mid,senior,lead',
+        ]);
+
+        DB::table('designations')->insert([
+            'department_id' => $request->department_id,
+            'designation_name' => $request->designation_name,
+            'level' => $request->level,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        return redirect()
+            ->route('hr.department.list');
+    }
+
+    public function department_edit($id)
+    {
+        $department = DB::table('departments')
+            ->where('id', $id)
+            ->first();
+
+        $departments = DB::table('departments')
+            ->get();
+        $designations = DB::table('designations')
+            ->where('department_id', $id)
+            ->get();
+        return view('hr.department_edit', compact('department', 'departments', 'designations'));
+    }
+
+    public function updateDesignations(Request $request, $id)
+    {
+
+        DB::table('designations')
+            ->where('department_id', $request->department_id)
+            ->update([
+                'status' => 0,
+                'updated_at' => now(),
             ]);
 
 
-        return response()->json([
-            'success' => true,
-            'message' => $request->status == 1
-                ? 'assign activated successfully'
-                : 'assign deactivated successfully'
-        ]);
+        if ($request->has('selected_designations')) {
+            foreach ($request->selected_designations as $id) {
+                DB::table('designations')
+                    ->where('id', $id)
+                    ->update([
+                        'department_id' => $request->department_id,
+                        'status' => 1,
+                        'updated_at' => now(),
+                    ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Designations updated successfully');
+        return back()->with('success', 'Updated successfully');
     }
 
-    public function assign_view($id)
-    {
-        dd($id);
-    }
+
+public function completed_project_show(){
+   return view("hr.complete_project");
+}
+
+public function index_show(){
+    $internCount = DB::table('intern_data')
+    ->count();
+    $activeInterns = DB::table('intern_data')->where('status', 1)->count();
+
+       $mentorCount = DB::table('mentor_data')
+    ->count();
+  $activementors = DB::table('mentor_data')->where('status', 1)->count();
+   $projectCount = DB::table('assignment')
+    ->count();
+   $completedCount = DB::table('assignment_submissions')
+    ->count();
+
+     return view('index' , compact('internCount', 'activeInterns', 'mentorCount', 'activementors', 'projectCount', 'completedCount'));
+}
+
+public function generate_cirtificate($id){
+DB::table('assignment_submissions')
+    ->where('id', $id)
+    ->update([
+        'submitted_by_hr'       => 'Approved',
+    ]);
+       return redirect()
+            ->route('hr.completed_project.list')
+            ->with('success', 'Cirtificate generate successfully!');
+}
+
 }

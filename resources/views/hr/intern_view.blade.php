@@ -11,15 +11,15 @@
 
     <title>Turain || Intern View </title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/assets/images/favicon.ico') }}">
 
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/bootstrap.min.css') }}" />
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/vendors.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendors/css/daterangepicker.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/css/vendors.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/vendors/css/daterangepicker.min.css') }}" />
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/theme.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('/assets/css/theme.min.css') }}" />
 
 </head>
 
@@ -79,7 +79,7 @@
             <!-- [ Main Content ] start -->
             <div class="main-content">
                 <div class="row">
-                    <div class="col-xxl-4 col-xl-6">
+                    <div class="col-xxl-2 col-xl-4">
                         <div class="card stretch stretch-full">
                             <div class="card-body">
                                 <div class="mb-4 text-center">
@@ -117,6 +117,7 @@
                                                 class="feather-mail"></i>Email</span>
                                         <a href="javascript:void(0);" class="float-end">{{ $intern->email }}</a>
                                     </li>
+
                                 </ul>
 
                             </div>
@@ -124,7 +125,7 @@
 
 
                     </div>
-                    <div class="col-xxl-8 col-xl-6">
+                    <div class="col-xxl-8 col-xl-8">
                         <div class="card border-top-0">
                             <div class="card-header p-0">
                                 <!-- Nav tabs -->
@@ -260,15 +261,15 @@
                                         </div>
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">State:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $state->name }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->name }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">District:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $districts->name }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->name }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">City:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $cities->name }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->name }}</div>
                                         </div>
 
 
@@ -283,932 +284,107 @@
                                         <table class="table mb-0">
                                             <thead>
                                                 <tr>
-                                                    <th>Description</th>
-                                                    <th class="wd-250 text-end">Actions</th>
+                                                    <th>Mentor Name</th>
+                                                    <th>Project Title</th>
+                                                    <th>Start Date</th>
+                                                    <th>End Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Successful payments
-                                                        </div>
-                                                        <small class="fs-12 text-muted">Receive a notification
-                                                            for
-                                                            every successful payment.</small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS</option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail"
-                                                                    selected>Email
-                                                                </option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off">Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push +
-                                                                    Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Customer payment dispute
-                                                        </div>
-                                                        <small class="fs-12 text-muted">Receive a notification
-                                                            if a
-                                                            payment is disputed by a customer and for dispute
-                                                            purposes.
-                                                        </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS</option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail">
-                                                                    Email</option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off" selected>
-                                                                    Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Refund alerts</div>
-                                                        <small class="fs-12 text-muted">Receive a notification
-                                                            if a
-                                                            payment is stated as risk by the Finance Department.
-                                                        </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell"
-                                                                    selected>Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail">
-                                                                    Email</option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off">Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Invoice payments</div>
-                                                        <small class="fs-12 text-muted">Receive a notification
-                                                            if a
-                                                            customer sends an incorrect amount to pay their
-                                                            invoice.
-                                                        </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail"
-                                                                    selected>Email
-                                                                </option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off">Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Rating reminders</div>
-                                                        <small class="fs-12 text-muted">Send an email
-                                                            reminding me to
-                                                            rate an item a week after purchase </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail">
-                                                                    Email</option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off" selected>
-                                                                    Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Item update
-                                                            notifications</div>
-                                                        <small class="fs-12 text-muted">Send an email when an
-                                                            item
-                                                            I've purchased is updated </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail">
-                                                                    Email</option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off">Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone" selected>
-                                                                    SMS + Push
-                                                                    + Email</option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Item comment
-                                                            notifications
-                                                        </div>
-                                                        <small class="fs-12 text-muted">Send me an email when
-                                                            someone
-                                                            comments on one of my items </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail">
-                                                                    Email</option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off">Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone" selected>
-                                                                    SMS +
-                                                                    Email</option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Team comment
-                                                            notifications
-                                                        </div>
-                                                        <small class="fs-12 text-muted">Send me an email when
-                                                            someone
-                                                            comments on one of my team items </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail">
-                                                                    Email</option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off">Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail"
-                                                                    selected>Email +
-                                                                    Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Item review
-                                                            notifications</div>
-                                                        <small class="fs-12 text-muted">Send me an email when
-                                                            my items
-                                                            are approved or rejected </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail">
-                                                                    Email</option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off" selected>
-                                                                    Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Buyer review
-                                                            notifications
-                                                        </div>
-                                                        <small class="fs-12 text-muted">Send me an email when
-                                                            someone
-                                                            leaves a review with their rating </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail">
-                                                                    Email</option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off">Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone" selected>
-                                                                    SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Expiring support
-                                                            notifications
-                                                        </div>
-                                                        <small class="fs-12 text-muted">Send me emails showing
-                                                            my soon
-                                                            to expire support entitlements </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell">Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail"
-                                                                    selected>Email
-                                                                </option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off">Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="fw-bold text-dark">Daily summary emails
-                                                        </div>
-                                                        <small class="fs-12 text-muted">Send me a daily
-                                                            summary of all
-                                                            items approved or rejected </small>
-                                                    </td>
-                                                    <td class="text-end">
-                                                        <div class="form-group select-wd-lg">
-                                                            <select class="form-control" data-select2-selector="icon">
-                                                                <option value="SMS" data-icon="feather-smartphone">
-                                                                    SMS
-                                                                </option>
-                                                                <option value="Push" data-icon="feather-bell"
-                                                                    selected>Push
-                                                                </option>
-                                                                <option value="Email" data-icon="feather-mail">
-                                                                    Email</option>
-                                                                <option value="Repeat" data-icon="feather-repeat">
-                                                                    Repeat</option>
-                                                                <option value="Deactivate"
-                                                                    data-icon="feather-bell-off">Deactivate
-                                                                </option>
-                                                                <option value="SMS+Push"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                </option>
-                                                                <option value="Email+Push" data-icon="feather-mail">
-                                                                    Email + Push</option>
-                                                                <option value="SMS+Email"
-                                                                    data-icon="feather-smartphone">SMS + Email
-                                                                </option>
-                                                                <option value="SMS+Push+Email"
-                                                                    data-icon="feather-smartphone">SMS + Push
-                                                                    + Email
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                @php
+                                                    $data = DB::select('CALL get_candidate_assignment_data(?)', [
+                                                        $intern->id,
+                                                    ]);
+                                                @endphp
+
+                                                @forelse ($data as $row)
+                                                    <tr>
+                                                        <td>{{ $row->name }}</td>
+                                                        @if ($row->project)
+                                                            <td>{{ $row->project }}</td>
+                                                        @else
+                                                            <td colspan="1" class="text-center"
+                                                                style="color: red;">
+                                                                No project assigned
+                                                            </td>
+                                                        @endif
+
+                                                        <td>
+                                                            {{ $row->start_date ? \Carbon\Carbon::parse($row->start_date)->format('d-m-Y') : '-' }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $row->end_date ? \Carbon\Carbon::parse($row->end_date)->format('d-m-Y') : '-' }}
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="4" class="text-center text-muted">
+                                                            No project assigned
+                                                        </td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
-                                    <hr>
-                                    <div class="notify-activity-section">
-                                        <div class="px-4 mb-4 d-flex justify-content-between">
-                                            <h5 class="fw-bold">Account Activity</h5>
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">View
-                                                Alls</a>
-                                        </div>
-                                        <div class="px-4">
-                                            <div
-                                                class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                                <div class="hstack me-4">
-                                                    <div class="avatar-text">
-                                                        <i class="feather-message-square"></i>
-                                                    </div>
-                                                    <div class="ms-4">
-                                                        <a href="javascript:void(0);"
-                                                            class="fw-bold mb-1 text-truncate-1-line">Someone
-                                                            comments
-                                                            on one of my items</a>
-                                                        <div class="fs-12 text-muted text-truncate-1-line">If
-                                                            someone
-                                                            comments on one of your items, it's important to
-                                                            respond in
-                                                            a timely and appropriate manner.</div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-check form-switch form-switch-sm">
-                                                    <label class="form-check-label fw-500 text-dark c-pointer"
-                                                        for="formSwitchComment"></label>
-                                                    <input class="form-check-input c-pointer" type="checkbox"
-                                                        id="formSwitchComment">
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                                <div class="hstack me-4">
-                                                    <div class="avatar-text">
-                                                        <i class="feather-briefcase"></i>
-                                                    </div>
-                                                    <div class="ms-4">
-                                                        <a href="javascript:void(0);"
-                                                            class="fw-bold mb-1 text-truncate-1-line">Someone
-                                                            replies
-                                                            to my job posting</a>
-                                                        <div class="fs-12 text-muted text-truncate-1-line">
-                                                            Great! It's
-                                                            always exciting to hear from someone who's
-                                                            interested in a
-                                                            job posting you've put out.</div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-check form-switch form-switch-sm">
-                                                    <label class="form-check-label fw-500 text-dark c-pointer"
-                                                        for="formSwitchReplie"></label>
-                                                    <input class="form-check-input c-pointer" type="checkbox"
-                                                        id="formSwitchReplie">
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                                <div class="hstack me-4">
-                                                    <div class="avatar-text">
-                                                        <i class="feather-briefcase"></i>
-                                                    </div>
-                                                    <div class="ms-4">
-                                                        <a href="javascript:void(0);"
-                                                            class="fw-bold mb-1 text-truncate-1-line">Someone
-                                                            mentions
-                                                            or follows me</a>
-                                                        <div class="fs-12 text-muted text-truncate-1-line">If
-                                                            you
-                                                            received a notification that someone mentioned or
-                                                            followed
-                                                            you, take a moment to read it and understand what it
-                                                            means.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-check form-switch form-switch-sm">
-                                                    <label class="form-check-label fw-500 text-dark c-pointer"
-                                                        for="formSwitchFollow"></label>
-                                                    <input class="form-check-input c-pointer" type="checkbox"
-                                                        id="formSwitchFollow">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
                                 <div class="tab-pane fade" id="connectionTab" role="tabpanel">
-                                    <div class="development-connections p-4 pb-0">
-                                        <div class="mb-4 d-flex align-items-center justify-content-between">
-                                            <h5 class="fw-bold">Developement Connections:</h5>
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">View
-                                                Alls</a>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/google-drive.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">Google
-                                                        Drive: Cloud
-                                                        Storage & File Sharing</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">
-                                                        Google's
-                                                        powerful search capabilities are embedded in Drive and
-                                                        offer
-                                                        speed, reliability, and collaboration. And features like
-                                                        Drive
-                                                        search chips help your team ...</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchGDrive"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchGDrive">
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/dropbox.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">Dropbox:
-                                                        Cloud
-                                                        Storage & File Sharing</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">Dropbox
-                                                        brings
-                                                        everything—traditional files, cloud content, and web
-                                                        shortcuts—together in one place. ... Save and access
-                                                        your files
-                                                        from any device, and share ...</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchDropbox"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchDropbox" checked>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/github.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">GitHub:
-                                                        Where the
-                                                        world builds software</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">GitHub
-                                                        is where
-                                                        over 83 million developers shape the future of software,
-                                                        together. Contribute to the open source community,
-                                                        manage your
-                                                        Git repositories, ...</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchGitHub"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchGitHub" checked>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/gitlab.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">GitLab: The
-                                                        One
-                                                        DevOps Platform</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">GitLab
-                                                        helps
-                                                        you automate the builds, integration, and verification
-                                                        of your
-                                                        code. With SAST, DAST, code quality analysis, plus
-                                                        pipelines
-                                                        that enable ...</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchGitLab"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchGitLab">
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/shopify.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">Shopify:
-                                                        Ecommerce
-                                                        Developers Platform</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">Try
-                                                        Shopify
-                                                        free and start a business or grow an existing one. Get
-                                                        more than
-                                                        ecommerce software with tools to manage every part of
-                                                        your
-                                                        business.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchShopify"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchShopify" checked>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/whatsapp.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">WhatsApp:
-                                                        WhatsApp
-                                                        from Facebook is a FREE messaging and video calling
-                                                        app</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">
-                                                        Reliable
-                                                        messaging. With WhatsApp, you'll get fast, simple,
-                                                        secure
-                                                        messaging and calling for free*, available on phones all
-                                                        ...
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchWhatsApp"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchWhatsApp">
-                                            </div>
-                                        </div>
+                                    <div class="table-responsive">
+                                        <table class="table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Project</th>
+                                                    <th>Project Link</th>
+                                                    <th>Total Time</th>
+                                                    <th>Submitted or not</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $data = DB::select('CALL get_candidate_assignment_submission(?)', [
+                                                        $intern->id,
+                                                    ]);
+                                                @endphp
+                                                @foreach ($data as $data)
+                                                    <tr>
+                                                        <td>{{ $data->project }}</td>
+                                                        <td class="text-center">
+                                                            @if (!empty($data->project_link))
+                                                                <a href="{{ $data->project_link }}" target="_blank"
+                                                                    title="Open Project Link">
+                                                                    <i class="bi bi-link-45deg fs-5"></i>
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted">-</span>
+                                                            @endif
+                                                        </td>
+
+                                                        <td>
+                                                            @if (!empty($data->start_date) && !empty($data->submission))
+                                                                {{ (int) \Carbon\Carbon::parse($data->start_date)->diffInDays(\Carbon\Carbon::parse($data->submission)) }}
+                                                                days
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if (!empty($data->submitted_by_mentor))
+                                                                <span class="badge bg-info">Submitted by Mentor</span>
+                                                            @elseif(!empty($data->project_link))
+                                                                <span class="badge bg-warning text-dark">Submitted by
+                                                                    Candidate</span>
+                                                            @else
+                                                                <span class="text-muted">-</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <hr>
-                                    <div class="social-connections px-4 mb-4">
-                                        <div class="mb-4 d-flex align-items-center justify-content-between">
-                                            <h5 class="fw-bold">Social Connections:</h5>
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">View
-                                                Alls</a>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/facebook.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">Facebook:
-                                                        The World
-                                                        Most Popular Social Network</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">Create
-                                                        an
-                                                        account or log into Facebook. Connect with friends,
-                                                        family and
-                                                        other people you know. Share photos and videos, send
-                                                        messages
-                                                        and get updates.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchFacebook"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchFacebook" checked>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/instagram.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">Instagram:
-                                                        Edit &
-                                                        Share photos, Videos & Dessages</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">Create
-                                                        an
-                                                        account or log in to Instagram - A simple, fun &
-                                                        creative way to
-                                                        capture, edit & share photos, videos & messages with
-                                                        friends &
-                                                        family.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchInstagram"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchInstagram">
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/twitter.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">Twitter:
-                                                        It's what's
-                                                        happening / Twitter </a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">From
-                                                        breaking
-                                                        news and entertainment to sports and politics, get the
-                                                        full
-                                                        story with all the live commentary.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchTwitter"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchTwitter" checked>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/spotify.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">Spotify: Web
-                                                        Player:
-                                                        Music for everyone </a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">Spotify
-                                                        is a
-                                                        digital music service that gives you access to millions
-                                                        of
-                                                        songs.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchSpotify"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchSpotify" checked>
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 mb-3 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/youtube.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">YouTube: The
-                                                        World
-                                                        Largest Video Sharing Platform</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">Enjoy
-                                                        the
-                                                        videos and music you love, upload original content, and
-                                                        share it
-                                                        all with friends, family, and the world on YouTube.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchYouTube"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchYouTube">
-                                            </div>
-                                        </div>
-                                        <div
-                                            class="hstack justify-content-between p-4 border border-dashed border-gray-3 rounded-1">
-                                            <div class="hstack me-4">
-                                                <div class="wd-40">
-                                                    <img src="assets/images/brand/pinterest.png" class="img-fluid"
-                                                        alt="">
-                                                </div>
-                                                <div class="ms-4">
-                                                    <a href="javascript:void(0);"
-                                                        class="fw-bold mb-1 text-truncate-1-line">Pinterest:
-                                                        Discover
-                                                        recipes, home ideas, style inspiration and other ideas
-                                                        to
-                                                        try</a>
-                                                    <div class="fs-12 text-muted text-truncate-1-line">
-                                                        Pinterest is an
-                                                        image sharing and social media service designed to
-                                                        enable saving
-                                                        and discovery of information on the internet using
-                                                        images.</div>
-                                                </div>
-                                            </div>
-                                            <div class="form-check form-switch form-switch-sm">
-                                                <label class="form-check-label fw-500 text-dark c-pointer"
-                                                    for="formSwitchPinterest"></label>
-                                                <input class="form-check-input c-pointer" type="checkbox"
-                                                    id="formSwitchPinterest" checked>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
                                 <div class="tab-pane fade p-4" id="securityTab" role="tabpanel">
                                     <div class="p-4 mb-4 border border-dashed border-gray-3 rounded-1">
@@ -1505,15 +681,15 @@
                                 for="app-font-family-ubuntu">Ubuntu</label>
                         </div>
                         <div class="col-6 text-center single-option">
-                            <input type="radio" class="btn-check" id="app-font-family-poppins"
-                                name="font-family" value="9" data-font-family="app-font-family-poppins" />
+                            <input type="radio" class="btn-check" id="app-font-family-poppins" name="font-family"
+                                value="9" data-font-family="app-font-family-poppins" />
                             <label
                                 class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label"
                                 for="app-font-family-poppins">Poppins</label>
                         </div>
                         <div class="col-6 text-center single-option">
-                            <input type="radio" class="btn-check" id="app-font-family-raleway"
-                                name="font-family" value="10" data-font-family="app-font-family-raleway" />
+                            <input type="radio" class="btn-check" id="app-font-family-raleway" name="font-family"
+                                value="10" data-font-family="app-font-family-raleway" />
                             <label
                                 class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label"
                                 for="app-font-family-raleway">Raleway</label>
@@ -1576,16 +752,14 @@
                         </div>
                         <div class="col-6 text-center single-option">
                             <input type="radio" class="btn-check" id="app-font-family-josefin-sans"
-                                name="font-family" value="19"
-                                data-font-family="app-font-family-josefin-sans" />
+                                name="font-family" value="19" data-font-family="app-font-family-josefin-sans" />
                             <label
                                 class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label"
                                 for="app-font-family-josefin-sans">Josefin Sans</label>
                         </div>
                         <div class="col-6 text-center single-option">
                             <input type="radio" class="btn-check" id="app-font-family-ibm-plex-sans"
-                                name="font-family" value="20"
-                                data-font-family="app-font-family-ibm-plex-sans" />
+                                name="font-family" value="20" data-font-family="app-font-family-ibm-plex-sans" />
                             <label
                                 class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label"
                                 for="app-font-family-ibm-plex-sans">IBM Plex Sans</label>
@@ -1608,8 +782,7 @@
                         </div>
                         <div class="col-6 text-center single-option">
                             <input type="radio" class="btn-check" id="app-font-family-roboto-slab"
-                                name="font-family" value="22"
-                                data-font-family="app-font-family-roboto-slab" />
+                                name="font-family" value="22" data-font-family="app-font-family-roboto-slab" />
                             <label
                                 class="py-2 fs-9 fw-bold text-dark text-uppercase text-spacing-1 border border-gray-2 w-100 h-100 c-pointer position-relative options-label"
                                 for="app-font-family-roboto-slab">Roboto Slab</label>

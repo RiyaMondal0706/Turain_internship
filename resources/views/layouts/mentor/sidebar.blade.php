@@ -13,7 +13,7 @@
                       <label>Navigation</label>
                   </li>
                   <li class="nxl-item nxl-hasmenu">
-                      <a class="nxl-link" href="{{ route('hr.dashboard') }}">
+                      <a class="nxl-link" href="{{ route('mentor.dashboard') }}">
                           <span class="nxl-micon">
                               <i class="feather feather-airplay"></i>
                           </span>
@@ -25,7 +25,7 @@
                           <span class="nxl-micon">
                               <i class="feather feather-users"></i>
                           </span>
-                          <span class="nxl-text">Intern List</span>
+                          <span class="nxl-text">Candidate List</span>
                       </a>
                   </li>
           </div>
