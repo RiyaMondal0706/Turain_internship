@@ -535,6 +535,7 @@ public function index_show(){
 }
 
 public function generate_cirtificate($id){
+    
 DB::table('assignment_submissions')
     ->where('id', $id)
     ->update([

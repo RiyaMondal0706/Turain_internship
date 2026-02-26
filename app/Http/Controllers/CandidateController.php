@@ -176,6 +176,17 @@ $projectCount = DB::table('assign')
      return view('candidate.icard_show', compact('intern', 'id'));
  }
 
+public function candidate_profile_show(){
+          $internId = session()->get('user_id');
+        $intern_id = DB::table('users')
+            ->where('id', $internId)
+            ->first();
+        $intern = DB::table('intern_data')
+            ->where('id', $intern_id->internship_data_id)
+            ->first();
 
+            return view('candidate.intern_profile', compact('intern'));
+            
+}
 
 }
