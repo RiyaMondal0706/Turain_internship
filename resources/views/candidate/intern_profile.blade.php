@@ -9,7 +9,7 @@
     <meta name="keyword" content="" />
     <meta name="author" content="flexilecode" />
 
-    <title>Turain || mentor View </title>
+    <title>Turain || Intern View </title>
 
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/assets/images/favicon.ico') }}">
 
@@ -25,9 +25,9 @@
 
 <body>
 
-    @include('layouts.mentor.sidebar')
+    @include('layouts.candidate.sidebar')
 
-    @include('layouts.mentor.header')
+    @include('layouts.candidate.header')
 
 
     <!--! ================================================================ !-->
@@ -39,11 +39,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">mentor</h5>
+                        <h5 class="m-b-10">Intern</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">mentor View</li>
+                        <li class="breadcrumb-item">Intern View</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -55,7 +55,6 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-
 
                         </div>
                     </div>
@@ -76,7 +75,7 @@
                                 <div class="mb-4 text-center">
                                     <div class="wd-150 ht-150 mx-auto mb-3 position-relative">
                                         <div class="avatar-image wd-150 ht-150 border border-5 border-gray-3">
-                                            <img src="{{ asset('assets/images/mentor/' . $mentor->image) }}"
+                                            <img src="{{ asset('assets/images/intern/' . $intern->image) }}"
                                                 alt="" class="img-fluid">
                                         </div>
                                         <div class="wd-10 ht-10 text-success rounded-circle position-absolute translate-middle"
@@ -86,9 +85,9 @@
                                     </div>
                                     <div class="mb-4">
                                         <a href="javascript:void(0);"
-                                            class="fs-14 fw-bold d-block">{{ $mentor->name }}</a>
+                                            class="fs-14 fw-bold d-block">{{ $intern->name }}</a>
                                         <a href="javascript:void(0);" class="fs-12 fw-normal text-muted d-block">
-                                            {{ $mentor->email }}</a>
+                                            {{ $intern->email }}</a>
                                     </div>
 
                                 </div>
@@ -96,17 +95,17 @@
                                     <li class="hstack justify-content-between mb-4">
                                         <span class="text-muted fw-medium hstack gap-3"><i
                                                 class="feather-map-pin"></i>Location</span>
-                                        <a href="javascript:void(0);" class="float-end">{{ $mentor->address }}</a>
+                                        <a href="javascript:void(0);" class="float-end">{{ $intern->address }}</a>
                                     </li>
                                     <li class="hstack justify-content-between mb-4">
                                         <span class="text-muted fw-medium hstack gap-3"><i
                                                 class="feather-phone"></i>Phone</span>
-                                        <a href="javascript:void(0);" class="float-end">{{ $mentor->phone }}</a>
+                                        <a href="javascript:void(0);" class="float-end">{{ $intern->phone }}</a>
                                     </li>
                                     <li class="hstack justify-content-between mb-0">
                                         <span class="text-muted fw-medium hstack gap-3"><i
                                                 class="feather-mail"></i>Email</span>
-                                        <a href="javascript:void(0);" class="float-end">{{ $mentor->email }}</a>
+                                        <a href="javascript:void(0);" class="float-end">{{ $intern->email }}</a>
                                     </li>
 
                                 </ul>
@@ -126,6 +125,14 @@
                                         <a href="javascript:void(0);" class="nav-link active" data-bs-toggle="tab"
                                             data-bs-target="#overviewTab" role="tab">Profile</a>
                                     </li>
+                                    <li class="nav-item flex-fill border-top" role="presentation">
+                                        <a href="javascript:void(0);" class="nav-link" data-bs-toggle="tab"
+                                            data-bs-target="#billingTab" role="tab">Educational Information</a>
+                                    </li>
+                                    <li class="nav-item flex-fill border-top" role="presentation">
+                                        <a href="javascript:void(0);" class="nav-link" data-bs-toggle="tab"
+                                            data-bs-target="#activityTab" role="tab">Address</a>
+                                    </li>
 
 
                                 </ul>
@@ -140,24 +147,125 @@
                                         </div>
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">Full Name:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $mentor->name }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->name }}</div>
+                                        </div>
+
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Date of Birth:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->dob }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">Mobile Number:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $mentor->phone }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->phone }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">Email Address:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $mentor->email }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->email }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">Location:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $mentor->address }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->address }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Joining Date:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->entry_date }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Ending Date:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->end_date }}</div>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+                                <div class="tab-pane fade" id="billingTab" role="tabpanel">
+
+                                    <div class="educational-details mb-5">
+                                        <div class="mb-4 d-flex align-items-center justify-content-between">
+                                            <h5 class="fw-bold mb-0">Educational Details:</h5>
+
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Madhyamik Board:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->mp_boad }}</div>
+                                        </div>
+
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Madhyamik Marks:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->mp_marks }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Hs Board:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->hs_boad }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Hs marks:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->hs_marks }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Graduation:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->graduation }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Graduation CGPA:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->graduation_cgpa }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Post Graduation:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->post_graduation }}</div>
+                                        </div>
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Post Graduation CGPA:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->post_graduation_cgpa }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                                <div class="tab-pane fade" id="activityTab" role="tabpanel">
+
+                                    <div class="address-details mb-5">
+                                        <div class="mb-4 d-flex align-items-center justify-content-between">
+                                            <h5 class="fw-bold mb-0">Address Details:</h5>
+
                                         </div>
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">Address Details:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $mentor->address }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->address }}</div>
                                         </div>
+
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">Pincode:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $intern->pincode }}</div>
+                                        </div>
+                                        @php
+                                            $state = DB::table('states')->where('id', $intern->state)->first();
+                                        @endphp
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">State:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $state->name }}</div>
+                                        </div>
+                                        @php
+                                            $District = DB::table('districts')->where('id', $intern->district)->first();
+                                        @endphp
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">District:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $District->name }}</div>
+                                        </div>
+                                        @php
+                                            $city = DB::table('cities')->where('id', $intern->city)->first();
+                                        @endphp
+                                        <div class="row g-0 mb-4">
+                                            <div class="col-sm-6 text-muted">City:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $city->name }}</div>
+                                        </div>
+
+
+
 
                                     </div>
 
@@ -165,6 +273,129 @@
                                 </div>
 
 
+                                <div class="tab-pane fade p-4" id="securityTab" role="tabpanel">
+                                    <div class="p-4 mb-4 border border-dashed border-gray-3 rounded-1">
+                                        <h6 class="fw-bolder"><a href="javascript:void(0);">Two-factor
+                                                Authentication</a></h6>
+                                        <div class="fs-12 text-muted text-truncate-3-line mt-2 mb-4">
+                                            Two-factor
+                                            authentication is an enhanced security meansur. Once enabled, you'll
+                                            be
+                                            required to give two types of identification when you log into
+                                            Google
+                                            Authentication and SMS are Supported.</div>
+                                        <div class="form-check form-switch form-switch-sm">
+                                            <label class="form-check-label fw-500 text-dark c-pointer"
+                                                for="2faVerification">Enable 2FA Verification</label>
+                                            <input class="form-check-input c-pointer" type="checkbox"
+                                                id="2faVerification" checked>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 mb-4 border border-dashed border-gray-3 rounded-1">
+                                        <h6 class="fw-bolder"><a href="javascript:void(0);">Secondary
+                                                Verification</a></h6>
+                                        <div class="fs-12 text-muted text-truncate-3-line mt-2 mb-4">The first
+                                            factor
+                                            is a password and the second commonly includes a text with a code
+                                            sent to
+                                            your smartphone, or biometrics using your fingerprint, face, or
+                                            retina.
+                                        </div>
+                                        <div class="form-check form-switch form-switch-sm">
+                                            <label class="form-check-label fw-500 text-dark c-pointer"
+                                                for="secondaryVerification">Set up secondary method</label>
+                                            <input class="form-check-input c-pointer" type="checkbox"
+                                                id="secondaryVerification" checked>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 mb-4 border border-dashed border-gray-3 rounded-1">
+                                        <h6 class="fw-bolder"><a href="javascript:void(0);">Backup Codes</a>
+                                        </h6>
+                                        <div class="fs-12 text-muted text-truncate-3-line mt-4 mb-4">A backup
+                                            code is
+                                            automatically generated for you when you turn on two-factor
+                                            authentication
+                                            through your iOS or Android Twitter app. You can also generate a
+                                            backup code
+                                            on twitter.com.</div>
+                                        <div class="form-check form-switch form-switch-sm">
+                                            <label class="form-check-label fw-500 text-dark c-pointer"
+                                                for="generateBackup">Generate backup codes</label>
+                                            <input class="form-check-input c-pointer" type="checkbox"
+                                                id="generateBackup">
+                                        </div>
+                                    </div>
+                                    <div class="p-4 border border-dashed border-gray-3 rounded-1">
+                                        <h6 class="fw-bolder"><a href="javascript:void(0);">Login
+                                                Verification</a>
+                                        </h6>
+                                        <div class="fs-12 text-muted text-truncate-3-line mt-2 mb-4">Login
+                                            verification is an enhanced security meansur. Once enabled, you'll
+                                            be
+                                            required to give two types of identification when you log into
+                                            Google
+                                            Authentication and SMS are Supported.</div>
+                                        <div class="form-check form-switch form-switch-sm">
+                                            <label class="form-check-label fw-500 text-dark c-pointer"
+                                                for="loginVerification">Enable Login Verification</label>
+                                            <input class="form-check-input c-pointer" type="checkbox"
+                                                id="loginVerification" checked>
+                                        </div>
+                                    </div>
+                                    <hr class="my-5">
+                                    <div class="alert alert-dismissible mb-4 p-4 d-flex alert-soft-danger-message"
+                                        role="alert">
+                                        <div class="me-4 d-none d-md-block">
+                                            <i class="feather feather-alert-triangle text-danger fs-1"></i>
+                                        </div>
+                                        <div>
+                                            <p class="fw-bold mb-0 text-truncate-1-line">You Are Delete or
+                                                Deactivating Your Account</p>
+                                            <p class="text-truncate-3-line mt-2 mb-4">Two-factor
+                                                authentication adds
+                                                an additional layer of security to your account by requiring
+                                                more than
+                                                just a password to log in.</p>
+                                            <a href="javascript:void(0);"
+                                                class="btn btn-sm btn-danger d-inline-block">Learn more</a>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                    <div class="card mt-5">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold">Delete Account</h6>
+                                            <p class="fs-11 text-muted">Go to the Data & Privacy section of
+                                                your
+                                                profile Account. Scroll to "Your data & privacy options." Delete
+                                                your
+                                                Profile Account. Follow the instructions to delete your account:
+                                            </p>
+                                            <div class="my-4 py-2">
+                                                <input type="password" class="form-control"
+                                                    placeholder="Enter your password">
+                                                <div class="mt-3">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input"
+                                                            id="acDeleteDeactive">
+                                                        <label class="custom-control-label c-pointer"
+                                                            for="acDeleteDeactive">I confirm my account
+                                                            deletations or
+                                                            deactivation.</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-sm-flex gap-2">
+                                                <a href="javascript:void(0);" class="btn btn-danger"
+                                                    data-action-target="#acSecctingsActionMessage">Delete
+                                                    Account</a>
+                                                <a href="javascript:void(0);"
+                                                    class="btn btn-warning mt-2 mt-sm-0 successAlertMessage">Deactiveted
+                                                    Account</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

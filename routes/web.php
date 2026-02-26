@@ -176,6 +176,9 @@ Route::get('/assignment/{id}/notes', [CandidateController::class, 'getNotes']);
 Route::get('/profile/id-card', [CandidateController::class, 'showIdCard'])
      ->name('profile.idcard');
 
+
+     Route::get('/candodate/profile', [CandidateController::class, 'candidate_profile_show'])->name('candidate.profile.show');
+
     }
 
 );

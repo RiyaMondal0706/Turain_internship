@@ -339,6 +339,11 @@
                             <i class="feather-user"></i>
                             <span>Generate ID Card</span>
                         </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{{ route('candidate.profile.show') }}" class="dropdown-item">
+                            <i class="feather-user"></i>
+                            <span>Profile Details</span>
+                        </a>
 
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('logout') }}" class="dropdown-item">
