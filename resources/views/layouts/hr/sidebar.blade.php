@@ -65,6 +65,42 @@
                           <span class="nxl-text">Completed Projeect</span>
                       </a>
                   </li>
+                  <li class="nxl-item has-sub">
+                      <a href="javascript:void(0);" class="nxl-link">
+                          <span class="nxl-micon">
+                              <i class="bi bi-gift-fill"></i>
+                          </span>
+                          <span class="nxl-text">Upcoming Celebrations</span>
+                          <span class="nxl-arrow">
+                              <i class="bi bi-chevron-down"></i>
+                          </span>
+                      </a>
+
+                      <!-- SUB MENU -->
+                      <ul class="nxl-submenu">
+
+                          <!-- Birthday -->
+                          <li class="nxl-item">
+                              <a class="nxl-link" href="{{ route('hr.birthday.list') }}">
+                                  <span class="nxl-micon">
+                                      <i class="bi bi-cake2-fill"></i>
+                                  </span>
+                                  <span class="nxl-text">Birthday</span>
+                              </a>
+                          </li>
+
+                          <!-- Work Anniversary -->
+                          <li class="nxl-item">
+                              <a class="nxl-link" href="{{ route('hr.work_anniversery.list') }}">
+                                  <span class="nxl-micon">
+                                      <i class="bi bi-briefcase-fill"></i>
+                                  </span>
+                                  <span class="nxl-text">Work Anniversary</span>
+                              </a>
+                          </li>
+
+                      </ul>
+                  </li>
 
                   {{-- <li class="nxl-item nxl-hasmenu">
                       <a href="javascript:void(0);" class="nxl-link">

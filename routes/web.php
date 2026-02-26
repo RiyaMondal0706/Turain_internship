@@ -27,9 +27,6 @@ Route::middleware(['role.session:hr'])->group(function () {
     // })->name('hr.dashboard');
   Route::get('/hr/dashboard', [HrController::class, 'index_show'])
         ->name('hr.dashboard');
-
-
-
     Route::get('/hr/intern-create', [HrController::class, 'internCreate_show'])
         ->name('hr.intern.create');
     Route::get('/hr/intern-list', [HrController::class, 'internList_show'])
@@ -70,19 +67,14 @@ Route::middleware(['role.session:hr'])->group(function () {
         ->name('assign.store');
     Route::get('/hr/assign-list', [HrController::class, 'assignList_show'])
         ->name('hr.assign.list');
-    // Route::post('/hr/assign/status-update', [HrController::class, 'updateStatus_assign'])
-    //     ->name('assign.status.update');
     Route::post('/hr/assign/status-update', [HrController::class, 'updateStatus_assign'])
         ->name('assign.status.update');
-
-
     Route::get('/hr/assign/view/{id}', [HrController::class, 'assign_view'])
         ->name('assign.view');
     Route::get('/hr/get-designations', [HrController::class, 'getDesignations'])
         ->name('get.designations');
     Route::get('/hr/department', [HrController::class, 'department_show'])
         ->name('hr.department.list');
-
     Route::get('/hr/department/create', [HrController::class, 'department_create'])
         ->name('hr.department.create');
     Route::post('/hr/department/create', [HrController::class, 'department_store'])
@@ -91,8 +83,6 @@ Route::middleware(['role.session:hr'])->group(function () {
         ->name('hr.designation.create');
     Route::post('/hr/designation/create', [HrController::class, 'designation_store'])
         ->name('hr.designation.store');
-
-
     Route::get('hr/designation/{id}/edit', [HrController::class, 'department_edit'])
         ->name('hr.department.edit');
     Route::put('/hr/department/{id}/update', [HrController::class, 'updateDesignations'])
@@ -103,15 +93,19 @@ Route::middleware(['role.session:hr'])->group(function () {
         '/designation/status-update',
         [HrController::class, 'designation_statusUpdate']
     )->name('designation.status.update');
-
-
  Route::get('/hr/completed_project', [HrController::class, 'completed_project_show'])
         ->name('hr.completed_project.list');
-
-
         Route::get('/certificate/generate/{id}', 
     [HrController::class, 'generate_cirtificate']
 )->name('certificate.generate');
+
+
+
+ Route::get('/hr/birthday_list', [HrController::class, 'upcomming_birthday_show'])
+        ->name('hr.birthday.list');
+ Route::get('/hr/work-anniversery-list', [HrController::class, 'upcomming_work_anniversery_show'])
+        ->name('hr.work_anniversery.list');
+
 });
 
 

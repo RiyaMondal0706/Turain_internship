@@ -546,4 +546,15 @@ DB::table('assignment_submissions')
             ->with('success', 'Cirtificate generate successfully!');
 }
 
+
+public function upcomming_birthday_show(){
+$data = DB::select('CALL get_all_birthdays_desc_all()');
+  return view("hr.birthday_list" , compact('data'));
+}
+
+public function upcomming_work_anniversery_show(){
+    dd("work");
+}
+
+
 }
