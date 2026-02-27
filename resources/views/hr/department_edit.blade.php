@@ -131,14 +131,21 @@
                                             </div>
 
                                             <!-- Selected Designations -->
+
+
                                             <div class="mb-3">
                                                 <label class="form-label fw-medium">Selected Designations</label>
+
                                                 <div id="selected-designations" class="selected-box">
                                                     @foreach ($designations as $designation)
                                                         @if ($designation->status == 1)
                                                             <div class="selected-tag" data-id="{{ $designation->id }}">
                                                                 {{ $designation->designation_name }}
                                                                 <span class="remove">&times;</span>
+
+                                                                <!-- hidden input -->
+                                                                <input type="hidden" name="selected_designations[]"
+                                                                    value="{{ $designation->id }}">
                                                             </div>
                                                         @endif
                                                     @endforeach
@@ -152,7 +159,8 @@
                                                     <option value="">Select designation</option>
                                                     @foreach ($designations as $designation)
                                                         @if ($designation->status == 0)
-                                                            <option value="{{ $designation->department_id }}">
+                                                            <!-- ✅ IMPORTANT: designation ID -->
+                                                            <option value="{{ $designation->id }}">
                                                                 {{ $designation->designation_name }}
                                                             </option>
                                                         @endif
@@ -160,8 +168,8 @@
                                                 </select>
                                             </div>
 
-                                            <!-- Hidden inputs -->
-                                            <div id="hidden-inputs"></div>
+                                            <!-- Department -->
+                                            <input type="hidden" name="department_id" value="{{ $department->id }}">
 
                                             <div class="text-end mt-4">
                                                 <button type="submit" class="btn btn-primary px-4">
@@ -875,47 +883,45 @@
     <script>
         $(document).ready(function() {
 
-            // Add designation
+            // ADD designation
             $('#designation_select').on('change', function() {
                 const id = $(this).val();
                 const text = $(this).find(':selected').text();
 
                 if (!id) return;
 
+                // ❌ prevent duplicate add
+                if ($('#selected-designations .selected-tag[data-id="' + id + '"]').length) {
+                    $(this).val('');
+                    return;
+                }
+
                 $('#selected-designations').append(`
             <div class="selected-tag" data-id="${id}">
                 ${text}
                 <span class="remove">&times;</span>
+                <input type="hidden" name="selected_designations[]" value="${id}">
             </div>
         `);
 
+                // remove from dropdown
                 $(this).find(':selected').remove();
                 $(this).val('');
             });
 
-            // Remove designation
+            // REMOVE designation
             $(document).on('click', '.remove', function() {
                 const tag = $(this).closest('.selected-tag');
                 const id = tag.data('id');
-                const text = tag.text().replace('×', '').trim();
+                const text = tag.clone().children().remove().end().text().trim();
 
+                // add back to dropdown
                 $('#designation_select').append(
                     `<option value="${id}">${text}</option>`
                 );
 
+                // remove tag + hidden input
                 tag.remove();
-            });
-
-            // Before submit → build hidden inputs
-            $('form').on('submit', function() {
-                $('#hidden-inputs').empty();
-
-                $('#selected-designations .selected-tag').each(function() {
-                    const id = $(this).data('id');
-                    $('#hidden-inputs').append(
-                        `<input type="hidden" name="selected_designations[]" value="${id}">`
-                    );
-                });
             });
 
         });

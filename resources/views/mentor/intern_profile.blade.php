@@ -250,18 +250,28 @@
                                             <div class="col-sm-6 text-muted">Pincode:</div>
                                             <div class="col-sm-6 fw-semibold">{{ $intern->pincode }}</div>
                                         </div>
+                                        @php
+                                            $state = DB::table('states')->where('id', $intern->state)->first();
+                                        @endphp
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">State:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $intern->name }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $state->name }}</div>
                                         </div>
+                                        @php
+                                            $District = DB::table('districts')->where('id', $intern->district)->first();
+                                        @endphp
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">District:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $intern->name }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $District->name }}</div>
                                         </div>
+                                        @php
+                                            $city = DB::table('cities')->where('id', $intern->city)->first();
+                                        @endphp
                                         <div class="row g-0 mb-4">
                                             <div class="col-sm-6 text-muted">City:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $intern->name }}</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $city->name }}</div>
                                         </div>
+
 
 
 

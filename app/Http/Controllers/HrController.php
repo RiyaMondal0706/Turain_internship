@@ -491,25 +491,22 @@ class HrController extends Controller
     public function updateDesignations(Request $request, $id)
     {
 
-        DB::table('designations')
-            ->where('department_id', $request->department_id)
-            ->update([
-                'status' => 0,
-                'updated_at' => now(),
-            ]);
-
-
-        if ($request->has('selected_designations')) {
-            foreach ($request->selected_designations as $id) {
-                DB::table('designations')
-                    ->where('id', $id)
-                    ->update([
-                        'department_id' => $request->department_id,
-                        'status' => 1,
-                        'updated_at' => now(),
-                    ]);
-            }
-        }
+DB::table('designations')
+    ->where('department_id', $request->department_id)
+    ->update([
+        'status' => 0,
+        'updated_at' => now(),
+    ]);
+// dd($request->selected_designations);
+if (!empty($request->selected_designations)) {
+    DB::table('designations')
+        ->whereIn('id', $request->selected_designations)
+        ->update([
+            'department_id' => $request->department_id,
+            'status' => 1,
+            'updated_at' => now(),
+        ]);
+}
 
         return redirect()->back()->with('success', 'Designations updated successfully');
         return back()->with('success', 'Updated successfully');
