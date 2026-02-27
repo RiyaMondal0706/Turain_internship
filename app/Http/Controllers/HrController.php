@@ -262,6 +262,7 @@ class HrController extends Controller
             'address' => $request->address,
             'image' => $avatarName,
             'created_at' => now(),
+            'entry_date' =>$request->joining_date,
         ]);
 
         $generate = 'turain' . random_int(1000, 9999);
@@ -359,6 +360,7 @@ class HrController extends Controller
                     'department' => $request->department_id,
                     'image' => $avatarName,
                     'address' => $request->address,
+                    'entry_date' =>$request->joining_date,
                 ]
             );
         return redirect()
@@ -497,7 +499,6 @@ DB::table('designations')
         'status' => 0,
         'updated_at' => now(),
     ]);
-// dd($request->selected_designations);
 if (!empty($request->selected_designations)) {
     DB::table('designations')
         ->whereIn('id', $request->selected_designations)

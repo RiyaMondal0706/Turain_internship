@@ -259,7 +259,26 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row mb-4 align-items-center">
+                                            <div class="col-lg-4">
+                                                <label for="joining_date" class="fw-semibold">
+                                                    &nbsp;&nbsp;Joining Date:<span class="text-danger">*</span>
+                                                </label>
+                                            </div>
 
+                                            <div class="col-lg-8">
+                                                <div class="input-group">
+                                                    <div class="input-group-text">
+                                                        <i class="feather-calendar"></i>
+                                                    </div>
+
+                                                    <input type="date" name="joining_date" id="joining_date"
+                                                        class="form-control"
+                                                        value="{{ isset($mentor->entry_date) ? \Carbon\Carbon::parse($mentor->entry_date)->format('Y-m-d') : '' }}"
+                                                        required>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <div class="row">
                                             <div class="col-lg-8 offset-lg-4">

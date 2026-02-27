@@ -249,30 +249,48 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row mb-4 align-items-center">
+                                            <div class="col-lg-4">
+                                                <label for="addressInput_1" class="fw-semibold">&nbsp;&nbsp;Joining
+                                                    Date:<span class="text-danger">*</span> </label>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="input-group">
+                                                    <div class="input-group-text"><i class="feather-map-pin"></i>
+                                                    </div>
 
+                                                    <input type="date" name="joining_date" id="joining_date"
+                                                        class="form-control" value="{{ old('joining_date') }}"
+                                                        required>
 
-                                        <div class="row">
-                                            <div class="col-lg-8 offset-lg-4">
-                                                <button type="submit" class="btn btn-primary px-4" id="submitBtn">
-                                                    <span class="btn-text">Submit Internship</span>
-                                                    <span id="submitLoader"
-                                                        class="spinner-border spinner-border-sm d-none ms-2"
-                                                        role="status" aria-hidden="true"></span>
-                                                </button>
+                                                </div>
                                             </div>
                                         </div>
-
-
                                     </div>
+
+
+                                    <div class="row">
+                                        <div class="col-lg-8 offset-lg-4">
+                                            <button type="submit" class="btn btn-primary px-4" id="submitBtn">
+                                                <span class="btn-text">Submit Internship</span>
+                                                <span id="submitLoader"
+                                                    class="spinner-border spinner-border-sm d-none ms-2"
+                                                    role="status" aria-hidden="true"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+
 
                                 </div>
 
                         </div>
 
-                        </form>
                     </div>
+
+                    </form>
                 </div>
             </div>
+        </div>
         </div>
         <!-- [ Main Content ] end -->
         </div>
