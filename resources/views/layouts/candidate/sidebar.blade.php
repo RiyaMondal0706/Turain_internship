@@ -21,6 +21,14 @@
                       </a>
                   </li>
                   <li class="nxl-item nxl-hasmenu">
+                      <a class="nxl-link" href="{{ route('candidate.chatbox') }}">
+                          <span class="nxl-micon">
+                              <i class="feather feather-message-circle"></i>
+                          </span>
+                          <span class="nxl-text">Chat </span>
+                      </a>
+                  </li>
+                  <li class="nxl-item nxl-hasmenu">
                       <a href="javascript:void(0);" class="nxl-link">
                           <span class="nxl-micon">
                               <i class="feather feather-clipboard"></i>

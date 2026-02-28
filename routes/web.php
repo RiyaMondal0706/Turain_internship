@@ -110,10 +110,11 @@ Route::middleware(['role.session:hr'])->group(function () {
         ->name('hr.work_anniversery.list');
 
 
-Route::get('/chat', [HrController::class, 'chatbox_show'])->name('chat');
-Route::get('/chat/messages/{user}', [HrController::class, 'messages'])->name('chat.messages');
-Route::post('/chat/send', [HrController::class, 'send'])->name('chat.send');
-Route::get('/chat/users', [HrController::class, 'chatUsers']);});
+    Route::get('/chat', [HrController::class, 'chatbox_show'])->name('chat');
+    Route::get('/chat/messages/{user}', [HrController::class, 'messages'])->name('chat.messages');
+    Route::post('/chat/send', [HrController::class, 'send'])->name('chat.send');
+    Route::get('/chat/users', [HrController::class, 'chatUsers']);
+});
 
 
 
@@ -156,6 +157,10 @@ Route::middleware('role.session:candidate')->group(
 
         Route::get('/candidate/dashboard', [CandidateController::class, 'index_show'])
             ->name('candidate.dashboard');
+        Route::get('/candidate/chatbox', [CandidateController::class, 'candidate_chatbox_show'])
+            ->name('candidate.chatbox');
+
+
 
         Route::get('/candidate/projects', [CandidateController::class, 'projectList_show'])
             ->name('candidate.project.list');
@@ -179,6 +184,14 @@ Route::middleware('role.session:candidate')->group(
 
 
         Route::get('/candodate/profile', [CandidateController::class, 'candidate_profile_show'])->name('candidate.profile.show');
+
+        Route::get('/candidate/chat', [CandidateController::class, 'candidate_chatbox_show'])->name('candidate.chat');
+Route::get(
+    '/candidate/chat/messages/{user}',
+    [CandidateController::class, 'candidate_messages']
+)->name('candidate.chat.messages');
+        Route::post('/candidate/chat/send', [CandidateController::class, 'candidate_send'])->name('candidate.chat.send');
+        Route::get('/candidate/chat/users', [CandidateController::class, 'candidate_chatUsers']);
     }
 
 );

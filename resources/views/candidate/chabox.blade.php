@@ -238,9 +238,9 @@
 
 <body>
 
-    @include('layouts.hr.sidebar')
+    @include('layouts.candidate.sidebar')
 
-    @include('layouts.hr.header')
+    @include('layouts.candidate.header')
 
     <!--! ================================================================ !-->
     <!--! [Start] Main Content !-->
@@ -619,7 +619,7 @@
 
     <script>
         function loadChatUsers(activeId = null) {
-            fetch('/chat/users')
+            fetch('/candidate/chat/users')
                 .then(res => res.json())
                 .then(users => {
                     let html = '';
@@ -681,13 +681,14 @@
     </script> --}}
     <script>
         function loadMessages(userId) {
-            fetch(`/chat/messages/${userId}`)
+            fetch(`/candidate/chat/messages/${userId}`)
                 .then(res => res.text())
                 .then(html => {
                     const box = document.getElementById('chatMessages');
                     box.innerHTML = html;
                     box.scrollTop = box.scrollHeight;
-                });
+                })
+                .catch(err => console.error('Message load error:', err));
         }
     </script>
     <script>
@@ -699,7 +700,7 @@
                 return;
             }
 
-            fetch("{{ route('chat.send') }}", {
+            fetch("{{ route('candidate.chat.send') }}", {
                 method: "POST",
                 headers: {
                     "X-CSRF-TOKEN": "{{ csrf_token() }}",
