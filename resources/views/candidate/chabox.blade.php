@@ -689,6 +689,7 @@
                     box.scrollTop = box.scrollHeight;
                 })
                 .catch(err => console.error('Message load error:', err));
+
         }
     </script>
     <script>

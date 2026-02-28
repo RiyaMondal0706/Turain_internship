@@ -186,10 +186,10 @@ Route::middleware('role.session:candidate')->group(
         Route::get('/candodate/profile', [CandidateController::class, 'candidate_profile_show'])->name('candidate.profile.show');
 
         Route::get('/candidate/chat', [CandidateController::class, 'candidate_chatbox_show'])->name('candidate.chat');
-Route::get(
-    '/candidate/chat/messages/{user}',
-    [CandidateController::class, 'candidate_messages']
-)->name('candidate.chat.messages');
+        Route::get(
+            '/candidate/chat/messages/{user}',
+            [CandidateController::class, 'candidate_messages']
+        )->name('candidate.chat.messages');
         Route::post('/candidate/chat/send', [CandidateController::class, 'candidate_send'])->name('candidate.chat.send');
         Route::get('/candidate/chat/users', [CandidateController::class, 'candidate_chatUsers']);
     }
