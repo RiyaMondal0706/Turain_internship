@@ -20,6 +20,14 @@
                           <span class="nxl-text">Dashboard</span>
                       </a>
                   </li>
+                  <li class="nxl-item nxl-hasmenu">
+                      <a class="nxl-link" href="{{ route('hr.chatbox') }}">
+                          <span class="nxl-micon">
+                              <i class="feather feather-message-circle"></i>
+                          </span>
+                          <span class="nxl-text">Chat </span>
+                      </a>
+                  </li>
                   <li class="nxl-item">
                       <a class="nxl-link" href="{{ route('hr.internship.list') }}">
                           <span class="nxl-micon">

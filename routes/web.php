@@ -25,8 +25,10 @@ Route::middleware(['role.session:hr'])->group(function () {
     // Route::get('/hr/dashboard', function () {
     //     return view('index');
     // })->name('hr.dashboard');
-  Route::get('/hr/dashboard', [HrController::class, 'index_show'])
+    Route::get('/hr/dashboard', [HrController::class, 'index_show'])
         ->name('hr.dashboard');
+    Route::get('/hr/chatbox', [HrController::class, 'chatbox_show'])
+        ->name('hr.chatbox');
     Route::get('/hr/intern-create', [HrController::class, 'internCreate_show'])
         ->name('hr.intern.create');
     Route::get('/hr/intern-list', [HrController::class, 'internList_show'])
@@ -93,29 +95,34 @@ Route::middleware(['role.session:hr'])->group(function () {
         '/designation/status-update',
         [HrController::class, 'designation_statusUpdate']
     )->name('designation.status.update');
- Route::get('/hr/completed_project', [HrController::class, 'completed_project_show'])
+    Route::get('/hr/completed_project', [HrController::class, 'completed_project_show'])
         ->name('hr.completed_project.list');
-        Route::get('/certificate/generate/{id}', 
-    [HrController::class, 'generate_cirtificate']
-)->name('certificate.generate');
+    Route::get(
+        '/certificate/generate/{id}',
+        [HrController::class, 'generate_cirtificate']
+    )->name('certificate.generate');
 
 
 
- Route::get('/hr/birthday_list', [HrController::class, 'upcomming_birthday_show'])
+    Route::get('/hr/birthday_list', [HrController::class, 'upcomming_birthday_show'])
         ->name('hr.birthday.list');
- Route::get('/hr/work-anniversery-list', [HrController::class, 'upcomming_work_anniversery_show'])
+    Route::get('/hr/work-anniversery-list', [HrController::class, 'upcomming_work_anniversery_show'])
         ->name('hr.work_anniversery.list');
 
-});
+
+Route::get('/chat', [HrController::class, 'chatbox_show'])->name('chat');
+Route::get('/chat/messages/{user}', [HrController::class, 'messages'])->name('chat.messages');
+Route::post('/chat/send', [HrController::class, 'send'])->name('chat.send');
+Route::get('/chat/users', [HrController::class, 'chatUsers']);});
 
 
 
 Route::middleware('role.session:mentor')->group(
     function () {
 
- Route::get('/mentor/dashboard', [MentorController::class, 'index_show'])
+        Route::get('/mentor/dashboard', [MentorController::class, 'index_show'])
             ->name('mentor.dashboard');
-        
+
         Route::get('/mentor/intern-list', [MentorController::class, 'mentor_internList_show'])
             ->name('mentor.intern.list');
         Route::get('/mentor/assignment/create', [MentorController::class, 'assignCreate'])
@@ -131,48 +138,47 @@ Route::middleware('role.session:mentor')->group(
 
         Route::get('/mentor/intern/profile/{id}', [MentorController::class, 'intern_profile'])
             ->name('intern.profile');
-            Route::get('/assignment-mentor/{id}/notes', [MentorController::class, 'getNotes']);
+        Route::get('/assignment-mentor/{id}/notes', [MentorController::class, 'getNotes']);
 
 
-Route::get('/mentor/submission-assignment/{id}', [MentorController::class, 'submission_assigment_show'])
-    ->name('submition_assignment.show');
+        Route::get('/mentor/submission-assignment/{id}', [MentorController::class, 'submission_assigment_show'])
+            ->name('submition_assignment.show');
 
-Route::post('/submit-review', [MentorController::class, 'store']);
-Route::get('/get-reviews/{project}', [MentorController::class, 'getReviews']);
+        Route::post('/submit-review', [MentorController::class, 'store']);
+        Route::get('/get-reviews/{project}', [MentorController::class, 'getReviews']);
 
-Route::get('/mentor/profile', [MentorController::class, 'mentor_profile_show'])->name('profile.show');
+        Route::get('/mentor/profile', [MentorController::class, 'mentor_profile_show'])->name('profile.show');
     }
 );
 
 Route::middleware('role.session:candidate')->group(
     function () {
 
-      Route::get('/candidate/dashboard', [CandidateController::class, 'index_show'])
+        Route::get('/candidate/dashboard', [CandidateController::class, 'index_show'])
             ->name('candidate.dashboard');
 
         Route::get('/candidate/projects', [CandidateController::class, 'projectList_show'])
             ->name('candidate.project.list');
 
-      Route::post('/candidate/assignment/{id}/submit', [CandidateController::class, 'submitAssignmentPost'])
-    ->name('assignment.submit.post');
-Route::post('/candidate/assignment-note/store', [CandidateController::class, 'today_work_store'])
-     ->name('assignment.note.store');
+        Route::post('/candidate/assignment/{id}/submit', [CandidateController::class, 'submitAssignmentPost'])
+            ->name('assignment.submit.post');
+        Route::post('/candidate/assignment-note/store', [CandidateController::class, 'today_work_store'])
+            ->name('assignment.note.store');
 
 
-Route::post('/candidate/github-link/store', [CandidateController::class, 'github_store'])
-     ->name('assignment.github.store');
-Route::get('/candidate/submited-project', [CandidateController::class, 'submitedprojectList_show'])
+        Route::post('/candidate/github-link/store', [CandidateController::class, 'github_store'])
+            ->name('assignment.github.store');
+        Route::get('/candidate/submited-project', [CandidateController::class, 'submitedprojectList_show'])
             ->name('candidate.project.submitted');
 
-Route::get('/assignment/{id}/notes', [CandidateController::class, 'getNotes']);
+        Route::get('/assignment/{id}/notes', [CandidateController::class, 'getNotes']);
 
 
-Route::get('/profile/id-card', [CandidateController::class, 'showIdCard'])
-     ->name('profile.idcard');
+        Route::get('/profile/id-card', [CandidateController::class, 'showIdCard'])
+            ->name('profile.idcard');
 
 
-     Route::get('/candodate/profile', [CandidateController::class, 'candidate_profile_show'])->name('candidate.profile.show');
-
+        Route::get('/candodate/profile', [CandidateController::class, 'candidate_profile_show'])->name('candidate.profile.show');
     }
 
 );

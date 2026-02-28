@@ -923,16 +923,16 @@
     <script>
         $(document).ready(function() {
 
-            if (!$.fn.DataTable.isDataTable('#customerList')) {
-                var table = $('#customerList').DataTable({
-                    ordering: true,
-                    pageLength: 10
-                });
+            if ($.fn.DataTable.isDataTable('#customerList')) {
+                $('#customerList').DataTable().destroy();
             }
 
-            $('#roleFilter').on('change', function() {
-                var table = $('#customerList').DataTable();
-                table.column(3).search(this.value).draw();
+            $('#customerList').DataTable({
+                ordering: true,
+                order: [
+                    [2, 'asc']
+                ], // Anniversary column index
+                pageLength: 10
             });
 
         });

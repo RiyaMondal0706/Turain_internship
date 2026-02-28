@@ -13,8 +13,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use PhpParser\Node\Expr\FuncCall;
+use Whoops\Run;
 use Yajra\DataTables\Facades\DataTables;
-
+use Illuminate\Support\Str;
 
 class HrController extends Controller
 {
@@ -262,7 +263,7 @@ class HrController extends Controller
             'address' => $request->address,
             'image' => $avatarName,
             'created_at' => now(),
-            'entry_date' =>$request->joining_date,
+            'entry_date' => $request->joining_date,
         ]);
 
         $generate = 'turain' . random_int(1000, 9999);
@@ -360,7 +361,7 @@ class HrController extends Controller
                     'department' => $request->department_id,
                     'image' => $avatarName,
                     'address' => $request->address,
-                    'entry_date' =>$request->joining_date,
+                    'entry_date' => $request->joining_date,
                 ]
             );
         return redirect()
@@ -493,71 +494,171 @@ class HrController extends Controller
     public function updateDesignations(Request $request, $id)
     {
 
-DB::table('designations')
-    ->where('department_id', $request->department_id)
-    ->update([
-        'status' => 0,
-        'updated_at' => now(),
-    ]);
-if (!empty($request->selected_designations)) {
-    DB::table('designations')
-        ->whereIn('id', $request->selected_designations)
-        ->update([
-            'department_id' => $request->department_id,
-            'status' => 1,
-            'updated_at' => now(),
-        ]);
-}
+        DB::table('designations')
+            ->where('department_id', $request->department_id)
+            ->update([
+                'status' => 0,
+                'updated_at' => now(),
+            ]);
+        if (!empty($request->selected_designations)) {
+            DB::table('designations')
+                ->whereIn('id', $request->selected_designations)
+                ->update([
+                    'department_id' => $request->department_id,
+                    'status' => 1,
+                    'updated_at' => now(),
+                ]);
+        }
 
         return redirect()->back()->with('success', 'Designations updated successfully');
         return back()->with('success', 'Updated successfully');
     }
 
 
-public function completed_project_show(){
-   return view("hr.complete_project");
-}
+    public function completed_project_show()
+    {
+        return view("hr.complete_project");
+    }
 
-public function index_show(){
-    $internCount = DB::table('intern_data')
-    ->count();
-    $activeInterns = DB::table('intern_data')->where('status', 1)->count();
+    public function index_show()
+    {
+        $internCount = DB::table('intern_data')
+            ->count();
+        $activeInterns = DB::table('intern_data')->where('status', 1)->count();
 
-       $mentorCount = DB::table('mentor_data')
-    ->count();
-  $activementors = DB::table('mentor_data')->where('status', 1)->count();
-   $projectCount = DB::table('assignment')
-    ->count();
-   $completedCount = DB::table('assignment_submissions')
-    ->count();
+        $mentorCount = DB::table('mentor_data')
+            ->count();
+        $activementors = DB::table('mentor_data')->where('status', 1)->count();
+        $projectCount = DB::table('assignment')
+            ->count();
+        $completedCount = DB::table('assignment_submissions')
+            ->count();
 
-     return view('index' , compact('internCount', 'activeInterns', 'mentorCount', 'activementors', 'projectCount', 'completedCount'));
-}
+        return view('index', compact('internCount', 'activeInterns', 'mentorCount', 'activementors', 'projectCount', 'completedCount'));
+    }
 
-public function generate_cirtificate($id){
-    
-DB::table('assignment_submissions')
-    ->where('id', $id)
-    ->update([
-        'submitted_by_hr'       => 'Approved',
-    ]);
-       return redirect()
+    public function generate_cirtificate($id)
+    {
+
+        DB::table('assignment_submissions')
+            ->where('id', $id)
+            ->update([
+                'submitted_by_hr'       => 'Approved',
+            ]);
+        return redirect()
             ->route('hr.completed_project.list')
             ->with('success', 'Cirtificate generate successfully!');
-}
+    }
 
 
-public function upcomming_birthday_show(){
-$data = DB::select('CALL get_all_birthdays_desc_all()');
-  return view("hr.birthday_list" , compact('data'));
-}
-public function upcomming_work_anniversery_show()
+    public function upcomming_birthday_show()
+    {
+        $data = DB::select('CALL get_all_birthdays_desc_all()');
+        return view("hr.birthday_list", compact('data'));
+    }
+    public function upcomming_work_anniversery_show()
+    {
+        // Call Stored Procedure
+        $data = DB::select('CALL get_upcoming_2_month_entries()');
+
+        return view('hr.work_anniversery_list', compact('data'));
+    }
+
+    public function chatbox_show()
+    {
+        $users = DB::table('users')
+            ->where('status', 1)
+            ->where('id', '<>', session()->get('user_id'))
+            ->get();
+
+        return view("hr.chabox", compact('users'));
+    }
+
+    public function messages(User $user)
+    {
+        $fromId = session()->get('user_id');
+        $toId   = $user->id;
+
+        $messages = DB::table('ch_messages')
+            ->where(function ($q) use ($fromId, $toId) {
+                $q->where('from_id', $fromId)
+                    ->where('to_id', $toId);
+            })
+            ->orWhere(function ($q) use ($fromId, $toId) {
+                $q->where('from_id', $toId)
+                    ->where('to_id', $fromId);
+            })
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return view('hr.partials.messages', compact('messages', 'fromId', 'toId'));
+    }
+
+    public function send(Request $request)
+    {
+        // dd($request);
+        DB::table('ch_messages')->insert([
+            'id'         => (string) Str::uuid(),
+            'from_id'    => session()->get('user_id'),
+            'to_id'      => $request->to_id,
+            'body'    => $request->message,
+            'created_at' => now(),
+        ]);
+
+        return response()->json(['status' => 'sent']);
+    }
+public function chatUsers()
 {
-    // Call Stored Procedure
-    $data = DB::select('CALL get_upcoming_2_month_entries()');
+    $currentUserId = session()->get('user_id');
 
-    return view('hr.work_anniversery_list', compact('data'));
+    if (!$currentUserId) {
+        return response()->json([]);
+    }
+
+    // Get last message per chat user
+    $chats = DB::table('ch_messages as m')
+        ->select(
+            DB::raw('
+                IF(m.from_id = ' . $currentUserId . ',
+                   m.to_id,
+                   m.from_id
+                ) as user_id
+            '),
+            'm.body',
+            'm.created_at'
+        )
+        ->where(function ($q) use ($currentUserId) {
+            $q->where('m.from_id', $currentUserId)
+              ->orWhere('m.to_id', $currentUserId);
+        })
+        ->orderBy('m.created_at', 'desc')
+        ->get()
+        ->unique('user_id'); // one per user (latest message)
+
+    if ($chats->isEmpty()) {
+        return response()->json([]);
+    }
+
+    // Get user details
+    $users = DB::table('users')
+        ->whereIn('id', $chats->pluck('user_id'))
+        ->get()
+        ->keyBy('id');
+
+    $data = [];
+
+    foreach ($chats as $chat) {
+        $user = $users[$chat->user_id] ?? null;
+        if (!$user) continue;
+
+        $data[] = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'last_message' => $chat->body,
+            'time' => Carbon::parse($chat->created_at)->format('h:i A'),
+        ];
+    }
+
+    return response()->json($data);
 }
-
-
 }
