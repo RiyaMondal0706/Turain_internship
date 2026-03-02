@@ -614,6 +614,8 @@
 
     <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
     <script src="{{ asset('assets/js/dashboard-init.min.js') }}"></script>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
 
@@ -775,6 +777,40 @@
             document.getElementById('userList').classList.add('d-none');
             document.getElementById('chatUserList').classList.remove('d-none');
         });
+    </script>
+
+    <script>
+        Pusher.logToConsole = true;
+
+        const pusher = new Pusher("{{ env('PUSHER_APP_KEY') }}", {
+            cluster: "{{ env('PUSHER_APP_CLUSTER') }}",
+            forceTLS: true
+        });
+
+        const channel = pusher.subscribe('chat-channel');
+
+        channel.bind('chat.message', function(e) {
+            console.log('Pusher event received:', e);
+            appendMessage(e.data);
+        });
+    </script>
+
+    <script>
+        function appendMessage(data) {
+            const box = document.getElementById('chatMessages');
+            // alert('message received');
+            const html = `
+        <div class="mb-2 text-start">
+            <div class="chat-bubble other">
+                <span class="chat-text">${data.message}</span>
+                <div class="chat-meta">${data.time}</div>
+            </div>
+        </div>
+    `;
+
+            box.insertAdjacentHTML('beforeend', html);
+            box.scrollTop = box.scrollHeight;
+        }
     </script>
 </body>
 

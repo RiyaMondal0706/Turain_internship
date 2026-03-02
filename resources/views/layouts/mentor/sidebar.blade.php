@@ -28,6 +28,15 @@
                           <span class="nxl-text">Candidate List</span>
                       </a>
                   </li>
+
+                  <li class="nxl-item nxl-hasmenu">
+                      <a class="nxl-link" href="{{ route('mentor.chatbox') }}">
+                          <span class="nxl-micon">
+                              <i class="feather feather-message-circle"></i>
+                          </span>
+                          <span class="nxl-text">Chat </span>
+                      </a>
+                  </li>
           </div>
       </div>
       </div>

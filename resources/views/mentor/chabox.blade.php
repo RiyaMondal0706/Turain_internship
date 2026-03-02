@@ -238,9 +238,9 @@
 
 <body>
 
-    @include('layouts.candidate.sidebar')
+    @include('layouts.mentor.sidebar')
 
-    @include('layouts.candidate.header')
+    @include('layouts.mentor.header')
 
     <!--! ================================================================ !-->
     <!--! [Start] Main Content !-->
@@ -621,7 +621,7 @@
 
     <script>
         function loadChatUsers(activeId = null) {
-            fetch('/candidate/chat/users')
+            fetch('/mentor/chat/users')
                 .then(res => res.json())
                 .then(users => {
                     let html = '';

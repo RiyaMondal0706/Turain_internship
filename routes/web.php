@@ -6,6 +6,7 @@ use App\Http\Middleware\auth;
 use App\Http\Controllers\HrController;
 use App\Http\Controllers\MentorController;
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\ChatController;
 
 Route::get('/', function () {
     return view('login');
@@ -18,6 +19,9 @@ Route::get('/login', function () {
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+
+Route::get('/chat/messages/{userId}', [ChatController::class, 'messages']);
+Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
 
 
 Route::middleware(['role.session:hr'])->group(function () {
@@ -108,11 +112,6 @@ Route::middleware(['role.session:hr'])->group(function () {
         ->name('hr.birthday.list');
     Route::get('/hr/work-anniversery-list', [HrController::class, 'upcomming_work_anniversery_show'])
         ->name('hr.work_anniversery.list');
-
-
-    Route::get('/chat', [HrController::class, 'chatbox_show'])->name('chat');
-    Route::get('/chat/messages/{user}', [HrController::class, 'messages'])->name('chat.messages');
-    Route::post('/chat/send', [HrController::class, 'send'])->name('chat.send');
     Route::get('/chat/users', [HrController::class, 'chatUsers']);
 });
 
@@ -149,6 +148,13 @@ Route::middleware('role.session:mentor')->group(
         Route::get('/get-reviews/{project}', [MentorController::class, 'getReviews']);
 
         Route::get('/mentor/profile', [MentorController::class, 'mentor_profile_show'])->name('profile.show');
+
+
+
+        Route::get('/mentor/chatbox', [MentorController::class, 'mentor_chatbox_show'])
+            ->name('mentor.chatbox');
+
+        Route::get('/mentor/chat/users', [MentorController::class, 'mentor_chatUsers']);
     }
 );
 
@@ -182,16 +188,9 @@ Route::middleware('role.session:candidate')->group(
         Route::get('/profile/id-card', [CandidateController::class, 'showIdCard'])
             ->name('profile.idcard');
 
+        Route::get('/candidate/chat/users', [CandidateController::class, 'candidate_chatUsers']);
 
         Route::get('/candodate/profile', [CandidateController::class, 'candidate_profile_show'])->name('candidate.profile.show');
-
-        Route::get('/candidate/chat', [CandidateController::class, 'candidate_chatbox_show'])->name('candidate.chat');
-        Route::get(
-            '/candidate/chat/messages/{user}',
-            [CandidateController::class, 'candidate_messages']
-        )->name('candidate.chat.messages');
-        Route::post('/candidate/chat/send', [CandidateController::class, 'candidate_send'])->name('candidate.chat.send');
-        Route::get('/candidate/chat/users', [CandidateController::class, 'candidate_chatUsers']);
     }
 
 );

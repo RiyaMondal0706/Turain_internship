@@ -574,40 +574,8 @@ class HrController extends Controller
         return view("hr.chabox", compact('users'));
     }
 
-    public function messages(User $user)
-    {
-        $fromId = session()->get('user_id');
-        $toId   = $user->id;
 
-        $messages = DB::table('ch_messages')
-            ->where(function ($q) use ($fromId, $toId) {
-                $q->where('from_id', $fromId)
-                    ->where('to_id', $toId);
-            })
-            ->orWhere(function ($q) use ($fromId, $toId) {
-                $q->where('from_id', $toId)
-                    ->where('to_id', $fromId);
-            })
-            ->orderBy('created_at', 'asc')
-            ->get();
-
-        return view('hr.partials.messages', compact('messages', 'fromId', 'toId'));
-    }
-
-    public function send(Request $request)
-    {
-        // dd($request);
-        DB::table('ch_messages')->insert([
-            'id'         => (string) Str::uuid(),
-            'from_id'    => session()->get('user_id'),
-            'to_id'      => $request->to_id,
-            'body'    => $request->message,
-            'created_at' => now(),
-        ]);
-
-        return response()->json(['status' => 'sent']);
-    }
-public function chatUsers()
+    public function chatUsers()
 {
     $currentUserId = session()->get('user_id');
 

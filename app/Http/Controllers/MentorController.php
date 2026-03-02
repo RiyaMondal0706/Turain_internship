@@ -237,4 +237,71 @@ public function mentor_profile_show(){
     }
 
 
+        public function mentor_chatbox_show()
+    {
+        $user = session()->get('user_id');
+        $users = DB::table('users')
+            ->where('status', 1)
+            ->where('id', '<>', $user)
+            ->get();
+
+        return view("mentor.chabox", compact('users'));
+    }
+
+
+    public function mentor_chatUsers()
+    {
+        $currentUserId = session()->get('user_id');
+
+        if (!$currentUserId) {
+            return response()->json([]);
+        }
+
+        // Get last message per chat user
+        $chats = DB::table('ch_messages as m')
+            ->select(
+                DB::raw('
+                IF(m.from_id = ' . $currentUserId . ',
+                   m.to_id,
+                   m.from_id
+                ) as user_id
+            '),
+                'm.body',
+                'm.created_at'
+            )
+            ->where(function ($q) use ($currentUserId) {
+                $q->where('m.from_id', $currentUserId)
+                    ->orWhere('m.to_id', $currentUserId);
+            })
+            ->orderBy('m.created_at', 'desc')
+            ->get()
+            ->unique('user_id'); // one per user (latest message)
+
+        if ($chats->isEmpty()) {
+            return response()->json([]);
+        }
+
+        // Get user details
+        $users = DB::table('users')
+            ->whereIn('id', $chats->pluck('user_id'))
+            ->get()
+            ->keyBy('id');
+
+        $data = [];
+
+        foreach ($chats as $chat) {
+            $user = $users[$chat->user_id] ?? null;
+            if (!$user) continue;
+
+            $data[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'last_message' => $chat->body,
+                'time' => Carbon::parse($chat->created_at)->format('h:i A'),
+            ];
+        }
+
+        return response()->json($data);
+    }
+
 }
