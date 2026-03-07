@@ -7,17 +7,20 @@
     <style>
         body {
             margin: 0;
+            padding: 0;
             background: #f5f5f5;
+            display: flex;
+            justify-content: center;
         }
 
         .certificate {
             width: 210mm;
             height: 297mm;
-            margin: auto;
             padding: 20mm;
             box-sizing: border-box;
             background: white;
             border: 10px solid #2f3d8f;
+            position: relative;
         }
 
         .top-bar {
@@ -63,7 +66,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 40px;
+            margin-top: 60px;
         }
 
         .sign {
@@ -81,13 +84,13 @@
         }
 
         .footer {
-            margin-top: 20px;
+            margin-top: 40px;
             font-size: 14px;
         }
 
         .no-print {
             text-align: center;
-            margin-top: 20px;
+            margin: 30px;
         }
 
         @page {
@@ -99,7 +102,7 @@
 
 <body>
 
-    <div class="certificate">
+    <div id="certificate" class="certificate">
 
         <div class="top-bar">
             <span>Sl No. <b>TSPL/INTRN/103/25-26</b></span>
@@ -171,7 +174,7 @@
     <script>
         function downloadPDF() {
 
-            const element = document.querySelector(".certificate");
+            const element = document.getElementById('certificate');
 
             const opt = {
                 margin: 0,
@@ -181,7 +184,7 @@
                     quality: 1
                 },
                 html2canvas: {
-                    scale: 3,
+                    scale: 2,
                     useCORS: true
                 },
                 jsPDF: {
