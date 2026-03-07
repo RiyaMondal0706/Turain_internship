@@ -55,17 +55,7 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand successAlertMessage">
-                                <i class="feather-star"></i>
-                            </a>
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand">
-                                <i class="feather-eye me-2"></i>
-                                <span>Follow</span>
-                            </a>
-                            <a href="customers-create.html" class="btn btn-primary">
-                                <i class="feather-plus me-2"></i>
-                                <span>Create Customer</span>
-                            </a>
+
                         </div>
                     </div>
                     <div class="d-md-none d-flex align-items-center">
@@ -105,12 +95,12 @@
                                     <li class="hstack justify-content-between mb-4">
                                         <span class="text-muted fw-medium hstack gap-3"><i
                                                 class="feather-map-pin"></i>Location</span>
-                                        <a href="javascript:void(0);" class="float-end"{{ $mentor->address }}/a>
+                                        <a href="javascript:void(0);" class="float-end">{{ $mentor->address }}</a>
                                     </li>
                                     <li class="hstack justify-content-between mb-4">
                                         <span class="text-muted fw-medium hstack gap-3"><i
                                                 class="feather-phone"></i>Phone</span>
-                                        <a href="javascript:void(0);" class="float-end"{{ $mentor->phone }}</a>
+                                        <a href="javascript:void(0);" class="float-end">{{ $mentor->phone }}</a>
                                     </li>
                                     <li class="hstack justify-content-between mb-0">
                                         <span class="text-muted fw-medium hstack gap-3"><i
@@ -145,8 +135,7 @@
                                         <div class="profile-details mb-5">
                                             <div class="mb-4 d-flex align-items-center justify-content-between">
                                                 <h5 class="fw-bold mb-0">Profile Details:</h5>
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">Edit
-                                                    Profile</a>
+
                                             </div>
                                             <div class="row g-0 mb-4">
                                                 <div class="col-sm-6 text-muted">Full Name:</div>
