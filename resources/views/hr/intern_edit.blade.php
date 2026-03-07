@@ -118,8 +118,7 @@
                                                         class="fs-12 fw-normal text-muted text-truncate-1-line">Following
                                                         information is publicly displayed, be careful! </span>
                                                 </h5>
-                                                <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">Add
-                                                    New</a>
+
                                             </div>
                                             <div class="row mb-4 align-items-center">
                                                 <div class="col-lg-4">

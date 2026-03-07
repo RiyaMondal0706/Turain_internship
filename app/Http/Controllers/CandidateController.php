@@ -262,4 +262,16 @@ class CandidateController extends Controller
 
         return response()->json($data);
     }
+
+    public function showCertificate($id)
+{
+ $assign = DB::table('assign')
+            ->where('id', $id)
+            ->first();
+        
+    $candidate = DB::table('intern_data')
+            ->where('id', $assign->candidate_id)
+            ->first();
+    return view('candidate.certificate', compact('candidate'));
+}
 }

@@ -163,7 +163,7 @@ class HrController extends Controller
 
     public function intern_update(Request $request, $id)
     {
-        // dd($request);
+        dd($request);
         // $request->validate([
         //     'name'        => 'required|string',
         //     'email'       => 'required|email',

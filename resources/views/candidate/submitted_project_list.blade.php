@@ -202,7 +202,7 @@
                                                                             <!-- HR submitted: show certificate download -->
                                                                             <span class="badge bg-success">Submitted by
                                                                                 HR</span>
-                                                                            <a href=""
+                                                                            <a href="{{ route('certificate.show', $assign->assign_id) }}"
                                                                                 class="btn btn-primary btn-sm">
                                                                                 <i class="bi bi-download"></i> Download
                                                                                 Certificate

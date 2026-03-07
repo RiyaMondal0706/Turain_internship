@@ -191,6 +191,10 @@ Route::middleware('role.session:candidate')->group(
         Route::get('/candidate/chat/users', [CandidateController::class, 'candidate_chatUsers']);
 
         Route::get('/candodate/profile', [CandidateController::class, 'candidate_profile_show'])->name('candidate.profile.show');
-    }
+    
+    Route::get('/certificate/{id}', [CandidateController::class, 'showCertificate'])
+    ->name('certificate.show');
+    
+        }
 
 );
