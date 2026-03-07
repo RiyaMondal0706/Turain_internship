@@ -108,7 +108,7 @@
 
         @endphp
         <div class="top-bar">
-            <span>Sl No. <b>TSPL/INTRN/{{ preg_replace('/\D/', '', $id->turain_id) }}/25-26</b></span>
+            <span>Sl No. <b>TSPL/INTRN/{{ preg_replace('/\D/', '', $id->turain_id) }}/26-26</b></span>
         </div>
 
         <div class="logo">
@@ -149,6 +149,7 @@
         <div class="bottom">
 
             <div class="sign">
+                <img src="/assets/signature/hr.png"" width="120">
                 <div class="line"></div>
                 HR Manager
             </div>
@@ -159,6 +160,7 @@
             </div>
 
             <div class="sign">
+                <img src="/assets/signature/tec.jpg" width="120">
                 <div class="line"></div>
                 Technical Head
             </div>
