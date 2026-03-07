@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 use App\Mail\InternshipCredentialsMail;
 use App\Mail\mentorCredentialsMail;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use App\Models\User;
-use PhpParser\Node\Expr\FuncCall;
-use Whoops\Run;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Str;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class HrController extends Controller
 {
@@ -25,6 +20,7 @@ class HrController extends Controller
             ->get();
         $departments = DB::table('departments')
             ->get();
+
         return view('hr.intern_create', compact('state', 'departments'));
     }
 
@@ -36,6 +32,7 @@ class HrController extends Controller
 
         return view('hr.intern_list', compact('intern'));
     }
+
     public function internship_store(Request $request)
     {
         $plainPassword = random_int(10000000, 99999999);
@@ -43,7 +40,7 @@ class HrController extends Controller
         $avatarName = null;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+            $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
             $avatar->move(public_path('assets/images/intern'), $avatarName);
         }
         $startDate = Carbon::createFromFormat('Y-m-d', $request->intern_start);
@@ -53,7 +50,7 @@ class HrController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'department' => $request->department_id,
-            'designation' =>  $request->designation_id,
+            'designation' => $request->designation_id,
             'dob' => Carbon::parse($request->dob)->format('Y-m-d'),
             'github_link' => $request->gitbub,
             'mp_boad' => $request->mp_boad,
@@ -75,7 +72,7 @@ class HrController extends Controller
             'create_at' => now(),
         ]);
 
-        $generate = 'turain' . random_int(1000, 9999);
+        $generate = 'turain'.random_int(1000, 9999);
 
         DB::table('users')->insert([
             'name' => $request->name,
@@ -100,9 +97,6 @@ class HrController extends Controller
         return back()->with('success', 'Internship registered & user created successfully!');
     }
 
-
-
-
     public function getDistricts(Request $request)
     {
         return DB::table('districts')
@@ -110,6 +104,7 @@ class HrController extends Controller
             ->select('id', 'name')
             ->get();
     }
+
     public function getCities(Request $request)
     {
         return DB::table('cities')
@@ -117,27 +112,29 @@ class HrController extends Controller
             ->select('id', 'name')
             ->get();
     }
+
     public function updateStatus(Request $request)
     {
         // dd("ok");
         DB::table('intern_data')
             ->where('id', $request->id)
             ->update([
-                'status' => $request->status
+                'status' => $request->status,
             ]);
         DB::table('users')
             ->where('internship_data_id', $request->id)
             ->update([
-                'status' => $request->status
+                'status' => $request->status,
             ]);
 
         return response()->json([
             'success' => true,
             'message' => $request->status == 1
                 ? 'Intern activated successfully'
-                : 'Intern deactivated successfully'
+                : 'Intern deactivated successfully',
         ]);
     }
+
     public function inter_view($id)
     {
         $result = DB::select('CALL get_intern_profile(?)', [$id]);
@@ -160,6 +157,7 @@ class HrController extends Controller
             ->first();
         $departments = DB::table('departments')
             ->get();
+
         return view('hr.intern_edit', compact('state', 'intern', 'departments'));
     }
 
@@ -185,12 +183,11 @@ class HrController extends Controller
             $avatarName = $oldAvatar;
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
-                $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+                $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
                 $avatar->move(public_path('assets/images/intern'), $avatarName);
             }
 
             $startDate = Carbon::createFromFormat('Y-m-d', $request->intern_start);
-
 
             DB::table('intern_data')
                 ->where('id', $id)
@@ -231,26 +228,29 @@ class HrController extends Controller
 
             Log::error('Intern update failed', [
                 'intern_id' => $id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return redirect()->back()
                 ->with('error', 'Something went wrong. Changes were not saved.');
         }
     }
+
     public function mentorCreate_show()
     {
         $departments = DB::table('departments')
             ->get();
+
         return view('hr.mentor_create', compact('departments'));
     }
+
     public function mentor_store(Request $request)
     {
         $avatarName = null;
         $plainPassword = random_int(10000000, 99999999);
         if ($request->hasFile('avatar')) {
-            $avatar      = $request->file('avatar');
-            $avatarName  = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+            $avatar = $request->file('avatar');
+            $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
             $avatar->move(public_path('assets/images/mentor'), $avatarName);
         }
 
@@ -266,7 +266,7 @@ class HrController extends Controller
             'entry_date' => $request->joining_date,
         ]);
 
-        $generate = 'turain' . random_int(1000, 9999);
+        $generate = 'turain'.random_int(1000, 9999);
 
         DB::table('users')->insert([
             'name' => $request->name,
@@ -287,6 +287,7 @@ class HrController extends Controller
                 $generate
             )
         );
+
         return redirect()
             ->route('hr.mentor.list')
             ->with('success', 'Mentor created successfully!');
@@ -297,27 +298,29 @@ class HrController extends Controller
 
         $mentor = DB::table('mentor_data')
             ->get();
+
         return view('hr.mentor_list', compact('mentor'));
     }
+
     public function updateStatus_mentor(Request $request)
     {
         // dd("ok");
         DB::table('mentor_data')
             ->where('id', $request->id)
             ->update([
-                'status' => $request->status
+                'status' => $request->status,
             ]);
         DB::table('users')
             ->where('mentor_data_id', $request->id)
             ->update([
-                'status' => $request->status
+                'status' => $request->status,
             ]);
 
         return response()->json([
             'success' => true,
             'message' => $request->status == 1
                 ? 'Intern activated successfully'
-                : 'Intern deactivated successfully'
+                : 'Intern deactivated successfully',
         ]);
     }
 
@@ -326,6 +329,7 @@ class HrController extends Controller
         $mentor = DB::table('mentor_data')
             ->where('id', $id)
             ->first();
+
         return view('hr.mentor_view', compact('mentor'));
     }
 
@@ -336,8 +340,10 @@ class HrController extends Controller
             ->first();
         $departments = DB::table('departments')
             ->get();
+
         return view('hr.mentor_edit', compact('mentor', 'departments'));
     }
+
     public function mentor_update(Request $request, $id)
     {
         $oldAvatar = DB::table('mentor_data')
@@ -347,7 +353,7 @@ class HrController extends Controller
         $avatarName = $oldAvatar;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+            $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
             $avatar->move(public_path('assets/images/intern'), $avatarName);
         }
         DB::table('mentor_data')
@@ -364,15 +370,16 @@ class HrController extends Controller
                     'entry_date' => $request->joining_date,
                 ]
             );
+
         return redirect()
             ->route('hr.mentor.list');
     }
 
     public function assignCreate_show(Request $request)
     {
-        $interns =  DB::table('intern_data')
+        $interns = DB::table('intern_data')
             ->get();
-        $mentors =  DB::table('mentor_data')
+        $mentors = DB::table('mentor_data')
             ->get();
 
         return view('hr.assign', compact('interns', 'mentors'));
@@ -383,9 +390,10 @@ class HrController extends Controller
         DB::table('assign')->insert(
             [
                 'mentor_id' => $request->mentor_id,
-                'candidate_id' => $request->intern_id
+                'candidate_id' => $request->intern_id,
             ]
         );
+
         return redirect()
             ->route('hr.assign.list');
     }
@@ -426,16 +434,20 @@ class HrController extends Controller
 
         return response()->json($designations);
     }
+
     public function department_show()
     {
         $departments = DB::table('departments')
             ->get();
+
         return view('hr.department_list', compact('departments'));
     }
+
     public function department_create()
     {
         return view('hr.department_create');
     }
+
     public function department_store(Request $request)
     {
         $departmentName = $request->department_name;
@@ -452,11 +464,12 @@ class HrController extends Controller
         return redirect()
             ->route('hr.department.list');
     }
-    public function designation_create()
 
+    public function designation_create()
     {
         $departments = DB::table('departments')
             ->get();
+
         return view('hr/designation_create', compact('departments'));
     }
 
@@ -473,6 +486,7 @@ class HrController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
         return redirect()
             ->route('hr.department.list');
     }
@@ -488,6 +502,7 @@ class HrController extends Controller
         $designations = DB::table('designations')
             ->where('department_id', $id)
             ->get();
+
         return view('hr.department_edit', compact('department', 'departments', 'designations'));
     }
 
@@ -500,7 +515,7 @@ class HrController extends Controller
                 'status' => 0,
                 'updated_at' => now(),
             ]);
-        if (!empty($request->selected_designations)) {
+        if (! empty($request->selected_designations)) {
             DB::table('designations')
                 ->whereIn('id', $request->selected_designations)
                 ->update([
@@ -511,13 +526,13 @@ class HrController extends Controller
         }
 
         return redirect()->back()->with('success', 'Designations updated successfully');
+
         return back()->with('success', 'Updated successfully');
     }
 
-
     public function completed_project_show()
     {
-        return view("hr.complete_project");
+        return view('hr.complete_project');
     }
 
     public function index_show()
@@ -543,19 +558,21 @@ class HrController extends Controller
         DB::table('assignment_submissions')
             ->where('id', $id)
             ->update([
-                'submitted_by_hr'       => 'Approved',
+                'submitted_by_hr' => 'Approved',
             ]);
+
         return redirect()
             ->route('hr.completed_project.list')
             ->with('success', 'Cirtificate generate successfully!');
     }
 
-
     public function upcomming_birthday_show()
     {
         $data = DB::select('CALL get_all_birthdays_desc_all()');
-        return view("hr.birthday_list", compact('data'));
+
+        return view('hr.birthday_list', compact('data'));
     }
+
     public function upcomming_work_anniversery_show()
     {
         // Call Stored Procedure
@@ -571,62 +588,63 @@ class HrController extends Controller
             ->where('id', '<>', session()->get('user_id'))
             ->get();
 
-        return view("hr.chabox", compact('users'));
+        return view('hr.chabox', compact('users'));
     }
-
 
     public function chatUsers()
-{
-    $currentUserId = session()->get('user_id');
+    {
+        $currentUserId = session()->get('user_id');
 
-    if (!$currentUserId) {
-        return response()->json([]);
-    }
+        if (! $currentUserId) {
+            return response()->json([]);
+        }
 
-    // Get last message per chat user
-    $chats = DB::table('ch_messages as m')
-        ->select(
-            DB::raw('
-                IF(m.from_id = ' . $currentUserId . ',
+        // Get last message per chat user
+        $chats = DB::table('ch_messages as m')
+            ->select(
+                DB::raw('
+                IF(m.from_id = '.$currentUserId.',
                    m.to_id,
                    m.from_id
                 ) as user_id
             '),
-            'm.body',
-            'm.created_at'
-        )
-        ->where(function ($q) use ($currentUserId) {
-            $q->where('m.from_id', $currentUserId)
-              ->orWhere('m.to_id', $currentUserId);
-        })
-        ->orderBy('m.created_at', 'desc')
-        ->get()
-        ->unique('user_id'); // one per user (latest message)
+                'm.body',
+                'm.created_at'
+            )
+            ->where(function ($q) use ($currentUserId) {
+                $q->where('m.from_id', $currentUserId)
+                    ->orWhere('m.to_id', $currentUserId);
+            })
+            ->orderBy('m.created_at', 'desc')
+            ->get()
+            ->unique('user_id'); // one per user (latest message)
 
-    if ($chats->isEmpty()) {
-        return response()->json([]);
+        if ($chats->isEmpty()) {
+            return response()->json([]);
+        }
+
+        // Get user details
+        $users = DB::table('users')
+            ->whereIn('id', $chats->pluck('user_id'))
+            ->get()
+            ->keyBy('id');
+
+        $data = [];
+
+        foreach ($chats as $chat) {
+            $user = $users[$chat->user_id] ?? null;
+            if (! $user) {
+                continue;
+            }
+
+            $data[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'last_message' => $chat->body,
+                'time' => Carbon::parse($chat->created_at)->format('h:i A'),
+            ];
+        }
+
+        return response()->json($data);
     }
-
-    // Get user details
-    $users = DB::table('users')
-        ->whereIn('id', $chats->pluck('user_id'))
-        ->get()
-        ->keyBy('id');
-
-    $data = [];
-
-    foreach ($chats as $chat) {
-        $user = $users[$chat->user_id] ?? null;
-        if (!$user) continue;
-
-        $data[] = [
-            'id' => $user->id,
-            'name' => $user->name,
-            'last_message' => $chat->body,
-            'time' => Carbon::parse($chat->created_at)->format('h:i A'),
-        ];
-    }
-
-    return response()->json($data);
-}
 }
