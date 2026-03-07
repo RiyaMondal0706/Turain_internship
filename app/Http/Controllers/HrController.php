@@ -161,80 +161,98 @@ class HrController extends Controller
         return view('hr.intern_edit', compact('state', 'intern', 'departments'));
     }
 
-    public function intern_update(Request $request, $id)
-    {
-        dd($request);
-        // $request->validate([
-        //     'name'        => 'required|string',
-        //     'email'       => 'required|email',
-        //     'phone'       => 'required|digits:10',
-        //     'designation' => 'required',
-        //     'dob'         => 'required|date',
-        //     'intern_start' => 'required|date',
-        // ]);
 
-        DB::beginTransaction();
 
-        try {
-            $oldAvatar = DB::table('intern_data')
-                ->where('id', $id)
-                ->value('image');
+public function intern_update(Request $request, $id)
+{
+    // Validation
+    $request->validate([
+        'name' => 'required|string',
+        'email' => 'required|email',
+        'phone' => 'required|digits:10',
+        'designation_id' => 'required',
+        'dob' => 'required|date',
+        'intern_start' => 'required|date',
+        'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+    ]);
 
-            $avatarName = $oldAvatar;
-            if ($request->hasFile('avatar')) {
-                $avatar = $request->file('avatar');
-                $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
-                $avatar->move(public_path('assets/images/intern'), $avatarName);
-            }
 
-            $startDate = Carbon::createFromFormat('Y-m-d', $request->intern_start);
+    DB::beginTransaction();
 
-            DB::table('intern_data')
-                ->where('id', $id)
-                ->update([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'department' => $request->department_id,
-                    'designation' => $request->designation_id,
-                    'dob' => $request->dob,
-                    'github_link' => $request->gitbub,
-                    'mp_boad' => $request->mp_boad,
-                    'mp_marks' => $request->mp_marks,
-                    'hs_boad' => $request->hs_boad,
-                    'hs_marks' => $request->hs_marks,
-                    'graduation' => $request->gratuadion,
-                    'graduation_cgpa' => $request->graduation_marks,
-                    'post_graduation' => $request->postgraduation,
-                    'post_graduation_cgpa' => $request->postgraduation_marks,
-                    'address' => $request->address,
-                    'pincode' => $request->pincode,
-                    'district' => $request->district,
-                    'state' => $request->state,
-                    'city' => $request->city,
-                    'image' => $avatarName,
-                    'entry_date' => $startDate->format('Y-m-d'),
-                    'end_date' => $startDate->copy()->addMonths(3)->format('Y-m-d'),
+    try {
 
-                ]);
+        // Old Image
+        $oldAvatar = DB::table('intern_data')
+            ->where('id', $id)
+            ->value('image');
 
-            DB::commit();
+        $avatarName = $oldAvatar;
 
-            return redirect()->back()
-                ->with('success', 'Internship updated successfully!');
-        } catch (\Throwable $e) {
+        // Upload new image
+        if ($request->hasFile('avatar')) {
 
-            DB::rollBack();
+            $avatar = $request->file('avatar');
 
-            Log::error('Intern update failed', [
-                'intern_id' => $id,
-                'error' => $e->getMessage(),
-            ]);
+            $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
 
-            return redirect()->back()
-                ->with('error', 'Something went wrong. Changes were not saved.');
+            $avatar->move(public_path('assets/images/intern'), $avatarName);
         }
+   
+        // Internship Start Date
+        $startDate = Carbon::parse($request->intern_start);
+
+        DB::table('intern_data')
+            ->where('id', $id)
+            ->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'department' => $request->department_id,
+                'designation' => $request->designation_id,
+                'dob' => $request->dob,
+
+                'github_link' => $request->github,
+                'mp_boad' => $request->mp_board,
+                'mp_marks' => $request->mp_marks,
+
+                'hs_boad' => $request->hs_board,
+                'hs_marks' => $request->hs_marks,
+
+                'graduation' => $request->graduation,
+                'graduation_cgpa' => $request->graduation_marks,
+
+                'post_graduation' => $request->postgraduation,
+                'post_graduation_cgpa' => $request->postgraduation_marks,
+
+                'address' => $request->address,
+                'pincode' => $request->pincode,
+                'district' => $request->district,
+                'state' => $request->state,
+                'city' => $request->city,
+
+                'image' => $avatarName,
+
+                'entry_date' => $startDate->format('Y-m-d'),
+                'end_date' => $startDate->copy()->addMonths(3)->format('Y-m-d'),
+
+            ]);
+//  dd("ok");
+        DB::commit();
+
+        return redirect()->back()->with('success', 'Internship updated successfully!');
+
+    } catch (\Throwable $e) {
+
+        DB::rollBack();
+
+        Log::error('Intern update failed', [
+            'intern_id' => $id,
+            'error' => $e->getMessage(),
+        ]);
+
+        return redirect()->back()->with('error', 'Something went wrong.');
     }
+}
 
     public function mentorCreate_show()
     {

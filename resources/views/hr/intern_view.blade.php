@@ -55,17 +55,7 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand successAlertMessage">
-                                <i class="feather-star"></i>
-                            </a>
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand">
-                                <i class="feather-eye me-2"></i>
-                                <span>Follow</span>
-                            </a>
-                            <a href="customers-create.html" class="btn btn-primary">
-                                <i class="feather-plus me-2"></i>
-                                <span>Create Customer</span>
-                            </a>
+
                         </div>
                     </div>
                     <div class="d-md-none d-flex align-items-center">
@@ -377,9 +367,11 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            @if (!empty($data->submitted_by_mentor))
+                                                            @if (!empty($data->submitted_by_hr))
+                                                                <span class="badge bg-success">Submitted by HR</span>
+                                                            @elseif (!empty($data->submitted_by_mentor))
                                                                 <span class="badge bg-info">Submitted by Mentor</span>
-                                                            @elseif(!empty($data->project_link))
+                                                            @elseif (!empty($data->project_link))
                                                                 <span class="badge bg-warning text-dark">Submitted by
                                                                     Candidate</span>
                                                             @else
