@@ -103,9 +103,12 @@
 <body>
 
     <div id="certificate" class="certificate">
+        @php
+            $id = DB::table('users')->where('internship_data_id', $candidate->id)->first();
 
+        @endphp
         <div class="top-bar">
-            <span>Sl No. <b>TSPL/INTRN/103/25-26</b></span>
+            <span>Sl No. <b>TSPL/INTRN/{{ preg_replace('/\D/', '', $id->turain_id) }}/25-26</b></span>
         </div>
 
         <div class="logo">
@@ -119,10 +122,15 @@
 
         <h2 class="name">{{ $candidate->name }}</h2>
 
+
+        @php
+            $des = DB::table('designations')->where('id', $candidate->designation)->first();
+
+        @endphp
         <p class="desc">
             For his outstanding completion of the internship program at firm
             <b>Turain Software Pvt. Ltd.</b> for the role of
-            <b>{{ $candidate->designation }}</b>
+            <b>{{ $des->designation_name }}</b>
             under the guidance of <b>Mr. Ayan Das</b>
             from date
             <b>{{ \Carbon\Carbon::parse($candidate->entry_date)->format('jS F, Y') }}</b>
