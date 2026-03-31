@@ -9,7 +9,7 @@
     <meta name="keyword" content="">
     <meta name="author" content="theme_ocean">
 
-    <title>Turain || Intern Create</title>
+    <title>Turain || Mentor Create</title>
 
 
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.ico') }}">
@@ -48,7 +48,7 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Intern</h5>
+                        <h5 class="m-b-10">Mentor</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}">Home</a></li>
@@ -580,22 +580,25 @@
     </div>
 
 
-    <script src="assets/vendors/js/vendors.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <script src="assets/vendors/js/select2.min.js"></script>
-    <script src="assets/vendors/js/select2-active.min.js"></script>
-    {{-- <script src="assets/vendors/js/datepicker.min.js"></script> --}}
-    <script src="assets/vendors/js/lslstrength.min.js"></script>
+    <!-- ✅ Vendors -->
+    <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
 
-    <script src="assets/js/common-init.min.js"></script>
-    <script src="assets/js/customers-create-init.min.js"></script>
+    <!-- ✅ DataTables -->
+    <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
 
-    <script src="assets/js/theme-customizer-init.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/vendors/js/datepicker.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.all.min.js"></script>
+    <!-- ✅ Select2 -->
+    <script src="{{ asset('assets/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/select2-active.min.js') }}"></script>
 
+    <!-- ✅ Core JS -->
+    <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
+
+    <!-- ✅ Page Scripts -->
+    <script src="{{ asset('assets/js/customers-init.min.js') }}"></script>
+    <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
 
     <script>
         function previewAvatar(input) {
@@ -652,7 +655,26 @@
                 const address = document.getElementById('addressInput_1').value.trim();
                 const joiningDate = document.getElementById('joining_date').value;
 
-                // ✅ VALIDATION
+                // ✅ IMAGE VALIDATION
+                const avatarInput = document.getElementById('avatarInput');
+                const file = avatarInput.files[0];
+
+                if (!file) {
+                    return stopSubmit(e, 'Profile image is required');
+                }
+
+                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+                if (!allowedTypes.includes(file.type)) {
+                    avatarInput.value = '';
+                    return stopSubmit(e, 'Only PNG, JPG, JPEG allowed');
+                }
+
+                if (file.size > 2 * 1024 * 1024) {
+                    avatarInput.value = '';
+                    return stopSubmit(e, 'Image size must be less than 2MB');
+                }
+
+                // ✅ OTHER VALIDATIONS
                 if (!name) return stopSubmit(e, 'Name is required');
 
                 if (!validateEmail(email))
@@ -707,7 +729,6 @@
     </script>
 
 
-
     <script>
         $(document).ready(function() {
             $('#departmentInput').on('change', function() {
@@ -737,6 +758,29 @@
             });
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('success') }}"
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "{{ session('error') }}"
+            });
+        </script>
+    @endif
+
 
 </body>
 

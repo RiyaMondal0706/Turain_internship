@@ -978,90 +978,115 @@
     <script>
         $(document).ready(function() {
 
-            // Open modal and set project id
+            // ✅ Toast Function
+            function showToast(message, type = 'error') {
+                let toast = document.createElement('div');
+                toast.className = 'toast-msg ' + (type === 'success' ? 'toast-success' : '');
+                toast.innerText = message;
+
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+
             $('.openReviewModal').on('click', function() {
                 var projectId = $(this).data('id');
-                $('#reviewProjectId').val(projectId);
 
-                // Optional: load existing reviews via AJAX
+                $('#reviewProjectId').val(projectId);
+                $('#reviewText').val('');
+
                 loadReviews(projectId);
 
                 $('#reviewModal').modal('show');
             });
 
-            // Submit review
             $('#submitReview').on('click', function() {
+
                 var projectId = $('#reviewProjectId').val();
                 var reviewText = $('#reviewText').val().trim();
+                var btn = $(this);
 
                 if (reviewText === '') {
-                    alert('Please write a review before submitting.');
+                    showToast('Please write a review before submitting');
                     return;
                 }
 
+                // Disable button to prevent multiple clicks
+                btn.prop('disabled', true);
+
                 $.ajax({
-                    url: '/submit-review', // Your route
+                    url: '/submit-review',
                     method: 'POST',
                     data: {
                         project_id: projectId,
                         review: reviewText,
-                        _token: $('meta[name="csrf-token"]').attr('content') // Laravel CSRF token
+                        _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        // Clear textarea
-                        $('#reviewText').val('');
 
-                        // Reload reviews
-                        loadReviews(projectId);
+                        if (response.status) {
+                            showToast(response.message, 'success');
+
+                            setTimeout(() => {
+                                location.reload(); // ✅ refresh page
+                            }, 1500);
+
+                        } else {
+                            showToast(response.message); // already submitted
+                            btn.prop('disabled', false);
+                        }
+
                     },
-                    error: function(xhr) {
-                        alert('Error submitting review. Please try again.');
+                    error: function() {
+                        showToast('Error submitting review');
+                        btn.prop('disabled', false);
                     }
                 });
             });
 
-            // Function to load reviews dynamically
             function loadReviews(projectId) {
                 $.ajax({
-                    url: '/get-reviews/' + projectId, // Your route
+                    url: '/get-reviews/' + projectId,
                     method: 'GET',
                     success: function(response) {
-                        $('#reviewsList').html(''); // Clear previous
+
+                        $('#reviewsList').html('');
+
                         if (response.reviews.length > 0) {
                             response.reviews.forEach(function(review) {
-                                $('#reviewsList').append(
-                                    `<div class="card mb-2">
-                                <div class="card-body">
-                                    <strong>${review.user_name}</strong>
-                                    <p>${review.review}</p>
-                                    <small class="text-muted">${review.created_at}</small>
+                                $('#reviewsList').append(`
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        <strong>${review.user_name ?? 'Mentor'}</strong>
+                                        <p>${review.review}</p>
+                                        <small class="text-muted">${review.created_at}</small>
+                                    </div>
                                 </div>
-                            </div>`
-                                );
+                            `);
                             });
                         } else {
                             $('#reviewsList').html('<p class="text-muted">No reviews yet.</p>');
                         }
-                    },
-
+                    }
                 });
             }
 
-        });
-    </script>
+            $('.openReviewModal').each(function() {
+                var button = $(this);
+                var assignmentId = button.data('id');
 
-    <script>
-        $('.openReviewModal').each(function() {
-            var button = $(this);
-            var assignmentId = button.data('id');
+                $.get('/assignment-status/' + assignmentId, function(response) {
 
-            // Example: check submission status (replace with real logic)
-            $.get('/assignment-status/' + assignmentId, function(response) {
-                if (response.is_submitted) {
-                    button.text('Submitted');
-                    button.prop('disabled', true);
-                }
+                    if (response.is_submitted) {
+                        button.text('Submitted');
+                        button.removeClass('btn-primary').addClass('btn-success');
+                        button.prop('disabled', true);
+                    }
+                });
             });
+
         });
     </script>
 </body>

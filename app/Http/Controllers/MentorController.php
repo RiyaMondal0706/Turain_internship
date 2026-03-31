@@ -178,22 +178,38 @@ $assignment = DB::table('assignment')
     return view('mentor.submission_assignment_show', compact('assignment', 'notes', 'github', 'final'));
 }
 
- public function store(Request $request)
-    {
-
-        $request->validate([
-            'project_id' => 'required|integer',
-            'review' => 'required|string',
-        ]);
-
-       DB::table('assignment_submissions')
-    ->where('assign_id', $request->project_id)
-    ->update([
-        'submitted_by_mentor'       => $request->review,
+public function store(Request $request)
+{
+    $request->validate([
+        'project_id' => 'required|integer',
+        'review' => 'required|string',
     ]);
 
-        
+    // Check existing review
+    $existing = DB::table('assignment_submissions')
+        ->where('assign_id', $request->project_id)
+        ->whereNotNull('submitted_by_mentor')
+        ->first();
+
+    if ($existing) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Review already submitted!'
+        ]);
     }
+
+    // Update review
+    DB::table('assignment_submissions')
+        ->where('assign_id', $request->project_id)
+        ->update([
+            'submitted_by_mentor' => $request->review,
+        ]);
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Review submitted successfully!'
+    ]);
+}
 
     public function index_show(){
 

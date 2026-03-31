@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
+
 class HrController extends Controller
 {
     public function internCreate_show()
@@ -35,69 +36,82 @@ class HrController extends Controller
 
     public function internship_store(Request $request)
     {
-        // dd($request->all());
-        $plainPassword = random_int(10000000, 99999999);
-        // dd($request->hasFile('avatar'));
-        $avatarName = '11.jpg';
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
-            $avatar->move(public_path('assets/images/intern'), $avatarName);
+        try {
+            $plainPassword = random_int(10000000, 99999999);
+
+            // Image Upload
+            $avatarName = '11.jpg';
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+                $avatar->move(public_path('assets/images/intern'), $avatarName);
+            }
+
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->intern_start);
+
+
+            $internshipDataId = DB::table('intern_data')->insertGetId([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'department' => $request->department_id,
+                'designation' => $request->designation_id,
+                'dob' => Carbon::parse($request->dob)->format('Y-m-d'),
+                'github_link' => $request->gitbub,
+                'mp_boad' => $request->mp_boad,
+                'mp_marks' => $request->mp_marks,
+                'hs_boad' => $request->hs_boad,
+                'hs_marks' => $request->hs_marks,
+                'graduation' => $request->gratuadion,
+                'graduation_cgpa' => $request->graduation_marks,
+                'post_graduation' => $request->postgraduation,
+                'post_graduation_cgpa' => $request->postgraduation_marks,
+                'address' => $request->address,
+                'pincode' => $request->pincode,
+                'district' => $request->district,
+                'state' => $request->state,
+                'city' => $request->city,
+                'image' => $avatarName,
+                'entry_date' => $startDate->format('Y-m-d'),
+                'end_date' => $startDate->copy()->addMonths(3)->format('Y-m-d'),
+                'create_at' => now(),
+            ]);
+
+            // Generate ID
+            $generate = 'turain' . random_int(1000, 9999);
+
+            // Insert User
+            DB::table('users')->insert([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($plainPassword),
+                'role' => 'candidate',
+                'turain_id' => $generate,
+                'internship_data_id' => $internshipDataId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Send Mail
+            Mail::to($request->email)->send(
+                new InternshipCredentialsMail(
+                    $request->name,
+                    $request->email,
+                    $plainPassword,
+                    $generate
+                )
+            );
+
+            return redirect()->back()->with('success', 'Internship registered successfully!');
+        } catch (\Exception $e) {
+
+            if (str_contains($e->getMessage(), 'Duplicate entry')) {
+                return redirect()->back()->with('error', 'Something went wrong!');
+            }
+
+            return redirect()->back()->with('error', 'Email already exists!');
         }
-        $startDate = Carbon::createFromFormat('Y-m-d', $request->intern_start);
-
-        $internshipDataId = DB::table('intern_data')->insertGetId([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'department' => $request->department_id,
-            'designation' => $request->designation_id,
-            'dob' => Carbon::parse($request->dob)->format('Y-m-d'),
-            'github_link' => $request->gitbub,
-            'mp_boad' => $request->mp_boad,
-            'mp_marks' => $request->mp_marks,
-            'hs_boad' => $request->hs_boad,
-            'hs_marks' => $request->hs_marks,
-            'graduation' => $request->gratuadion,
-            'graduation_cgpa' => $request->graduation_marks,
-            'post_graduation' => $request->postgraduation,
-            'post_graduation_cgpa' => $request->postgraduation_marks,
-            'address' => $request->address,
-            'pincode' => $request->pincode,
-            'district' => $request->district,
-            'state' => $request->state,
-            'city' => $request->city,
-            'image' => $avatarName,
-            'entry_date' => $startDate->format('Y-m-d'),
-            'end_date' => $startDate->copy()->addMonths(3)->format('Y-m-d'),
-            'create_at' => now(),
-        ]);
-
-        $generate = 'turain'.random_int(1000, 9999);
-
-        DB::table('users')->insert([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($plainPassword),
-            'role' => 'candidate',
-            'turain_id' => $generate,
-            'internship_data_id' => $internshipDataId,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        Mail::to($request->email)->send(
-            new InternshipCredentialsMail(
-                $request->name,
-                $request->email,
-                $plainPassword,
-                $generate
-            )
-        );
-
-        return back()->with('success', 'Internship registered & user created successfully!');
     }
-
     public function getDistricts(Request $request)
     {
         return DB::table('districts')
@@ -164,96 +178,95 @@ class HrController extends Controller
 
 
 
-public function intern_update(Request $request, $id)
-{
-    // Validation
-    $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email',
-        'phone' => 'required|digits:10',
-        'designation_id' => 'required',
-        'dob' => 'required|date',
-        'intern_start' => 'required|date',
-        'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
-    ]);
-
-
-    DB::beginTransaction();
-
-    try {
-
-        // Old Image
-        $oldAvatar = DB::table('intern_data')
-            ->where('id', $id)
-            ->value('image');
-
-        $avatarName = $oldAvatar;
-
-        // Upload new image
-        if ($request->hasFile('avatar')) {
-
-            $avatar = $request->file('avatar');
-
-            $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
-
-            $avatar->move(public_path('assets/images/intern'), $avatarName);
-        }
-   
-        // Internship Start Date
-        $startDate = Carbon::parse($request->intern_start);
-
-        DB::table('intern_data')
-            ->where('id', $id)
-            ->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'department' => $request->department_id,
-                'designation' => $request->designation_id,
-                'dob' => $request->dob,
-
-                'github_link' => $request->github,
-                'mp_boad' => $request->mp_board,
-                'mp_marks' => $request->mp_marks,
-
-                'hs_boad' => $request->hs_board,
-                'hs_marks' => $request->hs_marks,
-
-                'graduation' => $request->graduation,
-                'graduation_cgpa' => $request->graduation_marks,
-
-                'post_graduation' => $request->postgraduation,
-                'post_graduation_cgpa' => $request->postgraduation_marks,
-
-                'address' => $request->address,
-                'pincode' => $request->pincode,
-                'district' => $request->district,
-                'state' => $request->state,
-                'city' => $request->city,
-
-                'image' => $avatarName,
-
-                'entry_date' => $startDate->format('Y-m-d'),
-                'end_date' => $startDate->copy()->addMonths(3)->format('Y-m-d'),
-
-            ]);
-//  dd("ok");
-        DB::commit();
-
-        return redirect()->back()->with('success', 'Internship updated successfully!');
-
-    } catch (\Throwable $e) {
-
-        DB::rollBack();
-
-        Log::error('Intern update failed', [
-            'intern_id' => $id,
-            'error' => $e->getMessage(),
+    public function intern_update(Request $request, $id)
+    {
+        // Validation
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required|digits:10',
+            'designation_id' => 'required',
+            'dob' => 'required|date',
+            'intern_start' => 'required|date',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
-        return redirect()->back()->with('error', 'Something went wrong.');
+
+        DB::beginTransaction();
+
+        try {
+
+            // Old Image
+            $oldAvatar = DB::table('intern_data')
+                ->where('id', $id)
+                ->value('image');
+
+            $avatarName = $oldAvatar;
+
+            // Upload new image
+            if ($request->hasFile('avatar')) {
+
+                $avatar = $request->file('avatar');
+
+                $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+
+                $avatar->move(public_path('assets/images/intern'), $avatarName);
+            }
+
+            // Internship Start Date
+            $startDate = Carbon::parse($request->intern_start);
+
+            DB::table('intern_data')
+                ->where('id', $id)
+                ->update([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'department' => $request->department_id,
+                    'designation' => $request->designation_id,
+                    'dob' => $request->dob,
+
+                    'github_link' => $request->github,
+                    'mp_boad' => $request->mp_board,
+                    'mp_marks' => $request->mp_marks,
+
+                    'hs_boad' => $request->hs_board,
+                    'hs_marks' => $request->hs_marks,
+
+                    'graduation' => $request->graduation,
+                    'graduation_cgpa' => $request->graduation_marks,
+
+                    'post_graduation' => $request->postgraduation,
+                    'post_graduation_cgpa' => $request->postgraduation_marks,
+
+                    'address' => $request->address,
+                    'pincode' => $request->pincode,
+                    'district' => $request->district,
+                    'state' => $request->state,
+                    'city' => $request->city,
+
+                    'image' => $avatarName,
+
+                    'entry_date' => $startDate->format('Y-m-d'),
+                    'end_date' => $startDate->copy()->addMonths(3)->format('Y-m-d'),
+
+                ]);
+            //  dd("ok");
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Internship updated successfully!');
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            Log::error('Intern update failed', [
+                'intern_id' => $id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()->back()->with('error', 'Something went wrong.');
+        }
     }
-}
 
     public function mentorCreate_show()
     {
@@ -265,51 +278,60 @@ public function intern_update(Request $request, $id)
 
     public function mentor_store(Request $request)
     {
-        $avatarName = '11.jpg';
-        $plainPassword = random_int(10000000, 99999999);
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
-            $avatar->move(public_path('assets/images/mentor'), $avatarName);
+        try {
+            $avatarName = '11.jpg';
+            $plainPassword = random_int(10000000, 99999999);
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+                $avatar->move(public_path('assets/images/mentor'), $avatarName);
+            }
+
+            $internshipDataId = DB::table('mentor_data')->insertGetId([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'designation' => $request->designation_id,
+                'department' => $request->department_id,
+                'address' => $request->address,
+                'image' => $avatarName,
+                'created_at' => now(),
+                'entry_date' => $request->joining_date,
+            ]);
+
+            $generate = 'turain' . random_int(1000, 9999);
+
+            DB::table('users')->insert([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($plainPassword),
+                'role' => 'mentor',
+                'turain_id' => $generate,
+                'mentor_data_id' => $internshipDataId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            Mail::to($request->email)->send(
+                new mentorCredentialsMail(
+                    $request->name,
+                    $request->email,
+                    $plainPassword,
+                    $generate
+                )
+            );
+
+            // ✅ SUCCESS → BACK SAME PAGE
+            return redirect()->back()->with('success', 'Mentor created successfully!');
+        } catch (\Exception $e) {
+
+            // ✅ CLEAN ERROR MESSAGE
+            if (str_contains($e->getMessage(), 'Duplicate entry')) {
+                return redirect()->back()->with('error', 'Something went wrong!');
+            }
+
+            return redirect()->back()->with('error', 'Email already exists!');
         }
-
-        $internshipDataId = DB::table('mentor_data')->insertGetId([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'designation' => $request->designation_id,
-            'department' => $request->department_id,
-            'address' => $request->address,
-            'image' => $avatarName,
-            'created_at' => now(),
-            'entry_date' => $request->joining_date,
-        ]);
-
-        $generate = 'turain'.random_int(1000, 9999);
-
-        DB::table('users')->insert([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($plainPassword),
-            'role' => 'mentor',
-            'turain_id' => $generate,
-            'mentor_data_id' => $internshipDataId,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        Mail::to($request->email)->send(
-            new mentorCredentialsMail(
-                $request->name,
-                $request->email,
-                $plainPassword,
-                $generate
-            )
-        );
-
-        return redirect()
-            ->route('hr.mentor.list')
-            ->with('success', 'Mentor created successfully!');
     }
 
     public function mentorList_show()
@@ -372,7 +394,7 @@ public function intern_update(Request $request, $id)
         $avatarName = $oldAvatar;
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
-            $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
+            $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
             $avatar->move(public_path('assets/images/intern'), $avatarName);
         }
         DB::table('mentor_data')
@@ -492,31 +514,31 @@ public function intern_update(Request $request, $id)
         return view('hr/designation_create', compact('departments'));
     }
 
-public function designation_store(Request $request)
-{
-    $request->validate([
-        'department_id' => 'required',
-        'designation_name' => 'required',
-        'level' => 'required|in:junior,mid,senior,lead',
+    public function designation_store(Request $request)
+    {
+        $request->validate([
+            'department_id' => 'required',
+            'designation_name' => 'required',
+            'level' => 'required|in:junior,mid,senior,lead',
 
-       
-        'designation_name' => 'required|unique:designations,designation_name,NULL,id,department_id,' . $request->department_id,
-    ], [
-        'designation_name.unique' => 'This designation already exists in this department!'
-    ]);
 
-    DB::table('designations')->insert([
-        'department_id' => $request->department_id,
-        'designation_name' => $request->designation_name,
-        'level' => $request->level,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
+            'designation_name' => 'required|unique:designations,designation_name,NULL,id,department_id,' . $request->department_id,
+        ], [
+            'designation_name.unique' => 'This designation already exists in this department!'
+        ]);
 
-    return redirect()
-        ->back()
-        ->with('success', 'Designation added successfully!');
-}
+        DB::table('designations')->insert([
+            'department_id' => $request->department_id,
+            'designation_name' => $request->designation_name,
+            'level' => $request->level,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()
+            ->back()
+            ->with('success', 'Designation added successfully!');
+    }
 
     public function department_edit($id)
     {
@@ -630,7 +652,7 @@ public function designation_store(Request $request)
         $chats = DB::table('ch_messages as m')
             ->select(
                 DB::raw('
-                IF(m.from_id = '.$currentUserId.',
+                IF(m.from_id = ' . $currentUserId . ',
                    m.to_id,
                    m.from_id
                 ) as user_id

@@ -1,256 +1,194 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="keyword" content="">
-    <meta name="author" content="theme_ocean">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Turain || Mentor List</title>
+    <title>Mentor List</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <!-- ✅ CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendors.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/css/dataTables.bs5.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/theme.min.css') }}">
 
-    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/dataTables.bs5.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
-
-    <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css">
     <style>
         .toggle-switch {
             width: 50px;
             height: 25px;
-            background-color: #e0e0e0;
+            background: #ddd;
             border-radius: 50px;
             position: relative;
-            transition: 0.3s;
-        }
-
-        .toggle-switch.active {
-            background-color: #28a745;
-            /* green for active */
+            cursor: pointer;
         }
 
         .toggle-switch::after {
             content: '';
             width: 21px;
             height: 21px;
-            background: white;
-            border-radius: 50%;
+            background: #fff;
             position: absolute;
             top: 2px;
             left: 2px;
+            border-radius: 50%;
             transition: 0.3s;
+        }
+
+        .toggle-switch.active {
+            background: green;
         }
 
         .toggle-switch.active::after {
             left: 27px;
-            /* moves to right when active */
         }
     </style>
-
-
 </head>
 
 <body>
 
-
+    <!-- ✅ Sidebar -->
     @include('layouts.hr.sidebar')
 
+    <!-- ✅ Header -->
     @include('layouts.hr.header')
 
-
-    <!--! ================================================================ !-->
-    <!--! [Start] Main Content !-->
-    <!--! ================================================================ !-->
     <main class="nxl-container">
         <div class="nxl-content">
-            <!-- [ page-header ] start -->
-            <div class="page-header">
-                <div class="page-header-left d-flex align-items-center">
-                    <div class="page-header-title">
-                        <h5 class="m-b-10">Mentor</h5>
-                    </div>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}"">Home</a></li>
-                        <li class=" breadcrumb-item">Mentor List</li>
-                    </ul>
-                </div>
-                <div class="page-header-right ms-auto">
-                    <div class="page-header-right-items">
-                        <div class="d-flex d-md-none">
-                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
-                                <i class="feather-arrow-left me-2"></i>
-                                <span>Back</span>
-                            </a>
-                        </div>
-                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
 
-                            <div class="dropdown">
+            <!-- Header -->
+            <div class="page-header d-flex justify-content-between">
+                <h4>Mentor List</h4>
+                <a href="{{ route('hr.mentor.create') }}" class="btn btn-primary">Create Mentor</a>
+            </div>
+
+            <!-- Table -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <table class="table table-hover" id="customerList">
+                        <thead>
+                            <tr>
+                                <th class="wd-30">
+                                    <div class="btn-group mb-1">
+                                        <div class="custom-control custom-checkbox ms-1">
+                                            <input type="checkbox" class="custom-control-input" id="checkAllCustomer">
+                                            <label class="custom-control-label" for="checkAllCustomer"></label>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($mentor as $mentor)
+                                <tr class="single-item">
+                                    <td>
+                                        <div class="item-checkbox ms-1">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input checkbox"
+                                                    id="checkBox_1">
+                                                <label class="custom-control-label" for="checkBox_1"></label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="customers-view.html" class="hstack gap-3">
+                                            <div class="avatar-image avatar-md">
+                                                <img src="{{ asset('assets/images/mentor/' . $mentor->image) }}"
+                                                    alt="Intern Image" class="img-fluid">
+
+                                            </div>
+                                            <div>
+                                                <span class="text-truncate-1-line">{{ $mentor->name }}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td><a href="apps-email.html">{{ $mentor->email }}</a></td>
+
+                                    <td>{{ $mentor->phone }}</a></td>
+
+                                    <?php
+                                    $department = DB::table('departments')->where('id', $mentor->department)->first();
+                                    $designation = DB::table('designations')->where('id', $mentor->designation)->first();
+                                    ?>
+                                    <td>{{ $department->department_name ?? '-' }}</td>
+
+                                    <td>{{ $designation->designation_name ?? '-' }}</td>
 
 
-                            </div>
 
-                            <a href="{{ route('hr.mentor.create') }}" class="btn btn-primary">
-                                <i class="feather feather-user-plus me-2"></i>
-                                <span>Create Mentor</span>
-                            </a>
+                                    <td>
+                                        <span class="status-icon" data-id="{{ $mentor->id }}"
+                                            data-status="{{ $mentor->status }}"
+                                            style="cursor:pointer; font-size:24px;">
+                                            <div class="toggle-switch @if ($mentor->status == 1) active @endif">
+                                            </div>
+                                        </span>
 
-                        </div>
-                    </div>
-                    <div class="d-md-none d-flex align-items-center">
-                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
-                            <i class="feather-align-right fs-20"></i>
-                        </a>
-                    </div>
+
+
+                                        {{-- <option value="danger" data-bg="bg-danger">Declined</option> --}}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="hstack gap-2 justify-content-end">
+
+                                            {{-- View --}}
+                                            <a href="{{ route('mentor.view', $mentor->id) }}"
+                                                class="avatar-text avatar-md">
+                                                <i class="feather feather-eye"></i>
+                                            </a>
+
+
+
+                                            {{-- Edit --}}
+                                            <a href="{{ route('mentor.edit', $mentor->id) }}"
+                                                class="avatar-text avatar-md">
+                                                <i class="feather feather-edit-3"></i>
+                                            </a>
+
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            @endforeach
+
+
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- [ page-header ] end -->
-            <!-- [ Main Content ] start -->
-            <div class="main-content">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card stretch stretch-full">
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-hover" id="customerList">
-                                        <thead>
-                                            <tr>
-                                                <th class="wd-30">
-                                                    <div class="btn-group mb-1">
-                                                        <div class="custom-control custom-checkbox ms-1">
-                                                            <input type="checkbox" class="custom-control-input"
-                                                                id="checkAllCustomer">
-                                                            <label class="custom-control-label"
-                                                                for="checkAllCustomer"></label>
-                                                        </div>
-                                                    </div>
-                                                </th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>Department</th>
-                                                <th>Designation</th>
-                                                <th>Status</th>
-                                                <th class="text-end">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($mentor as $mentor)
-                                                <tr class="single-item">
-                                                    <td>
-                                                        <div class="item-checkbox ms-1">
-                                                            <div class="custom-control custom-checkbox">
-                                                                <input type="checkbox"
-                                                                    class="custom-control-input checkbox"
-                                                                    id="checkBox_1">
-                                                                <label class="custom-control-label"
-                                                                    for="checkBox_1"></label>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <a href="customers-view.html" class="hstack gap-3">
-                                                            <div class="avatar-image avatar-md">
-                                                                <img src="{{ asset('assets/images/mentor/' . $mentor->image) }}"
-                                                                    alt="Intern Image" class="img-fluid">
-
-                                                            </div>
-                                                            <div>
-                                                                <span class="text-truncate-1-line">{{ $mentor->name }}
-                                                                </span>
-                                                            </div>
-                                                        </a>
-                                                    </td>
-                                                    <td><a href="apps-email.html">{{ $mentor->email }}</a></td>
-
-                                                    <td>{{ $mentor->phone }}</a></td>
-
-                                                    <?php
-                                                    $department = DB::table('departments')->where('id', $mentor->department)->first();
-                                                    $designation = DB::table('designations')->where('id', $mentor->designation)->first();
-                                                    ?>
-                                                    <td>{{ $department->department_name ?? '-' }}</td>
-
-                                                    <td>{{ $designation->designation_name ?? '-' }}</td>
-
-
-
-                                                    <td>
-                                                        <span class="status-icon" data-id="{{ $mentor->id }}"
-                                                            data-status="{{ $mentor->status }}"
-                                                            style="cursor:pointer; font-size:24px;">
-                                                            <div
-                                                                class="toggle-switch @if ($mentor->status == 1) active @endif">
-                                                            </div>
-                                                        </span>
-
-
-
-                                                        {{-- <option value="danger" data-bg="bg-danger">Declined</option> --}}
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <div class="hstack gap-2 justify-content-end">
-
-                                                            {{-- View --}}
-                                                            <a href="{{ route('mentor.view', $mentor->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-eye"></i>
-                                                            </a>
-
-
-
-                                                            {{-- Edit --}}
-                                                            <a href="{{ route('mentor.edit', $mentor->id) }}"
-                                                                class="avatar-text avatar-md">
-                                                                <i class="feather feather-edit-3"></i>
-                                                            </a>
-
-
-                                                        </div>
-                                                    </td>
-
-                                                </tr>
-                                            @endforeach
-
-
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- [ Main Content ] end -->
         </div>
-        <!-- [ Footer ] start -->
-        <footer class="footer">
-            <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
-                <span>Copyright ©</span>
-                <script>
-                    document.write(new Date().getFullYear());
-                </script>
-            </p>
-            <p><span>By: <a target="_blank" href="https://wrapbootstrap.com/user/theme_ocean"
-                        target="_blank">theme_ocean</a></span> • <span>Distributed by: <a target="_blank"
-                        href="https://themewagon.com" target="_blank">ThemeWagon</a></span></p>
-            <div class="d-flex align-items-center gap-4">
-                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
-                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
-                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
-            </div>
-        </footer>
-        <!-- [ Footer ] end -->
+    </main>
+    <!-- [ Footer ] start -->
+    <footer class="footer">
+        <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
+            <span>Copyright ©</span>
+            <script>
+                document.write(new Date().getFullYear());
+            </script>
+        </p>
+        <p><span>By: <a target="_blank" href="https://wrapbootstrap.com/user/theme_ocean"
+                    target="_blank">theme_ocean</a></span> • <span>Distributed by: <a target="_blank"
+                    href="https://themewagon.com" target="_blank">ThemeWagon</a></span></p>
+        <div class="d-flex align-items-center gap-4">
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
+        </div>
+    </footer>
+    <!-- [ Footer ] end -->
     </main>
 
     <!--! ================================================================ !-->
@@ -903,21 +841,26 @@
     </div>
 
 
-    <!--! BEGIN: Vendors JS !-->
-    <script src="assets/vendors/js/vendors.min.js"></script>
-
-    <script src="assets/vendors/js/dataTables.min.js"></script>
-    <script src="assets/vendors/js/dataTables.bs5.min.js"></script>
-    <script src="assets/vendors/js/select2.min.js"></script>
-    <script src="assets/vendors/js/select2-active.min.js"></script>
-
-    <script src="assets/js/common-init.min.js"></script>
-    <script src="assets/js/customers-init.min.js"></script>
-
-    <script src="assets/js/theme-customizer-init.min.js"></script>
+    <!-- ✅ jQuery FIRST -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+    <!-- ✅ Vendors -->
+    <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
 
+    <!-- ✅ DataTables -->
+    <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
+
+    <!-- ✅ Select2 -->
+    <script src="{{ asset('assets/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/select2-active.min.js') }}"></script>
+
+    <!-- ✅ Core JS -->
+    <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
+
+    <!-- ✅ Page Scripts -->
+    <script src="{{ asset('assets/js/customers-init.min.js') }}"></script>
+    <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
     <script>
         document.getElementById('statusSelect').addEventListener('change', function() {
             const status = this.value;
@@ -930,18 +873,27 @@
         });
     </script>
 
+    <!-- ✅ DataTable -->
+    <script>
+        $(document).ready(function() {
+            $('#customerList').DataTable();
+        });
+    </script>
 
-
+    <!-- ✅ Status Toggle -->
     <script>
         $(document).on('click', '.status-icon', function() {
 
-            let $icon = $(this).find('.toggle-switch');
-            let id = $(this).data('id');
-            let currentStatus = $(this).data('status');
-            let newStatus = currentStatus == 1 ? 0 : 1;
+            let $this = $(this);
+            let toggle = $this.find('.toggle-switch');
 
-            $icon.toggleClass('active');
-            $(this).data('status', newStatus);
+            let id = $this.data('id');
+            let status = $this.data('status');
+
+            let newStatus = status == 1 ? 0 : 1;
+
+            toggle.toggleClass('active');
+            $this.data('status', newStatus);
 
             $.ajax({
                 url: "{{ route('mentor.status.update') }}",
@@ -951,23 +903,18 @@
                     id: id,
                     status: newStatus
                 },
-                success: function(response) {
-                    showToast(response.message, 'success');
+                success: function(res) {
+                    console.log(res.message);
                 },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    showToast('Failed to update status!', 'danger');
-                    // revert toggle if failed
-                    $icon.toggleClass('active');
-                    $(this).data('status', currentStatus);
+                error: function() {
+                    alert('Error updating status');
+                    toggle.toggleClass('active');
+                    $this.data('status', status);
                 }
             });
+
         });
     </script>
-
-
-
-
 
 </body>
 

@@ -71,11 +71,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Intern</h5>
+                        <h5 class="m-b-10">Department</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('hr.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item">Mentor Create</li>
+                        <li class="breadcrumb-item">Department Edit</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -841,18 +841,25 @@
 
 
     <!--! BEGIN: Vendors JS !-->
-    <script src="assets/vendors/js/vendors.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <script src="assets/vendors/js/dataTables.min.js"></script>
-    <script src="assets/vendors/js/dataTables.bs5.min.js"></script>
-    <script src="assets/vendors/js/select2.min.js"></script>
-    <script src="assets/vendors/js/select2-active.min.js"></script>
+    <!-- Vendors -->
+    <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
 
-    <script src="assets/js/common-init.min.js"></script>
-    <script src="assets/js/customers-init.min.js"></script>
+    <!-- DataTables -->
+    <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
 
-    <script src="assets/js/theme-customizer-init.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('assets/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/select2-active.min.js') }}"></script>
+
+    <!-- Core -->
+    <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
+
+    <!-- Page -->
+    <script src="{{ asset('assets/js/customers-init.min.js') }}"></script>
+    <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     {{-- <script>

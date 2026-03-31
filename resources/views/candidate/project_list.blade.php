@@ -129,13 +129,8 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-
-
-
                                                         @forelse ($project as $assign)
                                                             <tr class="shadow-sm rounded mb-2">
-
-
                                                                 <!-- Checkbox -->
                                                                 <td class="text-center">
                                                                     <div class="form-check">
@@ -153,11 +148,10 @@
                                                                         class="badge rounded-pill bg-primary mb-1 px-3 py-2">{{ $assign->project }}</span>
                                                                 </td>
 
+                                                                <!-- Project Documentation -->
                                                                 <td>
-                                                                    <span class="short-desc">
-                                                                        {{ Str::limit($assign->project_description, 10) }}
-                                                                    </span>
-
+                                                                    <span
+                                                                        class="short-desc">{{ Str::limit($assign->project_description, 10) }}</span>
                                                                     <button type="button"
                                                                         class="btn btn-sm btn-link toggle-desc"
                                                                         data-desc="{{ $assign->project_description }}"
@@ -165,8 +159,6 @@
                                                                         View
                                                                     </button>
                                                                 </td>
-
-
 
                                                                 <!-- Start Date -->
                                                                 <td>
@@ -227,11 +219,9 @@
                                                                     </span>
                                                                 </td>
 
-
+                                                                <!-- Project Submission / Actions -->
                                                                 <td>
-                                                                    <!-- Icon Buttons -->
                                                                     <div class="icon-actions d-flex gap-2">
-                                                                        <!-- 2️⃣ Copy GitHub link -->
                                                                         <button class="btn btn-info btn-sm"
                                                                             data-bs-toggle="modal"
                                                                             data-bs-target="#githubNoteModal"
@@ -247,9 +237,7 @@
                                                                     </div>
                                                                 </td>
 
-
-
-                                                                <!-- Actions -->
+                                                                <!-- Upload Action -->
                                                                 <td class="text-end">
                                                                     <button type="button"
                                                                         class="btn btn-sm btn-outline-success upload-btn"
@@ -259,12 +247,12 @@
                                                                         <i data-feather="upload"></i> Upload
                                                                     </button>
                                                                 </td>
-
                                                             </tr>
                                                         @empty
                                                             <tr>
-                                                                <td colspan="6" class="text-center text-muted">No
-                                                                    projects assigned</td>
+                                                                <td colspan="8" class="text-center text-muted">
+                                                                    No projects assigned
+                                                                </td>
                                                             </tr>
                                                         @endforelse
                                                     </tbody>
@@ -766,58 +754,81 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            // When note button clicked
+            let activeDate = null; // ✅ FIX: define global
+
+            // Open modal
             document.querySelectorAll('[data-bs-target="#noteModal"]').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const assignId = this.dataset.id;
+
                     document.getElementById('assignId').value = assignId;
                     document.getElementById('noteText').value = '';
+                    document.getElementById('noteDateTitle').innerText = '';
+
+                    activeDate = null; // reset
 
                     loadNoteDates(assignId);
                 });
             });
 
-            // Load date list
+            // Load notes
             function loadNoteDates(assignId) {
-                fetch(`/assignment/${assignId}/notes`) // backend route
+                fetch(`/assignment/${assignId}/notes`)
                     .then(res => res.json())
                     .then(data => {
+
                         let html = '';
+
                         data.forEach(row => {
                             html += `
-                        <tr>
-                            <td>
-                                <a href="#" class="note-date"
-                                   data-note="${row.note}"
-                                   data-date="${row.created_at}">
-                                   ${row.created_at}
-                                </a>
-                            </td>
-                        </tr>
-                    `;
+                            <tr>
+                                <td>
+                                    <a href="#" class="note-date"
+                                       data-note="${row.note}"
+                                       data-date="${row.created_at}">
+                                       ${row.created_at}
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
                         });
+
                         document.getElementById('noteDateList').innerHTML = html;
+
                         bindDateClicks();
                     });
             }
 
-            // When date clicked
+            // Click date
             function bindDateClicks() {
                 document.querySelectorAll('.note-date').forEach(link => {
                     link.addEventListener('click', function(e) {
                         e.preventDefault();
+
                         document.getElementById('noteText').value = this.dataset.note;
                         document.getElementById('noteDateTitle').innerText =
                             'Note: ' + this.dataset.date;
-                        activeDate = this.dataset.date;
+
+                        activeDate = this.dataset.date; // ✅ FIX
                     });
                 });
             }
 
-            // Save today's note
+            // Save note
             document.getElementById('saveNote').addEventListener('click', function() {
+
                 const assignId = document.getElementById('assignId').value;
                 const note = document.getElementById('noteText').value.trim();
+
+                // If no date selected → use today
+                if (!activeDate) {
+                    let today = new Date();
+                    activeDate = today.toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    }); // ✅ format: 31 Mar 2026
+                }
 
                 if (!note) {
                     Swal.fire('Required', 'Please write today’s note', 'warning');
@@ -838,8 +849,11 @@
                     })
                     .then(res => res.json())
                     .then(data => {
-                        Swal.fire('Saved', 'Today’s note saved', 'success');
-                        loadNoteDates(assignId); // reload left table
+                        Swal.fire('Success', data.message, 'success');
+                        loadNoteDates(assignId);
+                    })
+                    .catch(() => {
+                        Swal.fire('Error', 'Something went wrong!', 'error');
                     });
             });
 
@@ -911,7 +925,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            // Set assign id when upload button clicked
+            // Open modal
             document.querySelectorAll('.upload-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     document.getElementById('uploadAssignId').value = this.dataset.id;
@@ -920,21 +934,20 @@
                 });
             });
 
-            // Submit assignment
+            // Submit
             document.getElementById('uploadSaveBtn').addEventListener('click', function() {
 
                 let assignId = document.getElementById('uploadAssignId').value;
                 let projectLink = document.getElementById('projectLink').value.trim();
                 let projectNote = document.getElementById('projectNote').value.trim();
 
+                // Validation
                 if (!projectLink) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Required',
-                        text: 'Please enter project link'
-                    });
-                    return;
+                    return Swal.fire('Required', 'Please enter project link', 'warning');
                 }
+
+                // Disable button
+                this.disabled = true;
 
                 fetch("{{ route('assignment.submit.post', ':id') }}".replace(':id', assignId), {
                         method: "POST",
@@ -943,34 +956,42 @@
                             "X-CSRF-TOKEN": "{{ csrf_token() }}"
                         },
                         body: JSON.stringify({
-                            assign_id: assignId,
                             project_link: projectLink,
                             note: projectNote
                         })
                     })
                     .then(res => res.json())
                     .then(data => {
+
                         if (data.status) {
+
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Submitted',
-                                text: data.message || 'Assignment submitted successfully!',
+                                text: data.message,
                                 timer: 2000,
                                 showConfirmButton: false
                             });
 
+                            // Close modal
                             bootstrap.Modal.getInstance(
                                 document.getElementById('uploadModal')
                             ).hide();
+
+                            // Optional reload
+                            setTimeout(() => location.reload(), 2000);
+
+                        } else {
+                            Swal.fire('Error', data.message, 'error');
                         }
                     })
                     .catch(() => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Something went wrong!'
-                        });
+                        Swal.fire('Error', 'Something went wrong!', 'error');
+                    })
+                    .finally(() => {
+                        document.getElementById('uploadSaveBtn').disabled = false;
                     });
+
             });
 
         });

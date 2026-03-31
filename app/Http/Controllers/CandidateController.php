@@ -19,25 +19,30 @@ use App\Events\ChatMessageSent;
 
 class CandidateController extends Controller
 {
-    public function projectList_show()
-    {
-        $candidateId = session()->get('user_id');
-        $candidate_id = DB::table('users')
-            ->where('id', $candidateId)
-            ->first();
+public function projectList_show()
+{
+    $candidateId = session()->get('user_id');
 
-        $assign = DB::table('assign')
-            ->where('candidate_id', $candidate_id->internship_data_id)
-            ->first();
+    $candidate = DB::table('users')
+        ->where('id', $candidateId)
+        ->first();
 
-        $can = $assign->id;
-        $project = DB::table('assignment')
-            ->where('assign_id', $can)
-            ->where('status', 1)
-            ->get();
-        // dd($project);
-        return view('candidate.project_list', compact('project'));
+    if (!$candidate) {
+        return redirect()->back()->with('error', 'Candidate not found!');
     }
+
+    $assignments = DB::table('assign')
+        ->where('candidate_id', $candidate->internship_data_id)
+        ->pluck('id'); // Get only the assign IDs as an array
+
+    $project = DB::table('assignment')
+        ->whereIn('assign_id', $assignments)
+        ->where('status', 1)
+        ->get();
+
+    // Return to view
+    return view('candidate.project_list', compact('project'));
+}
 
     public function today_work_store(Request $request)
     {
@@ -101,15 +106,19 @@ class CandidateController extends Controller
 
 
     public function submitAssignmentPost(Request $request, $id)
-    {
+{
+    try {
 
+        $request->validate([
+            'project_link' => 'required|url',
+        ]);
 
         DB::table('assignment_submissions')->insert([
-            'assign_id' => $id,
-            'project_link' =>  $request->project_link,
-            'notes' =>   $request->note,
-            'created_at' => now(),
-
+            'assign_id'    => $id,
+            'project_link' => $request->project_link,
+            'notes'        => $request->note,
+            'submission'   => now(),
+          
         ]);
 
         DB::table('assignment')
@@ -118,15 +127,25 @@ class CandidateController extends Controller
                 'status' => 0
             ]);
 
-        return redirect()
-            ->route('candidate.project.list');
-    }
+        return response()->json([
+            'status' => true,
+            'message' => 'Assignment submitted successfully!'
+        ]);
 
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'status' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
 
     public function submitedprojectList_show()
     {
         $candidateId = session()->get('user_id');
         $data = DB::select('CALL get_submitted_projects_by_user(?)', [$candidateId]);
+        // dd($data);
         return view('candidate.submitted_project_list', compact('data'));
     }
 

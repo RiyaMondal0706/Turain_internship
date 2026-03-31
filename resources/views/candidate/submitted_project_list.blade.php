@@ -195,6 +195,7 @@
                                                                     $submitted_by_candidate = $assign->project_link;
                                                                     $submitted_by_mentor = $assign->submitted_by_mentor;
                                                                     $submitted_by_hr = $assign->submitted_by_hr;
+
                                                                 @endphp
                                                                 <td>
                                                                     <div class="submission-status">
@@ -202,7 +203,7 @@
                                                                             <!-- HR submitted: show certificate download -->
                                                                             <span class="badge bg-success">Submitted by
                                                                                 HR</span>
-                                                                            <a href="{{ route('certificate.show', $assign->assign_id) }}"
+                                                                            <a href="{{ route('certificate.show', $assign->assignment_id) }}"
                                                                                 class="btn btn-primary btn-sm">
                                                                                 <i class="bi bi-download"></i> Download
                                                                                 Certificate

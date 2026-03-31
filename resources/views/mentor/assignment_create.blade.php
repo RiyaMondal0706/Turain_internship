@@ -29,6 +29,41 @@
             z-index: 9999 !important;
         }
     </style>
+    <style>
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast-msg {
+            background: #dc3545;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .toast-success {
+            background: #28a745;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
 
 </head>
 
@@ -44,6 +79,8 @@
     <!--! [Start] Main Content !-->
     <!--! ================================================================ !-->
     <main class="nxl-container">
+
+
         <div class="nxl-content">
             <!-- [ page-header ] start -->
             <div class="page-header">
@@ -105,7 +142,7 @@
                                             <label class="form-label fw-semibold">
                                                 Select Intern
                                             </label>
-                                            <select name="intern_id" class="form-select" required>
+                                            <select name="intern_id" class="form-select">
                                                 <option value="">-- Select Intern --</option>
                                                 @foreach ($assign as $assign)
                                                     <?php
@@ -124,7 +161,7 @@
                                                 Project Title
                                             </label>
                                             <input type="text" name="project_name" class="form-control"
-                                                placeholder="Enter project title" required>
+                                                placeholder="Enter project title">
                                         </div>
 
                                         <!-- Documentation -->
@@ -133,7 +170,7 @@
                                                 Documentation (PDF)
                                             </label>
                                             <input type="file" name="documentation" class="form-control"
-                                                accept="application/pdf" required>
+                                                accept="application/pdf">
                                             <small class="text-muted">
                                                 Only PDF files are allowed
                                             </small>
@@ -152,7 +189,7 @@
                                             <label class="form-label fw-semibold">
                                                 Submission Date
                                             </label>
-                                            <input type="date" name="submit_date" class="form-control" required>
+                                            <input type="date" name="submit_date" class="form-control">
                                         </div>
 
                                     </div>
@@ -455,25 +492,110 @@
             </div>
         </div>
     </div>
+    <div id="toastContainer"></div>
+    <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
 
+    <script src="{{ asset('assets/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/select2-active.min.js') }}"></script>
 
-    <script src="assets/vendors/js/vendors.min.js"></script>
+    {{-- <script src="{{ asset('assets/vendors/js/datepicker.min.js') }}"></script> --}}
 
-    <script src="assets/vendors/js/select2.min.js"></script>
-    <script src="assets/vendors/js/select2-active.min.js"></script>
-    {{-- <script src="assets/vendors/js/datepicker.min.js"></script> --}}
-    <script src="assets/vendors/js/lslstrength.min.js"></script>
+    <script src="{{ asset('assets/vendors/js/lslstrength.min.js') }}"></script>
 
-    <script src="assets/js/common-init.min.js"></script>
-    <script src="assets/js/customers-create-init.min.js"></script>
+    <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
+    <script src="{{ asset('assets/js/customers-create-init.min.js') }}"></script>
 
-    <script src="assets/js/theme-customizer-init.min.js"></script>
+    <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('assets/vendors/js/datepicker.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        // ✅ Toast Function (FIXED)
+        function showToast(message, type = 'error') {
+            let container = document.getElementById('toastContainer');
 
+            let toast = document.createElement('div');
+            toast.className = 'toast-msg ' + (type === 'success' ? 'toast-success' : '');
+            toast.innerText = message;
 
+            container.appendChild(toast); // ✅ FIX HERE
 
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // ✅ Wait DOM Load (VERY IMPORTANT)
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const form = document.getElementById('mentorForm');
+
+            if (!form) return; // safety check
+
+            form.addEventListener('submit', function(e) {
+
+                let intern = document.querySelector('[name="intern_id"]').value;
+                let project = document.querySelector('[name="project_name"]').value.trim();
+                let fileInput = document.querySelector('[name="documentation"]');
+                let file = fileInput.files[0];
+                let submitDate = document.querySelector('[name="submit_date"]').value;
+
+                // Intern validation
+                if (!intern) {
+                    e.preventDefault();
+                    return showToast('Please select an intern');
+                }
+
+                // Project validation
+                if (!project) {
+                    e.preventDefault();
+                    return showToast('Project title is required');
+                }
+
+                // File validation
+                if (!file) {
+                    e.preventDefault();
+                    return showToast('Please upload documentation PDF');
+                }
+
+                // File type
+                if (file.type !== "application/pdf") {
+                    e.preventDefault();
+                    fileInput.value = '';
+                    return showToast('Only PDF files are allowed');
+                }
+
+                // File size
+                if (file.size > 2 * 1024 * 1024) {
+                    e.preventDefault();
+                    fileInput.value = '';
+                    return showToast('File size must be less than 2MB');
+                }
+
+                // Date validation
+                if (!submitDate) {
+                    e.preventDefault();
+                    return showToast('Submission date is required');
+                }
+
+                let today = new Date();
+                let selectedDate = new Date(submitDate);
+
+                today.setHours(0, 0, 0, 0);
+                selectedDate.setHours(0, 0, 0, 0);
+
+                if (selectedDate < today) {
+                    e.preventDefault();
+                    return showToast('Submission date cannot be in the past');
+                }
+
+                // ✅ Loader
+                document.getElementById('submitBtn').disabled = true;
+                document.getElementById('submitLoader').classList.remove('d-none');
+            });
+
+        });
+    </script>
     <script>
         function previewAvatar(input) {
             if (input.files && input.files[0]) {

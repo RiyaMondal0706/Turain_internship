@@ -947,23 +947,25 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <!-- ✅ jQuery FIRST -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- ✅ Bootstrap Datepicker -->
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
-
-    <!-- ✅ Feather Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-
-    <!-- ✅ SweetAlert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- ✅ OPTIONAL (only if exists in public folder) -->
+    <!-- ✅ Vendors -->
     <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
+
+    <!-- ✅ DataTables -->
+    <script src="{{ asset('assets/vendors/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/dataTables.bs5.min.js') }}"></script>
+
+    <!-- ✅ Select2 -->
+    <script src="{{ asset('assets/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/vendors/js/select2-active.min.js') }}"></script>
+
+    <!-- ✅ Core JS -->
+    <script src="{{ asset('assets/js/common-init.min.js') }}"></script>
+
+    <!-- ✅ Page Scripts -->
+    <script src="{{ asset('assets/js/customers-init.min.js') }}"></script>
+    <script src="{{ asset('assets/js/theme-customizer-init.min.js') }}"></script>
 
     <script>
         function previewAvatar(input) {
@@ -1011,136 +1013,188 @@
         });
     </script> --}}
     <script>
-        function showTab(tabId, navTarget) {
+        document.addEventListener('DOMContentLoaded', function() {
 
-            document.querySelectorAll('.tab-pane').forEach(tab => {
-                tab.classList.remove('show', 'active');
+            // ================= TAB SWITCH =================
+            function showTab(tabId, navTarget) {
+                document.querySelectorAll('.tab-pane').forEach(tab => {
+                    tab.classList.remove('show', 'active');
+                });
+
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                document.getElementById(tabId).classList.add('show', 'active');
+
+                const nav = document.querySelector(`[data-bs-target="${navTarget}"]`);
+                if (nav) nav.classList.add('active');
+            }
+
+            // ================= PROFILE VALIDATION =================
+            function validateProfileTab() {
+
+                const name = document.getElementById('fullnameInput').value.trim();
+                const email = document.getElementById('mailInput').value.trim();
+                const phone = document.getElementById('phoneInput').value.trim();
+                const department = document.getElementById('departmentInput').value;
+                const designation = document.getElementById('designationInput').value;
+
+                const dob = document.getElementById('dateofbirth').value;
+                const internDate = document.getElementById('internshipEntryDate').value;
+
+                const avatarInput = document.getElementById('avatarInput');
+                const file = avatarInput.files[0];
+
+                // Basic validation
+                if (!name) return showError('Name is required');
+                if (!validateEmail(email)) return showError('Valid email required');
+
+                if (!/^[6-9][0-9]{9}$/.test(phone)) {
+                    return showError('Valid phone number required');
+                }
+
+                if (!department) return showError('Select Department');
+                if (!designation) return showError('Select Designation');
+
+                // ================= IMAGE VALIDATION =================
+                // ================= IMAGE VALIDATION =================
+
+                // ❌ If no file selected
+                if (!file) {
+                    return showError('Profile image is required');
+                }
+
+                // ✅ If file exists → validate
+                const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+                if (!allowedTypes.includes(file.type)) {
+                    avatarInput.value = '';
+                    return showError('Only PNG, JPG, JPEG allowed');
+                }
+
+                if (file.size > 2 * 1024 * 1024) {
+                    avatarInput.value = '';
+                    return showError('Image size must be less than 2MB');
+                }
+                // ===================================================
+
+                if (!dob) return showError('Date of Birth is required');
+
+                let dobDate = new Date(dob);
+                let today = new Date();
+
+                today.setHours(0, 0, 0, 0);
+                dobDate.setHours(0, 0, 0, 0);
+
+                if (isNaN(dobDate.getTime())) {
+                    return showError('Invalid Date of Birth');
+                }
+
+                if (dobDate >= today) {
+                    return showError('Date of Birth must be before today');
+                }
+
+                if (!internDate) return showError('Internship Start Date is required');
+
+                let internStart = new Date(internDate);
+                internStart.setHours(0, 0, 0, 0);
+
+                if (isNaN(internStart.getTime())) {
+                    return showError('Invalid Internship Date');
+                }
+
+                if (internStart <= dobDate) {
+                    return showError('Internship date must be after Date of Birth');
+                }
+
+                // Age validation
+                let age = today.getFullYear() - dobDate.getFullYear();
+                let monthDiff = today.getMonth() - dobDate.getMonth();
+
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
+                    age--;
+                }
+
+                if (age < 16) {
+                    return showError('Minimum age must be 16');
+                }
+
+                return true;
+            }
+
+            // ================= EDUCATION =================
+            function validateEducationTab() {
+                const mpBoard = document.getElementById('madhyamikboad').value.trim();
+                const mpMarks = document.getElementById('madhyamikmarks').value.trim();
+                const hsBoard = document.getElementById('hsboad').value.trim();
+                const hsMarks = document.getElementById('hs_marks').value.trim();
+
+                if (!mpBoard) return showError('Madhyamik board required');
+                if (!validateMarks(mpMarks)) return showError('Invalid Madhyamik marks');
+                if (!hsBoard) return showError('HS board required');
+                if (!validateMarks(hsMarks)) return showError('Invalid HS marks');
+
+                return true;
+            }
+
+            // ================= ADDRESS =================
+            function validateAddressTab() {
+                const address = document.getElementById('addressInput_1').value.trim();
+                const pincode = document.getElementById('pinCodeInput').value.trim();
+                const state = document.getElementById('stateSelect').value;
+                const district = document.getElementById('districtSelect').value;
+                const city = document.getElementById('citySelect').value;
+
+                if (!address) return showError('Address is required');
+                if (!/^[1-9][0-9]{5}$/.test(pincode)) {
+                    return showError('Valid pincode required');
+                }
+                if (!state) return showError('Select State');
+                if (!district) return showError('Select District');
+                if (!city) return showError('Select City');
+
+                return true;
+            }
+
+            // ================= BUTTON EVENTS =================
+
+            document.getElementById('nextToEducation').addEventListener('click', function() {
+                if (validateProfileTab()) {
+                    showTab('passwordTab', '#passwordTab');
+                }
             });
 
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
+            document.getElementById('backToProfile').addEventListener('click', function() {
+                showTab('profileTab', '#profileTab');
             });
 
-            document.getElementById(tabId).classList.add('show', 'active');
+            document.getElementById('nextToAddress').addEventListener('click', function() {
+                if (validateEducationTab()) {
+                    showTab('billingTab', '#billingTab');
+                }
+            });
 
-            const nav = document.querySelector(`[data-bs-target="${navTarget}"]`);
-            if (nav) nav.classList.add('active');
-        }
-
-        // ================= PROFILE =================
-        function validateProfileTab() {
-            const name = document.getElementById('fullnameInput').value.trim();
-            const email = document.getElementById('mailInput').value.trim();
-            const phone = document.getElementById('phoneInput').value.trim();
-            const department = document.getElementById('departmentInput').value;
-            const designation = document.getElementById('designationInput').value;
-
-            const dob = document.getElementById('dateofbirth').value;
-            const internDate = document.getElementById('internshipEntryDate').value;
-
-            if (!name) return showError('Name is required');
-            if (!validateEmail(email)) return showError('Valid email required');
-            if (!/^[6-9][0-9]{9}$/.test(phone))
-                return showError('Valid phone number required');
-            if (!department) return showError('Select Department');
-            if (!designation) return showError('Select Designation');
-
-            if (!dob) return showError('Date of Birth is required');
-
-            let dobDate = new Date(dob);
-            let today = new Date();
-
-            if (dobDate >= today)
-                return showError('Date of Birth must be in the past');
-
-            if (!internDate) return showError('Internship Start Date is required');
-
-            let internStart = new Date(internDate);
-
-            if (internStart <= dobDate)
-                return showError('Internship date must be after Date of Birth');
-
-            return true;
-        }
-
-        // ================= EDUCATION =================
-        function validateEducationTab() {
-            const mpBoard = document.getElementById('madhyamikboad').value.trim();
-            const mpMarks = document.getElementById('madhyamikmarks').value.trim();
-            const hsBoard = document.getElementById('hsboad').value.trim();
-            const hsMarks = document.getElementById('hs_marks').value.trim();
-
-            if (!mpBoard) return showError('Madhyamik board required');
-            if (!validateMarks(mpMarks)) return showError('Invalid Madhyamik marks');
-            if (!hsBoard) return showError('HS board required');
-            if (!validateMarks(hsMarks)) return showError('Invalid HS marks');
-
-            return true;
-        }
-
-        // ================= ADDRESS =================
-        function validateAddressTab() {
-            const address = document.getElementById('addressInput_1').value.trim();
-            const pincode = document.getElementById('pinCodeInput').value.trim();
-            const state = document.getElementById('stateSelect').value;
-            const district = document.getElementById('districtSelect').value;
-            const city = document.getElementById('citySelect').value;
-
-            if (!address) return showError('Address is required');
-            if (!/^[1-9][0-9]{5}$/.test(pincode))
-                return showError('Valid pincode required');
-            if (!state) return showError('Select State');
-            if (!district) return showError('Select District');
-            if (!city) return showError('Select City');
-
-            return true;
-        }
-
-        // ================= BUTTON EVENTS =================
-
-        // Profile → Education
-        document.getElementById('nextToEducation').addEventListener('click', function() {
-            if (validateProfileTab()) {
+            document.getElementById('backToEducation').addEventListener('click', function() {
                 showTab('passwordTab', '#passwordTab');
-            }
+            });
+
+            // ================= FINAL SUBMIT =================
+            document.getElementById('internshipForm').addEventListener('submit', function(e) {
+
+                if (!validateProfileTab() || !validateEducationTab() || !validateAddressTab()) {
+                    e.preventDefault();
+                    return;
+                }
+
+                const btn = document.getElementById('submitBtn');
+                btn.querySelector('.btn-text').textContent = "Submitting...";
+                btn.querySelector('.btn-loader').classList.remove('d-none');
+                btn.disabled = true;
+            });
+
         });
 
-        // Education → Profile
-        document.getElementById('backToProfile').addEventListener('click', function() {
-            showTab('profileTab', '#profileTab');
-        });
-
-        // Education → Address
-        document.getElementById('nextToAddress').addEventListener('click', function() {
-            if (validateEducationTab()) {
-                showTab('billingTab', '#billingTab');
-            }
-        });
-
-        // Address → Education
-        document.getElementById('backToEducation').addEventListener('click', function() {
-            showTab('passwordTab', '#passwordTab');
-        });
-
-        // ✅ FINAL SUBMIT WITH LOADER
-        document.getElementById('internshipForm').addEventListener('submit', function(e) {
-
-            // Step 1: Validate Address
-            if (!validateAddressTab()) {
-                e.preventDefault();
-                return;
-            }
-
-            // Step 2: Show Loader
-            const btn = document.getElementById('submitBtn');
-            btn.querySelector('.btn-text').textContent = "Submitting...";
-            btn.querySelector('.btn-loader').classList.remove('d-none');
-
-            // Step 3: Disable button
-            btn.disabled = true;
-
-            // ✅ IMPORTANT: Do NOT prevent default here → form will submit to controller
-        });
         // ================= HELPERS =================
         function validateEmail(email) {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -1277,7 +1331,29 @@
         });
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('success') }}",
+                confirmButtonColor: '#3085d6'
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "{{ session('error') }}",
+                confirmButtonColor: '#d33'
+            });
+        </script>
+    @endif
 
 </body>
 
