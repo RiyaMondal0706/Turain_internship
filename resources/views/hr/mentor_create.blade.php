@@ -81,9 +81,8 @@
                         <div class="card border-top-0">
                             <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3">
                             </div>
-                            <form id="mentorForm" action="{{ route('mentor.store') }}" enctype="multipart/form-data"
-                                method="POST">
-
+                            <form id="mentorForm" action="{{ route('mentor.store') }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="tab-content">
 
@@ -203,7 +202,7 @@
                                                             <i class="feather-layers"></i>
                                                         </div>
                                                         <select class="form-control" id="departmentInput"
-                                                            name="department_id" required>
+                                                            name="department_id">
                                                             <option value="">Select Department</option>
                                                             @foreach ($departments as $department)
                                                                 <option value="{{ $department->id }}">
@@ -226,7 +225,7 @@
                                                             <i class="feather-briefcase"></i>
                                                         </div>
                                                         <select class="form-control" id="designationInput"
-                                                            name="designation_id" required>
+                                                            name="designation_id">
                                                             <option value="">Select Designation</option>
                                                         </select>
                                                     </div>
@@ -260,8 +259,7 @@
                                                     </div>
 
                                                     <input type="date" name="joining_date" id="joining_date"
-                                                        class="form-control" value="{{ old('joining_date') }}"
-                                                        required>
+                                                        class="form-control" value="{{ old('joining_date') }}">
 
                                                 </div>
                                             </div>
@@ -271,11 +269,12 @@
 
                                     <div class="row">
                                         <div class="col-lg-8 offset-lg-4">
-                                            <button type="submit" class="btn btn-primary px-4" id="submitBtn">
-                                                <span class="btn-text">Submit Internship</span>
+                                            <button type="submit" id="submitBtn" class="btn btn-primary">
+                                                <span class="btn-text">Submit Mentor</span>
                                                 <span id="submitLoader"
-                                                    class="spinner-border spinner-border-sm d-none ms-2"
-                                                    role="status" aria-hidden="true"></span>
+                                                    class="spinner-border spinner-border-sm d-none ms-2"></span>
+                                                <span id="submitLoader"
+                                                    class="spinner-border spinner-border-sm d-none ms-2"></span>
                                             </button>
                                         </div>
                                     </div>
@@ -595,7 +594,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('assets/vendors/js/datepicker.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.all.min.js"></script>
 
 
     <script>
@@ -642,40 +641,72 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             const form = document.getElementById('mentorForm');
-            if (!form) return;
 
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
-
-                const btn = document.getElementById('submitBtn');
-                const loader = document.getElementById('submitLoader');
 
                 const name = document.getElementById('fullnameInput').value.trim();
                 const email = document.getElementById('mailInput').value.trim();
                 const phone = document.getElementById('phoneInput').value.trim();
+                const department = document.getElementById('departmentInput').value;
                 const designation = document.getElementById('designationInput').value;
                 const address = document.getElementById('addressInput_1').value.trim();
+                const joiningDate = document.getElementById('joining_date').value;
 
+                // ✅ VALIDATION
+                if (!name) return stopSubmit(e, 'Name is required');
 
-                if (!name) return showToast('Name is required');
-                if (!email || !validateEmail(email)) return showToast('Valid email required');
-                if (!/^[6-9][0-9]{9}$/.test(phone)) return showToast('Valid phone number required');
-                if (!designation) return showToast('Designation is required');
-                if (!address) return showToast('Address is required');
+                if (!validateEmail(email))
+                    return stopSubmit(e, 'Valid email required');
 
+                if (!/^[6-9][0-9]{9}$/.test(phone))
+                    return stopSubmit(e, 'Valid phone number required');
 
+                if (!department)
+                    return stopSubmit(e, 'Select Department');
+
+                if (!designation)
+                    return stopSubmit(e, 'Select Designation');
+
+                if (!address)
+                    return stopSubmit(e, 'Address is required');
+
+                if (!joiningDate)
+                    return stopSubmit(e, 'Joining Date is required');
+
+                let today = new Date().toISOString().split('T')[0];
+                if (joiningDate > today)
+                    return stopSubmit(e, 'Joining date cannot be in future');
+
+                // ✅ LOADER
+                const btn = document.getElementById('submitBtn');
+                btn.querySelector('.btn-text').textContent = "Submitting...";
+                document.getElementById('submitLoader').classList.remove('d-none');
                 btn.disabled = true;
-                loader.classList.remove('d-none');
-                btn.querySelector('.btn-text').innerText = 'Submitting...';
-
-                form.submit();
             });
+
         });
 
+        // ✅ EMAIL VALIDATION FUNCTION
         function validateEmail(email) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // ✅ STOP SUBMIT FUNCTION
+        function stopSubmit(e, message) {
+            e.preventDefault();
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: message
+            });
+
+            return false;
         }
     </script>
+
+
 
     <script>
         $(document).ready(function() {

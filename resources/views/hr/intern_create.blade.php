@@ -101,8 +101,8 @@
 
                                 </ul>
                             </div>
-                            <form action="{{ route('internship.store') }}" enctype="multipart/form-data" method="POST">
-
+                            <form id="internshipForm" action="{{ route('internship.store') }}"
+                                enctype="multipart/form-data" method="POST">
                                 @csrf
                                 <div class="tab-content">
 
@@ -643,12 +643,10 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-8 offset-lg-4">
-                                                    <button type="submit" class="btn btn-primary px-4"
-                                                        id="submitBtn">
-                                                        <span class="btn-text">Submit Internship</span>
-                                                        <span id="submitLoader"
-                                                            class="spinner-border spinner-border-sm d-none ms-2"
-                                                            role="status" aria-hidden="true"></span>
+                                                    <button type="submit" id="submitBtn" class="btn btn-primary">
+                                                        <span class="btn-text">Submit</span>
+                                                        <span
+                                                            class="btn-loader spinner-border spinner-border-sm d-none"></span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -950,23 +948,22 @@
         </div>
     </div>
 
-
-    <script src="assets/vendors/js/vendors.min.js"></script>
-
-    <script src="assets/vendors/js/select2.min.js"></script>
-    <script src="assets/vendors/js/select2-active.min.js"></script>
-    {{-- <script src="assets/vendors/js/datepicker.min.js"></script> --}}
-    <script src="assets/vendors/js/lslstrength.min.js"></script>
-
-    <script src="assets/js/common-init.min.js"></script>
-    <script src="assets/js/customers-create-init.min.js"></script>
-
-    <script src="assets/js/theme-customizer-init.min.js"></script>
+    <!-- ✅ jQuery FIRST -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('assets/vendors/js/datepicker.min.js') }}"></script>
+
+    <!-- ✅ Bootstrap Datepicker -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- ✅ Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
+    <!-- ✅ SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- ✅ OPTIONAL (only if exists in public folder) -->
+    <script src="{{ asset('assets/vendors/js/vendors.min.js') }}"></script>
 
     <script>
         function previewAvatar(input) {
@@ -981,48 +978,131 @@
             }
         }
     </script>
-    <script>
+    {{-- <script>
         $(document).ready(function() {
 
-            feather.replace();
-            $('.internship-date-picker').datepicker({
-                format: 'dd-mm-yyyy',
-                startDate: new Date(),
-                autoclose: true,
-                todayHighlight: true,
-                orientation: "bottom auto"
-            });
-            $('.input-group-text').on('click', function() {
-                $(this)
-                    .closest('.input-group')
-                    .find('.internship-date-picker')
-                    .datepicker('show');
-            });
+            // ✅ Safe feather check
+            if (typeof feather !== "undefined") {
+                feather.replace();
+            }
+
+            // ✅ Check datepicker exists
+            if ($.fn.datepicker) {
+
+                $('.internship-date-picker').datepicker({
+                    format: 'yyyy-mm-dd', // better for Laravel
+                    startDate: new Date(),
+                    autoclose: true,
+                    todayHighlight: true
+                });
+
+                // open on icon click
+                $('.input-group-text').on('click', function() {
+                    $(this)
+                        .closest('.input-group')
+                        .find('.internship-date-picker')
+                        .datepicker('show');
+                });
+
+            } else {
+                console.error("❌ Datepicker not loaded");
+            }
 
         });
-    </script>
+    </script> --}}
     <script>
         function showTab(tabId, navTarget) {
-            // Remove active from all tab panes
+
             document.querySelectorAll('.tab-pane').forEach(tab => {
                 tab.classList.remove('show', 'active');
             });
 
-            // Remove active from all nav links
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
 
-            // Activate selected tab pane
             document.getElementById(tabId).classList.add('show', 'active');
 
-            // Activate corresponding nav link
-            document.querySelector(`[data-bs-target="${navTarget}"]`).classList.add('active');
+            const nav = document.querySelector(`[data-bs-target="${navTarget}"]`);
+            if (nav) nav.classList.add('active');
         }
+
+        // ================= PROFILE =================
+        function validateProfileTab() {
+            const name = document.getElementById('fullnameInput').value.trim();
+            const email = document.getElementById('mailInput').value.trim();
+            const phone = document.getElementById('phoneInput').value.trim();
+            const department = document.getElementById('departmentInput').value;
+            const designation = document.getElementById('designationInput').value;
+
+            const dob = document.getElementById('dateofbirth').value;
+            const internDate = document.getElementById('internshipEntryDate').value;
+
+            if (!name) return showError('Name is required');
+            if (!validateEmail(email)) return showError('Valid email required');
+            if (!/^[6-9][0-9]{9}$/.test(phone))
+                return showError('Valid phone number required');
+            if (!department) return showError('Select Department');
+            if (!designation) return showError('Select Designation');
+
+            if (!dob) return showError('Date of Birth is required');
+
+            let dobDate = new Date(dob);
+            let today = new Date();
+
+            if (dobDate >= today)
+                return showError('Date of Birth must be in the past');
+
+            if (!internDate) return showError('Internship Start Date is required');
+
+            let internStart = new Date(internDate);
+
+            if (internStart <= dobDate)
+                return showError('Internship date must be after Date of Birth');
+
+            return true;
+        }
+
+        // ================= EDUCATION =================
+        function validateEducationTab() {
+            const mpBoard = document.getElementById('madhyamikboad').value.trim();
+            const mpMarks = document.getElementById('madhyamikmarks').value.trim();
+            const hsBoard = document.getElementById('hsboad').value.trim();
+            const hsMarks = document.getElementById('hs_marks').value.trim();
+
+            if (!mpBoard) return showError('Madhyamik board required');
+            if (!validateMarks(mpMarks)) return showError('Invalid Madhyamik marks');
+            if (!hsBoard) return showError('HS board required');
+            if (!validateMarks(hsMarks)) return showError('Invalid HS marks');
+
+            return true;
+        }
+
+        // ================= ADDRESS =================
+        function validateAddressTab() {
+            const address = document.getElementById('addressInput_1').value.trim();
+            const pincode = document.getElementById('pinCodeInput').value.trim();
+            const state = document.getElementById('stateSelect').value;
+            const district = document.getElementById('districtSelect').value;
+            const city = document.getElementById('citySelect').value;
+
+            if (!address) return showError('Address is required');
+            if (!/^[1-9][0-9]{5}$/.test(pincode))
+                return showError('Valid pincode required');
+            if (!state) return showError('Select State');
+            if (!district) return showError('Select District');
+            if (!city) return showError('Select City');
+
+            return true;
+        }
+
+        // ================= BUTTON EVENTS =================
 
         // Profile → Education
         document.getElementById('nextToEducation').addEventListener('click', function() {
-            showTab('passwordTab', '#passwordTab');
+            if (validateProfileTab()) {
+                showTab('passwordTab', '#passwordTab');
+            }
         });
 
         // Education → Profile
@@ -1032,71 +1112,51 @@
 
         // Education → Address
         document.getElementById('nextToAddress').addEventListener('click', function() {
-            showTab('billingTab', '#billingTab');
+            if (validateEducationTab()) {
+                showTab('billingTab', '#billingTab');
+            }
         });
 
         // Address → Education
         document.getElementById('backToEducation').addEventListener('click', function() {
             showTab('passwordTab', '#passwordTab');
         });
-    </script>
 
-    <script>
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault(); // stop default submit
+        // ✅ FINAL SUBMIT WITH LOADER
+        document.getElementById('internshipForm').addEventListener('submit', function(e) {
 
+            // Step 1: Validate Address
+            if (!validateAddressTab()) {
+                e.preventDefault();
+                return;
+            }
+
+            // Step 2: Show Loader
             const btn = document.getElementById('submitBtn');
-            const loader = document.getElementById('submitLoader');
+            btn.querySelector('.btn-text').textContent = "Submitting...";
+            btn.querySelector('.btn-loader').classList.remove('d-none');
 
-            // Grab values
-            const name = document.getElementById('fullnameInput').value.trim();
-            const email = document.getElementById('mailInput').value.trim();
-            const phone = document.getElementById('phoneInput').value.trim();
-            const dob = document.getElementById('dateofbirth').value.trim();
-            const entryDate = document.getElementById('internshipEntryDate').value.trim();
-            const madhyamikBoard = document.getElementById('madhyamikboad').value.trim();
-            const madhyamikMarks = document.getElementById('madhyamikmarks').value.trim();
-            const address = document.getElementById('addressInput_1').value.trim();
-            const pinCode = document.getElementById('pinCodeInput').value.trim();
-
-            // Validations
-            if (!name) return showToast('Name is required!');
-            if (!email || !validateEmail(email)) return showToast('Valid email is required!');
-            if (!/^[6-9][0-9]{9}$/.test(phone)) return showToast('Valid 10-digit phone number required!');
-            if (!dob) return showToast('Date of Birth is required!');
-            if (!entryDate) return showToast('Internship Entry Date is required!');
-            if (!madhyamikBoard) return showToast('Madhyamik Board is required!');
-            if (!/^(100(\.00)?|[0-9]{1,2}(\.[0-9]{1,2})?)$/.test(madhyamikMarks))
-                return showToast('Madhyamik marks must be 0–100 with up to 2 decimals!');
-            if (!address) return showToast('Address is required!');
-            if (!/^[1-9][0-9]{5}$/.test(pinCode)) return showToast('Valid 6-digit pincode required!');
-
+            // Step 3: Disable button
             btn.disabled = true;
-            loader.classList.remove('d-none');
-            btn.querySelector('.btn-text').textContent = 'Submitting...';
-            this.submit();
-        });
 
+            // ✅ IMPORTANT: Do NOT prevent default here → form will submit to controller
+        });
+        // ================= HELPERS =================
         function validateEmail(email) {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
 
-        function showToast(message) {
-            const toastEl = document.createElement('div');
-            toastEl.className = 'toast align-items-center text-bg-danger border-0 position-fixed top-0 end-0 m-3';
-            toastEl.innerHTML = `
-            <div class="d-flex">
-                <div class="toast-body">${message}</div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>`;
-            document.body.appendChild(toastEl);
+        function validateMarks(value) {
+            return /^(100(\.00)?|[0-9]{1,2}(\.[0-9]{1,2})?)$/.test(value);
+        }
 
-            const toast = new bootstrap.Toast(toastEl, {
-                delay: 3000
+        function showError(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: message
             });
-            toast.show();
-
-            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+            return false;
         }
     </script>
 

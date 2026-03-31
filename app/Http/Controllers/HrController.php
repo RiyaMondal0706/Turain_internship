@@ -35,9 +35,10 @@ class HrController extends Controller
 
     public function internship_store(Request $request)
     {
+        // dd($request->all());
         $plainPassword = random_int(10000000, 99999999);
         // dd($request->hasFile('avatar'));
-        $avatarName = null;
+        $avatarName = '11.jpg';
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
             $avatarName = time().'_'.uniqid().'.'.$avatar->getClientOriginalExtension();
@@ -264,7 +265,7 @@ public function intern_update(Request $request, $id)
 
     public function mentor_store(Request $request)
     {
-        $avatarName = null;
+        $avatarName = '11.jpg';
         $plainPassword = random_int(10000000, 99999999);
         if ($request->hasFile('avatar')) {
             $avatar = $request->file('avatar');
@@ -491,23 +492,31 @@ public function intern_update(Request $request, $id)
         return view('hr/designation_create', compact('departments'));
     }
 
-    public function designation_store(Request $request)
-    {
-        $request->validate([
-            'level' => 'required|in:junior,mid,senior,lead',
-        ]);
+public function designation_store(Request $request)
+{
+    $request->validate([
+        'department_id' => 'required',
+        'designation_name' => 'required',
+        'level' => 'required|in:junior,mid,senior,lead',
 
-        DB::table('designations')->insert([
-            'department_id' => $request->department_id,
-            'designation_name' => $request->designation_name,
-            'level' => $request->level,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+       
+        'designation_name' => 'required|unique:designations,designation_name,NULL,id,department_id,' . $request->department_id,
+    ], [
+        'designation_name.unique' => 'This designation already exists in this department!'
+    ]);
 
-        return redirect()
-            ->route('hr.department.list');
-    }
+    DB::table('designations')->insert([
+        'department_id' => $request->department_id,
+        'designation_name' => $request->designation_name,
+        'level' => $request->level,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    return redirect()
+        ->back()
+        ->with('success', 'Designation added successfully!');
+}
 
     public function department_edit($id)
     {

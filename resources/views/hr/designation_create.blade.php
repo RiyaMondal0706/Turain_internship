@@ -125,7 +125,8 @@
                                     </h5>
                                 </div>
                                 <div class="card-body p-4">
-                                    <form action="{{ route('hr.designation.store') }}" method="POST">
+                                    <form id="designationForm" action="{{ route('hr.designation.store') }}"
+                                        method="POST">
                                         @csrf
 
                                         <!-- Department Dropdown -->
@@ -140,8 +141,7 @@
                                                 </span>
 
                                                 <select name="department_id" id="department_id"
-                                                    class="form-control @error('department_id') is-invalid @enderror"
-                                                    required>
+                                                    class="form-control @error('department_id') is-invalid @enderror">
                                                     <option value="">Select Department</option>
 
                                                     @foreach ($departments as $department)
@@ -175,7 +175,7 @@
 
                                                 <input type="text" name="designation_name" id="designation_name"
                                                     class="form-control @error('designation_name') is-invalid @enderror"
-                                                    placeholder="e.g. Junior Developer" required>
+                                                    placeholder="e.g. Junior Developer">
 
                                                 @error('designation_name')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -198,7 +198,7 @@
                                                 </span>
 
                                                 <select name="level" id="level"
-                                                    class="form-control @error('level') is-invalid @enderror" required>
+                                                    class="form-control @error('level') is-invalid @enderror">
                                                     <option value="">Select Level</option>
                                                     <option value="junior">Junior</option>
                                                     <option value="mid">Mid</option>
@@ -900,8 +900,81 @@
     <script src="assets/js/customers-init.min.js"></script>
 
     <script src="assets/js/theme-customizer-init.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+    <script>
+        document.getElementById('designationForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // stop form submit
 
+            let department = document.getElementById('department_id').value;
+            let designation = document.getElementById('designation_name').value.trim();
+            let level = document.getElementById('level').value;
+
+            // Validation checks
+            if (department === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a department!'
+                });
+                return;
+            }
+
+            if (designation === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Designation name is required!'
+                });
+                return;
+            }
+
+            if (level === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a level!'
+                });
+                return;
+            }
+
+            // Success confirmation
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to save this designation?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, save it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    e.target.submit(); // submit form
+                }
+            });
+
+        });
+    </script>
+
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "{{ $errors->first() }}"
+            });
+        </script>
+    @endif
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: "{{ session('success') }}"
+            });
+        </script>
+    @endif
 </body>
 
 </html>

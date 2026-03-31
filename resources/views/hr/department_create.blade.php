@@ -125,7 +125,8 @@
                                     </h5>
                                 </div>
                                 <div class="card-body p-4">
-                                    <form action="{{ route('hr.departments.store') }}" method="POST">
+                                    <form id="departmentForm" action="{{ route('hr.departments.store') }}"
+                                        method="POST">
                                         @csrf
 
                                         <div class="form-group mb-4">
@@ -138,7 +139,7 @@
                                                 </span>
                                                 <input type="text" name="department_name" id="department_name"
                                                     class="form-control @error('department_name') is-invalid @enderror"
-                                                    placeholder="e.g. Human Resources" required>
+                                                    placeholder="e.g. Human Resources">
                                                 @error('department_name')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -827,8 +828,57 @@
 
     <script src="assets/js/common-init.min.js"></script>
     <script src="assets/js/customers-init.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <script src="assets/js/theme-customizer-init.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.23.0/sweetalert2.all.min.js"></script>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const form = document.getElementById('departmentForm');
+
+            form.addEventListener('submit', function(e) {
+
+                const deptName = document.getElementById('department_name').value.trim();
+
+                // ✅ VALIDATION
+                if (!deptName) {
+                    e.preventDefault();
+                    showError('Department name is required');
+                    return;
+                }
+
+                if (deptName.length < 3) {
+                    e.preventDefault();
+                    showError('Department name must be at least 3 characters');
+                    return;
+                }
+
+                // Optional: only letters + spaces
+                if (!/^[a-zA-Z\s]+$/.test(deptName)) {
+                    e.preventDefault();
+                    showError('Only letters allowed in department name');
+                    return;
+                }
+
+            });
+
+        });
+
+        // ✅ SweetAlert Function
+        function showError(message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: message
+            });
+        }
+    </script>
+
+
 
 
 </body>
