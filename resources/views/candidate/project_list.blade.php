@@ -800,7 +800,6 @@
                     });
             }
 
-            // Click date
             function bindDateClicks() {
                 document.querySelectorAll('.note-date').forEach(link => {
                     link.addEventListener('click', function(e) {
@@ -810,7 +809,7 @@
                         document.getElementById('noteDateTitle').innerText =
                             'Note: ' + this.dataset.date;
 
-                        activeDate = this.dataset.date; // ✅ FIX
+                        activeDate = this.dataset.date;
                     });
                 });
             }

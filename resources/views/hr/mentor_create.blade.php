@@ -655,7 +655,7 @@
                 const address = document.getElementById('addressInput_1').value.trim();
                 const joiningDate = document.getElementById('joining_date').value;
 
-                // ✅ IMAGE VALIDATION
+
                 const avatarInput = document.getElementById('avatarInput');
                 const file = avatarInput.files[0];
 
@@ -674,7 +674,7 @@
                     return stopSubmit(e, 'Image size must be less than 2MB');
                 }
 
-                // ✅ OTHER VALIDATIONS
+
                 if (!name) return stopSubmit(e, 'Name is required');
 
                 if (!validateEmail(email))
@@ -708,13 +708,11 @@
 
         });
 
-        // ✅ EMAIL VALIDATION FUNCTION
         function validateEmail(email) {
             const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return re.test(email);
         }
 
-        // ✅ STOP SUBMIT FUNCTION
         function stopSubmit(e, message) {
             e.preventDefault();
 

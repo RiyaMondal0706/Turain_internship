@@ -727,10 +727,10 @@
                             showConfirmButton: false
                         });
 
-                        // Clear textarea
+
                         document.getElementById('noteText').value = '';
 
-                        // Close modal
+
                         bootstrap.Modal.getInstance(
                             document.getElementById('noteModal')
                         ).hide();

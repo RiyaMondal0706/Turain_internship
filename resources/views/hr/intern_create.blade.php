@@ -1057,15 +1057,11 @@
                 if (!department) return showError('Select Department');
                 if (!designation) return showError('Select Designation');
 
-                // ================= IMAGE VALIDATION =================
-                // ================= IMAGE VALIDATION =================
 
-                // ❌ If no file selected
                 if (!file) {
                     return showError('Profile image is required');
                 }
 
-                // ✅ If file exists → validate
                 const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 
                 if (!allowedTypes.includes(file.type)) {
@@ -1077,7 +1073,6 @@
                     avatarInput.value = '';
                     return showError('Image size must be less than 2MB');
                 }
-                // ===================================================
 
                 if (!dob) return showError('Date of Birth is required');
 
@@ -1108,7 +1103,6 @@
                     return showError('Internship date must be after Date of Birth');
                 }
 
-                // Age validation
                 let age = today.getFullYear() - dobDate.getFullYear();
                 let monthDiff = today.getMonth() - dobDate.getMonth();
 
@@ -1123,7 +1117,6 @@
                 return true;
             }
 
-            // ================= EDUCATION =================
             function validateEducationTab() {
                 const mpBoard = document.getElementById('madhyamikboad').value.trim();
                 const mpMarks = document.getElementById('madhyamikmarks').value.trim();
@@ -1138,7 +1131,6 @@
                 return true;
             }
 
-            // ================= ADDRESS =================
             function validateAddressTab() {
                 const address = document.getElementById('addressInput_1').value.trim();
                 const pincode = document.getElementById('pinCodeInput').value.trim();
@@ -1157,7 +1149,6 @@
                 return true;
             }
 
-            // ================= BUTTON EVENTS =================
 
             document.getElementById('nextToEducation').addEventListener('click', function() {
                 if (validateProfileTab()) {
@@ -1179,7 +1170,7 @@
                 showTab('passwordTab', '#passwordTab');
             });
 
-            // ================= FINAL SUBMIT =================
+
             document.getElementById('internshipForm').addEventListener('submit', function(e) {
 
                 if (!validateProfileTab() || !validateEducationTab() || !validateAddressTab()) {
@@ -1195,7 +1186,6 @@
 
         });
 
-        // ================= HELPERS =================
         function validateEmail(email) {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
