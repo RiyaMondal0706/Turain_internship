@@ -621,8 +621,10 @@
                 </div>
 
                 <div class="modal-body">
-                    <input type="hidden" id="githubAssignId"> <!-- renamed -->
-                    <textarea id="githubNoteText" class="form-control" rows="4" placeholder="Write something..."></textarea> <!-- renamed -->
+                    <input type="hidden" id="githubAssignId">
+                    <textarea id="githubNoteText" class="form-control" rows="4" placeholder="Enter project link..."
+                        pattern="https?://.+" title="Please enter a valid URL (must start with http:// or https://)" required>
+</textarea>
                 </div>
 
                 <div class="modal-footer">
@@ -754,7 +756,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            let activeDate = null; // ✅ FIX: define global
+            let activeDate = null;
 
             // Open modal
             document.querySelectorAll('[data-bs-target="#noteModal"]').forEach(btn => {
@@ -765,8 +767,7 @@
                     document.getElementById('noteText').value = '';
                     document.getElementById('noteDateTitle').innerText = '';
 
-                    activeDate = null; // reset
-
+                    activeDate = null;
                     loadNoteDates(assignId);
                 });
             });
@@ -876,18 +877,43 @@
 
     <script>
         document.getElementById('githubSaveNote').addEventListener('click', function() {
-            let assignId = document.getElementById('githubAssignId').value;
-            let note = document.getElementById('githubNoteText').value;
 
-            if (!note.trim()) {
+            let assignId = document.getElementById('githubAssignId').value;
+            let note = document.getElementById('githubNoteText').value.trim();
+
+            // ❌ Empty check
+            if (!note) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Required',
-                    text: 'Please write note'
+                    text: 'Please enter project link'
                 });
                 return;
             }
 
+            // ❌ URL validation
+            try {
+                new URL(note);
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid URL',
+                    text: 'Please enter a valid URL (http/https)'
+                });
+                return;
+            }
+
+            // ✅ OPTIONAL: Only GitHub link
+            // if (!note.includes("github.com")) {
+            //     Swal.fire({
+            //         icon: 'error',
+            //         title: 'Invalid Link',
+            //         text: 'Only GitHub links allowed!'
+            //     });
+            //     return;
+            // }
+
+            // ✅ API CALL
             fetch("{{ route('assignment.github.store') }}", {
                     method: "POST",
                     headers: {
@@ -1020,6 +1046,7 @@
 
         });
     </script>
+
 
 </body>
 

@@ -36,10 +36,10 @@ class HrController extends Controller
 
     public function internship_store(Request $request)
     {
+        DB::beginTransaction();
         try {
             $plainPassword = random_int(10000000, 99999999);
 
-            // Image Upload
             $avatarName = '11.jpg';
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
@@ -48,7 +48,6 @@ class HrController extends Controller
             }
 
             $startDate = Carbon::createFromFormat('Y-m-d', $request->intern_start);
-
 
             $internshipDataId = DB::table('intern_data')->insertGetId([
                 'name' => $request->name,
@@ -77,10 +76,8 @@ class HrController extends Controller
                 'create_at' => now(),
             ]);
 
-            // Generate ID
             $generate = 'turain' . random_int(1000, 9999);
 
-            // Insert User
             DB::table('users')->insert([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -92,7 +89,6 @@ class HrController extends Controller
                 'updated_at' => now(),
             ]);
 
-            // Send Mail
             Mail::to($request->email)->send(
                 new InternshipCredentialsMail(
                     $request->name,
@@ -102,14 +98,17 @@ class HrController extends Controller
                 )
             );
 
+            DB::commit(); 
+
             return redirect()->back()->with('success', 'Internship registered successfully!');
         } catch (\Exception $e) {
 
+            DB::rollBack();
             if (str_contains($e->getMessage(), 'Duplicate entry')) {
-                return redirect()->back()->with('error', 'Something went wrong!');
+                return redirect()->back()->with('error', 'Email already exists!');
             }
 
-            return redirect()->back()->with('error', 'Email already exists!');
+            return redirect()->back()->with('error', 'Something went wrong!');
         }
     }
     public function getDistricts(Request $request)
@@ -276,63 +275,68 @@ class HrController extends Controller
         return view('hr.mentor_create', compact('departments'));
     }
 
-    public function mentor_store(Request $request)
-    {
-        try {
-            $avatarName = '11.jpg';
-            $plainPassword = random_int(10000000, 99999999);
-            if ($request->hasFile('avatar')) {
-                $avatar = $request->file('avatar');
-                $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
-                $avatar->move(public_path('assets/images/mentor'), $avatarName);
-            }
+ public function mentor_store(Request $request)
+{
+    DB::beginTransaction(); 
 
-            $internshipDataId = DB::table('mentor_data')->insertGetId([
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'designation' => $request->designation_id,
-                'department' => $request->department_id,
-                'address' => $request->address,
-                'image' => $avatarName,
-                'created_at' => now(),
-                'entry_date' => $request->joining_date,
-            ]);
+    try {
+        $avatarName = '11.jpg';
+        $plainPassword = random_int(10000000, 99999999);
 
-            $generate = 'turain' . random_int(1000, 9999);
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $avatarName = time() . '_' . uniqid() . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('assets/images/mentor'), $avatarName);
+        }
 
-            DB::table('users')->insert([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($plainPassword),
-                'role' => 'mentor',
-                'turain_id' => $generate,
-                'mentor_data_id' => $internshipDataId,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        $internshipDataId = DB::table('mentor_data')->insertGetId([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'designation' => $request->designation_id,
+            'department' => $request->department_id,
+            'address' => $request->address,
+            'image' => $avatarName,
+            'created_at' => now(),
+            'entry_date' => $request->joining_date,
+        ]);
 
-            Mail::to($request->email)->send(
-                new mentorCredentialsMail(
-                    $request->name,
-                    $request->email,
-                    $plainPassword,
-                    $generate
-                )
-            );
+        $generate = 'turain' . random_int(1000, 9999);
 
-            // ✅ SUCCESS → BACK SAME PAGE
-            return redirect()->back()->with('success', 'Mentor created successfully!');
-        } catch (\Exception $e) {
+        DB::table('users')->insert([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($plainPassword),
+            'role' => 'mentor',
+            'turain_id' => $generate,
+            'mentor_data_id' => $internshipDataId,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-            // ✅ CLEAN ERROR MESSAGE
-            if (str_contains($e->getMessage(), 'Duplicate entry')) {
-                return redirect()->back()->with('error', 'Something went wrong!');
-            }
+        Mail::to($request->email)->send(
+            new mentorCredentialsMail(
+                $request->name,
+                $request->email,
+                $plainPassword,
+                $generate
+            )
+        );
 
+        DB::commit();
+
+        return redirect()->back()->with('success', 'Mentor created successfully!');
+
+    } catch (\Exception $e) {
+
+        DB::rollBack(); 
+        if (str_contains($e->getMessage(), 'Duplicate entry')) {
             return redirect()->back()->with('error', 'Email already exists!');
         }
+
+        return redirect()->back()->with('error', 'Something went wrong!');
     }
+}
 
     public function mentorList_show()
     {
